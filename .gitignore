@@ -78,5 +78,6 @@ crashlytics-build.properties
 # End of https://www.toptal.com/developers/gitignore/api/unity
 
 Splendor/Temp/
-obj/
-Logs/
+Splendor/obj/
+Splendor/Logs/
+Splendor/Library/Bee/
