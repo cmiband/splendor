@@ -14,7 +14,7 @@ namespace SplendorConsole
         private Card[] reservedCard;
         private Noble[] nobles;
         private int points;
-        public void BuyCards(Card card)
+        public void BuyCard(Card card)
         {
             throw new NotImplementedException();
         }
