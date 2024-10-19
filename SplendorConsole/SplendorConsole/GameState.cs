@@ -14,7 +14,7 @@ namespace SplendorConsole
         private Bank bank;
         public void Serialize()
         {
-
+            throw new NotImplementedException();
         }
     }
 }

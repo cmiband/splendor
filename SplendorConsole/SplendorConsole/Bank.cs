@@ -8,5 +8,6 @@ namespace SplendorConsole
 {
     internal class Bank
     {
+        private Resources resources;
     }
 }
