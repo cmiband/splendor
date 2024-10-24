@@ -9,21 +9,11 @@ namespace SplendorConsole
 {
     internal class Game
     {
-        List<Card> level1shuffled = new List<Card>();
-        List<Card> level2shuffled = new List<Card>();
-        List<Card> level3shuffled = new List<Card>();
-
-        AvailableCards cards = new AvailableCards();
         public void GameStart()
         {
             Random random = new Random();
             List<Player> listOfPlayers = SetNumberOfPlayers();
             List<Noble> listOfNobles = SetNumberOfNobles(listOfPlayers.Count);
-         
-           level1shuffled = TasowanieListy(cards.level1Cards, random);
-           level2shuffled = TasowanieListy(cards.level2Cards, random);
-           level3shuffled = TasowanieListy(cards.level3Cards, random);
-           
         }
 
         List<Noble> SetNumberOfNobles(int numberOfPlayers)
@@ -63,12 +53,21 @@ namespace SplendorConsole
                 //Mechanika gry?
             }
         }
-     
 
-        List<Card> TasowanieListy(List<Card> lista, Random random)
+        static List<Card> StworzDeck(List<Card> level1Cards, List<Card> level2Cards, List<Card> level3Cards) //4 karty kazdego poziomu 
         {
-            
+            Random random = new Random();
+            List<Card> deck = new List<Card>();
 
+            deck.Add(TasowanieListy(level1Cards, 4, random))
+            deck.Add(TasowanieListy(level2Cards, 4, random))
+            deck.Add(TasowanieListy(level3Cards, 4, random))
+
+            return deck;
+        }
+
+        static List<Card> TasowanieListy(List<Card> lista, int liczbaKart, Random random)
+        {
             List<Card> wylosowaneKarty = new List<Card>();
             List<Card> duplikatListy = new List<Card>(lista);
 
