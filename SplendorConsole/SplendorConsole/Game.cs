@@ -14,14 +14,20 @@ namespace SplendorConsole
         List<Card> level2Shuffled = new List<Card>();
         List<Card> level3Shuffled = new List<Card>();
 
+        List<Card> level1VisibleCards = new List<Card>();
+        List<Card> level2VisibleCards = new List<Card>();
+        List<Card> level3VisibleCards = new List<Card>();
+
+
+
         public void GameStart()
         {
             Random random = new Random();
             List<Player> listOfPlayers = SetNumberOfPlayers();
             List<Noble> listOfNobles = SetNumberOfNobles(listOfPlayers.Count);
-            level1Shuffled = Shuffling(availableCards.level1Cards, random);
-            level2Shuffled = Shuffling(availableCards.level2Cards, random);
-            level3Shuffled = Shuffling(availableCards.level3Cards, random);
+            level1Shuffled = Shuffling(availableCards.level1Cards, 4,random);
+            level2Shuffled = Shuffling(availableCards.level2Cards, 4, random);
+            level3Shuffled = Shuffling(availableCards.level3Cards, 4, random);         
         }
 
         List<Noble> SetNumberOfNobles(int numberOfPlayers)
@@ -62,19 +68,22 @@ namespace SplendorConsole
             }
         }
 
-        
+        void VisibleCards()
+        {
 
-        List<Card> Shuffling(List<Card> lista, Random random)
+        }
+
+        List<Card> Shuffling(List<Card> lista, int ilosc, Random random)
         {
             List<Card> wylosowaneKarty = new List<Card>();
-            List<Card> duplikatListy = new List<Card>(lista);
-
+            
            for(int i = 0; i < lista.Count; i++)
            {
-            int index = random.Next(duplikatListy.Count);
-            wylosowaneKarty.Add(duplikatListy[index]);
-            duplikatListy.RemoveAt(index);     
+            int index = random.Next(lista.Count);
+            wylosowaneKarty.Add(lista[index]);
+            lista.RemoveAt(index);               
            }
+
            return wylosowaneKarty;
         }
     }
