@@ -13,9 +13,21 @@ namespace SplendorConsole
 
         }
 
-        public Player SetNumberOfPlayers()
+        List<Player> SetNumberOfPlayers()
         {
+            string input;
+            input = Console.ReadLine();
 
+            int numberOfPlayers = Convert.ToInt32(input);
+
+            List<Player> players = new List<Player>();
+
+            for (int i = 0; i < numberOfPlayers; i++)
+            {
+                players.Add(new Player());
+            }
+
+            return players;
         }
     }
 }
