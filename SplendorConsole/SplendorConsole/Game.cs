@@ -8,11 +8,24 @@ namespace SplendorConsole
 {
     internal class Game
     {
-        public void Start()
+        public void GameStart()
         {
-
+            List<Player> listOfPlayers = SetNumberOfPlayers();
+            List<Noble> listOfNobles = SetNumberOfNobles(listOfPlayers.Count);
         }
 
+        List<Noble> SetNumberOfNobles(int numberOfPlayers)
+        {
+            int numberOfNobles = numberOfPlayers + 1;
+            List<Noble> nobles = new List<Noble>();
+
+            for (int i = 0; i < numberOfNobles; i++)
+            {
+                nobles.Add(new Noble());
+            }
+
+            return nobles;
+        }
         List<Player> SetNumberOfPlayers()
         {
             string input;
@@ -28,6 +41,15 @@ namespace SplendorConsole
             }
 
             return players;
+        }
+
+        void GameLoop(int numberOfPlayers)
+        {
+            int currentTurn = 0;
+            while(currentTurn != numberOfPlayers)
+            {
+                //Mechanika gry?
+            }
         }
     }
 }
