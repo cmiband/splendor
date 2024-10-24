@@ -26,16 +26,12 @@ namespace SplendorConsole
             Random random = new Random();
             List<Player> listOfPlayers = SetNumberOfPlayers();
             List<Noble> listOfNobles = SetNumberOfNobles(listOfPlayers.Count);
-<<<<<<< HEAD
+
             level1Shuffled = Shuffling(availableCards.level1Cards, 4,random);
             level2Shuffled = Shuffling(availableCards.level2Cards, 4, random);
             level3Shuffled = Shuffling(availableCards.level3Cards, 4, random);         
-=======
-            level1Shuffled = Shuffling(availableCards.level1Cards, random);
-            level2Shuffled = Shuffling(availableCards.level2Cards, random);
-            level3Shuffled = Shuffling(availableCards.level3Cards, random);
             AddResourcesToBank(bank, listOfPlayers.Count);
->>>>>>> 610f1525c2e877281dd2bc149664604310a0d2b6
+
         }
 
         List<Noble> SetNumberOfNobles(int numberOfPlayers)
