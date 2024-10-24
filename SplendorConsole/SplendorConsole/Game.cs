@@ -8,10 +8,15 @@ namespace SplendorConsole
 {
     internal class Game
     {
+        int currentTurn = 0;
+
         public void GameStart()
         {
             List<Player> listOfPlayers = SetNumberOfPlayers();
             List<Noble> listOfNobles = SetNumberOfNobles(listOfPlayers.Count);
+            Bank bank = new Bank();
+
+            
         }
 
         List<Noble> SetNumberOfNobles(int numberOfPlayers)
@@ -50,6 +55,26 @@ namespace SplendorConsole
             {
                 //Mechanika gry?
             }
+        }
+
+        void PlayerTurn()
+        {
+
+        }
+
+        void GrabTokens()
+        {
+
+        }
+
+        void BuyCard()
+        {
+
+        }
+
+        void BuyMine()
+        {
+
         }
 
         static List<Card> StworzDeck(List<Card> level1Cards, List<Card> level2Cards, List<Card> level3Cards) //4 karty kazdego poziomu 
