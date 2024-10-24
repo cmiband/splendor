@@ -13,6 +13,7 @@ namespace SplendorConsole
         List<Card> level1Shuffled = new List<Card>();
         List<Card> level2Shuffled = new List<Card>();
         List<Card> level3Shuffled = new List<Card>();
+        Bank bank = new Bank();
 
         public void GameStart()
         {
@@ -22,6 +23,7 @@ namespace SplendorConsole
             level1Shuffled = Shuffling(availableCards.level1Cards, random);
             level2Shuffled = Shuffling(availableCards.level2Cards, random);
             level3Shuffled = Shuffling(availableCards.level3Cards, random);
+            AddResourcesToBank(bank, listOfPlayers.Count);
         }
 
         List<Noble> SetNumberOfNobles(int numberOfPlayers)
@@ -51,6 +53,37 @@ namespace SplendorConsole
             }
 
             return players;
+        }
+
+        void AddResourcesToBank(Bank bank, int numberOfPlayers)
+        {
+            if (numberOfPlayers == 2)
+            {
+                foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                {
+                    if (color == GemColor.GOLDEN) break;
+                    bank.resources.gems.Add(color, 4);
+                }
+                bank.resources.gems.Add(GemColor.GOLDEN, 5);
+            }
+            if (numberOfPlayers == 3)
+            {
+                foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                {
+                    if (color == GemColor.GOLDEN) break;
+                    bank.resources.gems.Add(color, 5);
+                }
+                bank.resources.gems.Add(GemColor.GOLDEN, 5);
+            }
+            if (numberOfPlayers == 4)
+            {
+                foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                {
+                    if (color == GemColor.GOLDEN) break;
+                    bank.resources.gems.Add(color, 7);
+                }
+                bank.resources.gems.Add(GemColor.GOLDEN, 5);
+            }
         }
 
         void GameLoop(int numberOfPlayers)
