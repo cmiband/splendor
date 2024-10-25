@@ -9,5 +9,10 @@ namespace SplendorConsole
     internal class Bank
     {
         public Resources resources;
+
+        public void TakeOutResources(int amount, GemColor color)
+        {
+            resources.gems.Remove(color, out amount);
+        }
     }
 }
