@@ -5,34 +5,101 @@ using System.Threading.Tasks;
 using System.Net.WebSockets;
 using System.Text;
 
+
 namespace SplendorConsole
 {
-    class WebserviceClient
+    public delegate void FetchDataCallbackHandler(string data);
+
+    public class WebserviceClient
     {
-        private Uri SERVER_ENDPOINT;
+        private const string CONNECTION_ERROR_MESSAGE = "Error occured while trying to connect to web socket";
+        private const string SEND_DATA_EXCEPTION_MESSAGE = "Error occured while trying to send data to web socket";
+        private const string FETCH_DATA_EXCEPTION_MESSAGE = "Error occured while trying to fetch data from web socket";
+        private const string FETCH_DATA_WITH_CALLBACK_EXCEPTION_MESSAGE = "Error occured while trying to fetch data and perform callback";
+        private const string DISCONNECT_ERROR_MESSAGE = "Error occured while trying to disconnect from web socket";
+        private const string CLOSING_STATUS = "Closing";
+        private Uri serverEndpoint;
         private ClientWebSocket webSocket;
 
         public WebserviceClient(string endpoint)
         {
-            SERVER_ENDPOINT = new Uri(endpoint);
+            serverEndpoint = new Uri(endpoint);
             webSocket = new ClientWebSocket();
         }
 
         public async Task ConnectToWebsocket()
         {
-            await webSocket.ConnectAsync(SERVER_ENDPOINT, CancellationToken.None);
-            Console.WriteLine("Connected");
+            try
+            {
+                await webSocket.ConnectAsync(serverEndpoint, CancellationToken.None);
+            } 
+            catch(Exception e)
+            {
+                throw new WebserviceClientException(CONNECTION_ERROR_MESSAGE, e);
+            }
         }
 
         public async Task SendDataToSocket(string data)
         {
-            ArraySegment<byte> bytesToSend = new ArraySegment<byte>(Encoding.UTF8.GetBytes(data));
-            await webSocket.SendAsync(bytesToSend, WebSocketMessageType.Text, true, CancellationToken.None);
+            try
+            {
+                ArraySegment<byte> bytesToSend = new ArraySegment<byte>(Encoding.UTF8.GetBytes(data));
+                await webSocket.SendAsync(bytesToSend, WebSocketMessageType.Text, true, CancellationToken.None);
+            } 
+            catch(Exception e)
+            {
+                Console.WriteLine(SEND_DATA_EXCEPTION_MESSAGE + " " + e.StackTrace);
+            }
+        }
+
+        public async Task<string> FetchDataFromSocket()
+        {
+            try
+            {
+                ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[1024]);
+                WebSocketReceiveResult result = await this.webSocket.ReceiveAsync(buffer, CancellationToken.None);
+                string receivedMessage = Encoding.UTF8.GetString(buffer.Array, 0, result.Count);
+
+                return receivedMessage;
+            } 
+            catch(Exception e)
+            {
+                Console.WriteLine(FETCH_DATA_EXCEPTION_MESSAGE + " " + e.StackTrace);
+            }
+            return "";
+        }
+
+        public async Task FetchDataFromSocketAndPerformCallback(FetchDataCallbackHandler callback)
+        {
+            try
+            {
+                string data = await this.FetchDataFromSocket();
+                if(callback != null)
+                {
+                    callback(data);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(FETCH_DATA_WITH_CALLBACK_EXCEPTION_MESSAGE + " " + e.StackTrace);
+            }
         }
 
         public async Task DisconnectFromWebsocket()
         {
-            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+            try
+            {
+                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, CLOSING_STATUS, CancellationToken.None);
+            } 
+            catch(Exception e)
+            {
+                throw new WebserviceClientException(DISCONNECT_ERROR_MESSAGE, e);
+            }
+        }
+
+        public class WebserviceClientException : Exception
+        {
+            public WebserviceClientException(string message, Exception baseException) : base(message, baseException) { }
         }
     }
 }
