@@ -33,9 +33,9 @@ namespace SplendorConsole
             List<Player> listOfPlayers = SetNumberOfPlayers();
             List<Noble> listOfNobles = SetNumberOfNobles(listOfPlayers.Count);
 
-            level1Shuffled = Shuffling(availableCards.level1Cards,random);
+            level1Shuffled = Shuffling(availableCards.level1Cards, random);
             level2Shuffled = Shuffling(availableCards.level2Cards, random);
-            level3Shuffled = Shuffling(availableCards.level3Cards, random);         
+            level3Shuffled = Shuffling(availableCards.level3Cards, random);
             AddResourcesToBank(bank, listOfPlayers.Count);
             SetVisibleCards();
 
@@ -103,7 +103,7 @@ namespace SplendorConsole
 
         void GameLoop(int numberOfPlayers)
         {
-            while(endGame != true)
+            while (endGame != true)
             {
                 if (currentTurn > numberOfPlayers) currentTurn = 0;
                 Turn(listOfPlayers[currentTurn]);
@@ -112,13 +112,13 @@ namespace SplendorConsole
 
         void Turn(Player player)
         {
-            int action = ChoiceOfAction();
-            int tokens = ChoiceOfTokens();
-            
+            ChoiceOfAction(player);
         }
 
-        int ChoiceOfAction()
+        void ChoiceOfAction(Player player)
         {
+            GemColor color;
+            GemColor[] colors;
             Console.WriteLine("=== Wybierz akcję do wykonania ===");
             Console.WriteLine("1. Weź 3 klejnoty różnych kolorów");
             Console.WriteLine("2. Weź 2 klejnoty tego samego koloru");
@@ -130,12 +130,51 @@ namespace SplendorConsole
             {
                 Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-4): ");
             }
-            return input;
-
+            switch (input)
+            {
+                case 1:
+                    colors = ChoiceOfColors();
+                    player.TakeThreeTokens(bank.resources, colors);
+                    break;
+                case 2:
+                    //color = ChoiceOfColor();
+                    //player.TakeTwoTokens(bank.resources, color);
+                    break;
+            }
         }
 
-        int ChoiceOfTokens()
+        GemColor[] ChoiceOfColors()
         {
+            List<GemColor> avaiableTokens = ChoiceOfColor3();
+            GemColor[] colors = new GemColor[3];
+
+            int i = 0;
+            Console.WriteLine("=== Wybierz kolor === ");
+            foreach (GemColor item in avaiableTokens)
+            {
+                
+            }
+
+            return colors;
+        }
+
+        List<GemColor> ChoiceOfColor3()
+        {
+            List<GemColor> avaiableTokens = new List<GemColor>();
+
+            foreach (KeyValuePair<GemColor, int> tokens in bank.resources.gems)
+            {
+                if (tokens.Value > 0)
+                {
+                    avaiableTokens.Add(tokens.Key);
+                }
+            }
+            return avaiableTokens;
+        }
+
+        /*GemColor ChoiceOfColor()
+        {
+            GemColor output;
             Console.WriteLine("=== Wybierz kolor === ");
             Console.WriteLine("1. Biały");
             Console.WriteLine("2. Niebieski");
@@ -148,9 +187,29 @@ namespace SplendorConsole
             {
                 Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-5): ");
             }
-            return choice;
+            switch(choice)
+            {
+                case 1:
+                    output = GemColor.WHITE;
+                    break;
+                case 2:
+                    output = GemColor.BLUE;
+                    break;
+                case 3:
+                    output = GemColor.GREEN;
+                    break;
+                case 4:
+                    output = GemColor.RED;
+                    break;
+                case 5:
+                    output = GemColor.BLACK;
+                    break;
+                default:
+                    throw new ArgumentException("Coś pan odwalił");
+            }
+            return output;
 
-        }
+        }*/
 
         void SetVisibleCards()
         {

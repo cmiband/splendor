@@ -22,12 +22,20 @@ namespace SplendorConsole
         {
             throw new NotImplementedException();
         }
-        public void TakeTwoTokens(Resources resources)
+        public void TakeTwoTokens(Resources resources, GemColor color)
         {
-            throw new NotImplementedException();
+            if (resources.gems[color] >= 4)
+            {
+                this.resources.gems.Add(color, 2);
+            }
+            Console.WriteLine("Byku wybierz inny kolor");
         }
-        public void TakeThreeTokens(Resources resources)
+        public void TakeThreeTokens(Resources resources, GemColor[] colors)
         {
+            for (int i = 0; i < 3; i++)
+            {
+                if (resources.gems[colors[i]] > 0) this.resources.gems.Add(colors[i], 1);
+            }
             throw new NotImplementedException();
         }
         public Noble GetNoble(Noble noble)
