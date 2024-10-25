@@ -14,6 +14,7 @@ namespace SplendorConsole
     {
         private const string CONNECTION_ERROR_MESSAGE = "Error occured while trying to connect to web socket";
         private const string SEND_DATA_EXCEPTION_MESSAGE = "Error occured while trying to send data to web socket";
+        private const string SEND_AND_FETCH_EXCEPTION_MESSAGE = "Error occured while trying to send and fetch data from web socket";
         private const string FETCH_DATA_EXCEPTION_MESSAGE = "Error occured while trying to fetch data from web socket";
         private const string FETCH_DATA_WITH_CALLBACK_EXCEPTION_MESSAGE = "Error occured while trying to fetch data and perform callback";
         private const string DISCONNECT_ERROR_MESSAGE = "Error occured while trying to disconnect from web socket";
@@ -48,8 +49,24 @@ namespace SplendorConsole
             } 
             catch(Exception e)
             {
-                Console.WriteLine(SEND_DATA_EXCEPTION_MESSAGE + " " + e.StackTrace);
+                Console.WriteLine(SEND_DATA_EXCEPTION_MESSAGE + " " + e.Message+ " " + e.StackTrace);
             }
+        }
+
+        public async Task<string> SendAndFetchDataFromSocket(string data)
+        {
+            try
+            {
+                await this.SendDataToSocket(data);
+
+                return await this.FetchDataFromSocket();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(SEND_AND_FETCH_EXCEPTION_MESSAGE + " " + e.Message + " " + e.StackTrace);
+            }
+
+            return "";
         }
 
         public async Task<string> FetchDataFromSocket()
@@ -64,7 +81,7 @@ namespace SplendorConsole
             } 
             catch(Exception e)
             {
-                Console.WriteLine(FETCH_DATA_EXCEPTION_MESSAGE + " " + e.StackTrace);
+                Console.WriteLine(FETCH_DATA_EXCEPTION_MESSAGE + " " + e.Message + " "+ e.StackTrace);
             }
             return "";
         }
