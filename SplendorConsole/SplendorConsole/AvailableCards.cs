@@ -15,7 +15,6 @@ namespace SplendorConsole
 
         public void LoadCardsFromExcel(string filePath = "KartyWykaz.xlsx")
         {
-
             using (var workbook = new XLWorkbook(filePath))
             {
                 var worksheet = workbook.Worksheets.First();
@@ -37,7 +36,6 @@ namespace SplendorConsole
                     detailedPrice.gems[GemColor.BLACK] = int.Parse(row.Cell(9).GetString());
 
                     var card = new Card(level, bonusColor, points, illustration, detailedPrice);
-
                     AddCard(card);
                 }
             }
@@ -59,7 +57,19 @@ namespace SplendorConsole
                     throw new ArgumentException("Wrong card level!");
             }
         }
+        //dodane
+        public void Echo()
+        {
+            List<Card> allCards = new List<Card>();
+            allCards.AddRange(level1Cards);
+            allCards.AddRange(level2Cards);
+            allCards.AddRange(level3Cards);
 
+            foreach (var Card in allCards)
+            {
+                Card.Echo();
+            }
+        }
 
     }
 
