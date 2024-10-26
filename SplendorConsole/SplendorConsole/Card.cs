@@ -34,7 +34,7 @@ namespace SplendorConsole
             this.illustration = illustration;
         }
         //dodane
-        public void Echo()
+        public void Echo(bool alter)
         {
             string valuee = "";
             string price = "";
@@ -65,18 +65,34 @@ namespace SplendorConsole
             }
             price += "!";
 
-            for (int i = 0; i < color.Count; i++)
+            if (alter)
             {
-                if (price[i] != '!') valuee += $"{color[i]} = {price[i]} ";
-                else valuee += $"{color[i]} = {0} ";
+                for (int i = 0; i < color.Count; i++)
+                {
+                    if (price[i] != '!') valuee += $"{color[i]} = {price[i]} ";
+                    else valuee += $"{color[i]} = {0} ";
+                }
+                Console.WriteLine($"level: {level}");
+                Console.WriteLine($"bonus: {bonusColor}");
+                Console.WriteLine($"points: {points}");
+                Console.WriteLine($"price: {valuee}");
+                Console.WriteLine($"illustration: {illustration}");
+                Console.WriteLine();
             }
-
-            Console.WriteLine($"level: {level}");
-            Console.WriteLine($"bonus: {bonusColor}");
-            Console.WriteLine($"points: {points}");
-            Console.WriteLine($"price: {valuee}");
-            Console.WriteLine($"illustration: {illustration}");
-            Console.WriteLine();
+            else
+            {
+                for (int i = 0; i < color.Count; i++)
+                {
+                    if (price[i] != '!') valuee += price[i];
+                    else valuee += 0;
+                }
+                Console.WriteLine(level);
+                Console.WriteLine(bonusColor);
+                Console.WriteLine(points);
+                Console.WriteLine(valuee);
+                Console.WriteLine(illustration);
+                Console.WriteLine();
+            }
         }
     }
 }

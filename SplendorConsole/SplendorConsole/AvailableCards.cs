@@ -58,16 +58,28 @@ namespace SplendorConsole
             }
         }
         //dodane
-        public void Echo()
+        public void Echo(bool alter)
         {
             List<Card> allCards = new List<Card>();
             allCards.AddRange(level1Cards);
             allCards.AddRange(level2Cards);
             allCards.AddRange(level3Cards);
 
-            foreach (var Card in allCards)
+            if (alter)
             {
-                Card.Echo();
+                int i = 1;
+                foreach (var Card in allCards)
+                {
+                    Console.WriteLine($"{ i++}. karta");
+                    Card.Echo(alter);
+                }
+            }
+            else
+            {
+                foreach (var Card in allCards)
+                {
+                    Card.Echo(alter);
+                }
             }
         }
 

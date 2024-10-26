@@ -7,6 +7,9 @@ public class Program
     {
         SplendorConsole.AvailableCards card = new SplendorConsole.AvailableCards();
         card.LoadCardsFromExcel("KartyWykaz.xlsx");
-        card.Echo();
+        //wypisuje karty z informacjami co jest co
+        card.Echo(true);
+        //wypisuje same dane kart
+        card.Echo(false);
     }
 }
