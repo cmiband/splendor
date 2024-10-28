@@ -30,7 +30,7 @@ namespace SplendorConsole
                 this.resources.gems[color] += 2;
 
             }
-            this.resources.gems.Add(color,2);
+            else this.resources.gems.Add(color,2);
         }
         public void TakeThreeTokens(Resources resources, GemColor[] colors)
         {
