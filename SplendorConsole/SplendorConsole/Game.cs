@@ -10,20 +10,20 @@ namespace SplendorConsole
 {
     internal class Game
     {
-        int currentTurn = 0;
-        AvailableCards availableCards = new AvailableCards();
-        
-        List<Card> level1Shuffled = new List<Card>();
-        List<Card> level2Shuffled = new List<Card>();
-        List<Card> level3Shuffled = new List<Card>();
-        Bank bank = new Bank();
+        private int currentTurn = 0;
+        private AvailableCards availableCards = new AvailableCards();
 
-        List<Card> level1VisibleCards = new List<Card>();
-        List<Card> level2VisibleCards = new List<Card>();
-        List<Card> level3VisibleCards = new List<Card>();
+        private List<Card> level1Shuffled = new List<Card>();
+        private List<Card> level2Shuffled = new List<Card>();
+        private List<Card> level3Shuffled = new List<Card>();
+        private Bank bank = new Bank();
 
-        List<Player> listOfPlayers = new List<Player>();
-        List<Noble> listOfNobles = new List<Noble>();
+        private List<Card> level1VisibleCards = new List<Card>();
+        private List<Card> level2VisibleCards = new List<Card>();
+        private List<Card> level3VisibleCards = new List<Card>();
+
+        private List<Player> listOfPlayers = new List<Player>();
+        private List<Noble> listOfNobles = new List<Noble>();
 
         public Bank Bank
         {
