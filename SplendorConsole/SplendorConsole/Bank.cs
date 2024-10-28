@@ -12,7 +12,7 @@ namespace SplendorConsole
 
         public void TakeOutResources(int amount, GemColor color)
         {
-            resources.gems.Remove(color, out amount);
+            resources.gems[color] -= amount;
         }
     }
 }
