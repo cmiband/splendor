@@ -11,7 +11,6 @@ namespace SplendorConsole
     internal class Game
     {
         int currentTurn = 0;
-        bool endGame = false;
         AvailableCards availableCards = new AvailableCards();
         
         List<Card> level1Shuffled = new List<Card>();
@@ -117,16 +116,21 @@ namespace SplendorConsole
 
         void GameLoop(int numberOfPlayers)
         {
-            while (endGame != true)
+            while (true)
             {
                 if (currentTurn > numberOfPlayers) currentTurn = 0;
                 Turn(listOfPlayers[currentTurn]);
+
+                // więcej logiki GameLoopa
+                currentTurn += 1;
             }
         }
 
         void Turn(Player player)
         {
             ChoiceOfAction(player);
+
+            // więcej logiki w turze?
         }
 
         void ChoiceOfAction(Player player)
@@ -139,11 +143,12 @@ namespace SplendorConsole
                 Console.WriteLine("2. Weź 2 klejnoty tego samego koloru");
                 Console.WriteLine("3. Zarezerwuj kartę niedorozwoju i weź złoty klejnot");
                 Console.WriteLine("4. Kup kartę niedorozwoju lub wcześniej zarezerwowaną kartę i puść złoty klejnot");
-                Console.Write("Wprowadź numer akcji (1-4): ");
+                Console.WriteLine("5. Spasuj byczku sobie turke");
+                Console.Write("Wprowadź numer akcji (1-5): ");
 
-                while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 4)
+                while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 5)
                 {
-                    Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-4): ");
+                    Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-5): ");
                 }
 
                 switch (input)
@@ -168,9 +173,17 @@ namespace SplendorConsole
                     case 4:
                         // Logika dla kupna karty niedorozwoju
                         break;
+                    case 5:
+                        Pass();
+                        break;
                 }
-            } while (input != 4);
+            } while (input != 5);
 
+        }
+
+        void Pass()
+        {
+            //Implementacja logiki passa
         }
 
         bool TakeThreeDifferentGems(Player player)
