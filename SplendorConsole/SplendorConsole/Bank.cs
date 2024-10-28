@@ -8,6 +8,11 @@ namespace SplendorConsole
 {
     internal class Bank
     {
-        private Resources resources;
+        public Resources resources = new Resources();
+
+        public void TakeOutResources(int amount, GemColor color)
+        {
+            resources.gems[color] -= amount;
+        }
     }
 }

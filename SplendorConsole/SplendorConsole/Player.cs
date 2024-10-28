@@ -8,7 +8,7 @@ namespace SplendorConsole
 {
     internal class Player
     {
-        private Resources resources;
+        private Resources resources = new Resources();
         private Resources bonusResources;
         private Card[] hand;
         private Card[] reservedCard;
@@ -22,13 +22,27 @@ namespace SplendorConsole
         {
             throw new NotImplementedException();
         }
-        public void TakeTwoTokens(Resources resources)
+        public void TakeTwoTokens(Resources resources, GemColor color)
         {
-            throw new NotImplementedException();
+
+            if (this.resources.gems.ContainsKey(color))
+            {
+                this.resources.gems[color] += 2;
+
+            }
+            this.resources.gems.Add(color,2);
         }
-        public void TakeThreeTokens(Resources resources)
+        public void TakeThreeTokens(Resources resources, GemColor[] colors)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < 3; i++)
+            {
+                if (this.resources.gems.ContainsKey(colors[i]))
+                {
+                    this.resources.gems[colors[i]] += 1;
+
+                }
+                else this.resources.gems.Add(colors[i], 1);
+            }
         }
         public Noble GetNoble(Noble noble)
         {

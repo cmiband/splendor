@@ -9,9 +9,9 @@ namespace SplendorConsole
 {
     public class AvailableCards
     {
-        private List<Card> level1Cards = new List<Card>();
-        private List<Card> level2Cards = new List<Card>();
-        private List<Card> level3Cards = new List<Card>();
+        public List<Card> level1Cards = new List<Card>();
+        public List<Card> level2Cards = new List<Card>();
+        public List<Card> level3Cards = new List<Card>();
 
         public void LoadCardsFromExcel(string filePath = "KartyWykaz.xlsx")
         {
