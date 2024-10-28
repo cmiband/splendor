@@ -117,42 +117,78 @@ namespace SplendorConsole
 
         void ChoiceOfAction(Player player)
         {
-            GemColor color;
-            GemColor[] colors;
-            Console.WriteLine("=== Wybierz akcję do wykonania ===");
-            Console.WriteLine("1. Weź 3 klejnoty różnych kolorów");
-            Console.WriteLine("2. Weź 2 klejnoty tego samego koloru");
-            Console.WriteLine("3. Zarezerwuj kartę rozwoju i weź złoty klejnot");
-            Console.WriteLine("4. Kup kartę rozwoju lub wcześniej zarezerwowaną kartę i oddaj złoty klejnot");
-            Console.Write("Wprowadź numer akcji (1-4): ");
             int input;
-            while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 4)
+            do
             {
-                Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-4): ");
-            }
-            switch (input)
-            {
-                case 1:
-                    colors = ChoiceOfColors();
-                    player.TakeThreeTokens(bank.resources, colors);
-                    break;
-                case 2:
-                    //color = ChoiceOfColor();
-                    //player.TakeTwoTokens(bank.resources, color);
-                    break;
-            }
+                Console.WriteLine("=== Wybierz akcję do wykonania ===");
+                Console.WriteLine("1. Weź 3 klejnoty różnych kolorów");
+                Console.WriteLine("2. Weź 2 klejnoty tego samego koloru");
+                Console.WriteLine("3. Zarezerwuj kartę niedorozwoju i weź złoty klejnot");
+                Console.WriteLine("4. Kup kartę niedorozwoju lub wcześniej zarezerwowaną kartę i puść złoty klejnot");
+                Console.Write("Wprowadź numer akcji (1-4): ");
+
+                while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 4)
+                {
+                    Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-4): ");
+                }
+
+                switch (input)
+                {
+                    case 1:
+                        if (!TakeThreeDifferentGems(player))
+                        {
+                            Console.WriteLine("Spróbuj ponownie.");
+                            continue; // Wraca do wyboru akcji
+                        }
+                        break;
+                    case 2:
+                        // Logika dla wyboru 2 klejnotów tego samego koloru
+                        break;
+                    case 3:
+                        // Logika dla rezerwacji karty niedorozwoju
+                        break;
+                    case 4:
+                        // Logika dla kupna karty niedorozwoju
+                        break;
+                }
+            } while (input != 4); // Może być warunek wyjścia, jeśli potrzebny
         }
+
+        bool TakeThreeDifferentGems(Player player)
+        {
+            if (bank.resources.gems.Count < 3)
+            {
+                Console.WriteLine("Brak wystarczające ilośći klejnotów na planszy, wybierz inną akcję.");
+                return false;
+            }
+
+            GemColor[] colors = ChoiceOfColors();
+            player.TakeThreeTokens(colors);
+            for (int i = 0; i < 3; i++)
+            {
+                bank.TakeOutResources(1, colors[i]);
+            }
+            return true;
+        }
+
+
 
         GemColor[] ChoiceOfColors()
         {
             List<GemColor> avaiableTokens = ChoiceOfColor3();
             GemColor[] colors = new GemColor[3];
 
-            int i = 0;
+            int i = 1;
             Console.WriteLine("=== Wybierz kolor === ");
             foreach (GemColor item in avaiableTokens)
             {
-                
+                Console.WriteLine($"{i.} {item}");
+                i += 1;
+            }
+            for (int j = 0; j < 3; j++)
+            {
+                int input = Convert.ToInt32(Console.ReadLine());
+                colors[j] = avaiableTokens[input];
             }
 
             return colors;
@@ -171,45 +207,6 @@ namespace SplendorConsole
             }
             return avaiableTokens;
         }
-
-        /*GemColor ChoiceOfColor()
-        {
-            GemColor output;
-            Console.WriteLine("=== Wybierz kolor === ");
-            Console.WriteLine("1. Biały");
-            Console.WriteLine("2. Niebieski");
-            Console.WriteLine("3. Zielony");
-            Console.WriteLine("4. Czerwony");
-            Console.WriteLine("5. Czarny");
-            Console.Write("Wprowadź numer koloru (1-5): ");
-            int choice;
-            while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 5)
-            {
-                Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-5): ");
-            }
-            switch(choice)
-            {
-                case 1:
-                    output = GemColor.WHITE;
-                    break;
-                case 2:
-                    output = GemColor.BLUE;
-                    break;
-                case 3:
-                    output = GemColor.GREEN;
-                    break;
-                case 4:
-                    output = GemColor.RED;
-                    break;
-                case 5:
-                    output = GemColor.BLACK;
-                    break;
-                default:
-                    throw new ArgumentException("Coś pan odwalił");
-            }
-            return output;
-
-        }*/
 
         void SetVisibleCards()
         {
