@@ -25,13 +25,58 @@ namespace SplendorConsole
         List<Player> listOfPlayers = new List<Player>();
         List<Noble> listOfNobles = new List<Noble>();
 
+        public Bank Bank
+        {
+            get => bank;
+        }
+
+        public List<Card> Level1Shuffled
+        {
+            get => level1Shuffled;
+        }
+
+        public List<Card> Level2Shuffled
+        {
+            get => level2Shuffled;
+        }
+
+        public List<Card> Level3Shuffled
+        {
+            get => level3Shuffled;
+        }
+
+        public List<Card> Level1VisibleCards
+        {
+            get => level1VisibleCards;
+        }
+
+        public List<Card> Level2VisibleCards
+        {
+            get => level2VisibleCards;
+        }
+
+        public List<Card> Level3VisibleCards
+        {
+            get => level3VisibleCards;
+        }
+
+        public List<Noble> ListOfNobles
+        {
+            get => listOfNobles;
+        }
+
+        public List<Player> ListOfPlayers
+        {
+            get => listOfPlayers;
+        }
 
 
         public void GameStart()
         {
             Random random = new Random();
-            List<Player> listOfPlayers = SetNumberOfPlayers();
-            List<Noble> listOfNobles = SetNumberOfNobles(listOfPlayers.Count);
+            Console.WriteLine("aaaa");
+            listOfPlayers = SetNumberOfPlayers();
+            listOfNobles = SetNumberOfNobles(listOfPlayers.Count);
 
             level1Shuffled = Shuffling(availableCards.level1Cards, random);
             level2Shuffled = Shuffling(availableCards.level2Cards, random);
@@ -55,10 +100,18 @@ namespace SplendorConsole
         }
         List<Player> SetNumberOfPlayers()
         {
-            string input;
-            input = Console.ReadLine();
+            int numberOfPlayers;
+            do
+            {
+                Console.WriteLine("=== Podaj ilość graczy (od 2 do 4) ===");
+                string input = Console.ReadLine();
 
-            int numberOfPlayers = Convert.ToInt32(input);
+                
+                if (!int.TryParse(input, out numberOfPlayers) || numberOfPlayers < 2 || numberOfPlayers > 4)
+                {
+                    Console.WriteLine("Nieprawidłowa liczba graczy. Wprowadź wartość od 2 do 4.");
+                }
+            } while (numberOfPlayers < 2 || numberOfPlayers > 4);
 
             List<Player> players = new List<Player>();
 
@@ -69,6 +122,7 @@ namespace SplendorConsole
 
             return players;
         }
+
 
         void AddResourcesToBank(Bank bank, int numberOfPlayers)
         {
@@ -142,7 +196,11 @@ namespace SplendorConsole
                         }
                         break;
                     case 2:
-                        // Logika dla wyboru 2 klejnotów tego samego koloru
+                        if(!TakeTwoSameGems(player))
+                        {
+                            Console.WriteLine("Spróbuj ponownie.");
+                            continue; // Wraca do wyboru akcji
+                        }
                         break;
                     case 3:
                         // Logika dla rezerwacji karty niedorozwoju
@@ -151,7 +209,8 @@ namespace SplendorConsole
                         // Logika dla kupna karty niedorozwoju
                         break;
                 }
-            } while (input != 4); // Może być warunek wyjścia, jeśli potrzebny
+            } while (input != 4);
+
         }
 
         bool TakeThreeDifferentGems(Player player)
@@ -171,18 +230,51 @@ namespace SplendorConsole
             return true;
         }
 
+        bool TakeTwoSameGems(Player player)
+        {
+            GemColor color = ChoiceOfColor();
+            if (bank.resources.gems[color] < 4)
+            {
+                Console.WriteLine($"Brak wystarczające ilośći klejnotów koloru {color} na planszy, wybierz inną akcję.");
+                return false;
+            }
+            else if(bank.resources.gems.Count < 2)
+            {
+                Console.WriteLine("Brak wystarczające ilośći klejnotów na planszy, wybierz inną akcję.");
+                return false;
+            }
+            player.TakeTwoTokens(color);
+            bank.TakeOutResources(2, color);
+            return true;
+        }
 
+        GemColor ChoiceOfColor()
+        {
+            List<GemColor> avaiableTokens = ShowAvaiableTokens();
+            GemColor color;
+
+            int i = 1;
+            Console.WriteLine("=== Wybierz kolor === ");
+            foreach (GemColor item in avaiableTokens)
+            {
+                Console.WriteLine($"{i} {item}");
+                i += 1;
+            }
+            int input = Convert.ToInt32(Console.ReadLine());
+            color = avaiableTokens[input];
+            return color;
+        }
 
         GemColor[] ChoiceOfColors()
         {
-            List<GemColor> avaiableTokens = ChoiceOfColor3();
+            List<GemColor> avaiableTokens = ShowAvaiableTokens();
             GemColor[] colors = new GemColor[3];
 
             int i = 1;
             Console.WriteLine("=== Wybierz kolor === ");
             foreach (GemColor item in avaiableTokens)
             {
-                Console.WriteLine($"{i.} {item}");
+                Console.WriteLine($"{i} {item}");
                 i += 1;
             }
             for (int j = 0; j < 3; j++)
@@ -194,7 +286,7 @@ namespace SplendorConsole
             return colors;
         }
 
-        List<GemColor> ChoiceOfColor3()
+        List<GemColor> ShowAvaiableTokens()
         {
             List<GemColor> avaiableTokens = new List<GemColor>();
 
