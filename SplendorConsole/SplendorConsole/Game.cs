@@ -13,6 +13,7 @@ namespace SplendorConsole
         int currentTurn = 0;
         bool endGame = false;
         AvailableCards availableCards = new AvailableCards();
+        
         List<Card> level1Shuffled = new List<Card>();
         List<Card> level2Shuffled = new List<Card>();
         List<Card> level3Shuffled = new List<Card>();
@@ -30,51 +31,11 @@ namespace SplendorConsole
             get => bank;
         }
 
-        public List<Card> Level1Shuffled
-        {
-            get => level1Shuffled;
-        }
-
-        public List<Card> Level2Shuffled
-        {
-            get => level2Shuffled;
-        }
-
-        public List<Card> Level3Shuffled
-        {
-            get => level3Shuffled;
-        }
-
-        public List<Card> Level1VisibleCards
-        {
-            get => level1VisibleCards;
-        }
-
-        public List<Card> Level2VisibleCards
-        {
-            get => level2VisibleCards;
-        }
-
-        public List<Card> Level3VisibleCards
-        {
-            get => level3VisibleCards;
-        }
-
-        public List<Noble> ListOfNobles
-        {
-            get => listOfNobles;
-        }
-
-        public List<Player> ListOfPlayers
-        {
-            get => listOfPlayers;
-        }
-
 
         public void GameStart()
         {
+            availableCards.LoadCardsFromExcel();
             Random random = new Random();
-            Console.WriteLine("aaaa");
             listOfPlayers = SetNumberOfPlayers();
             listOfNobles = SetNumberOfNobles(listOfPlayers.Count);
 
@@ -83,7 +44,6 @@ namespace SplendorConsole
             level3Shuffled = Shuffling(availableCards.level3Cards, random);
             AddResourcesToBank(bank, listOfPlayers.Count);
             SetVisibleCards();
-
         }
 
         List<Noble> SetNumberOfNobles(int numberOfPlayers)
@@ -199,7 +159,7 @@ namespace SplendorConsole
                         if(!TakeTwoSameGems(player))
                         {
                             Console.WriteLine("Spróbuj ponownie.");
-                            continue; // Wraca do wyboru akcji
+                            continue; 
                         }
                         break;
                     case 3:
@@ -304,21 +264,24 @@ namespace SplendorConsole
         {
             for (int i = 0; i < 4; i++)
             {
-                level1VisibleCards.Add(level1Shuffled[i]);
-                level2VisibleCards.Add(level2Shuffled[i]);
-                level3VisibleCards.Add(level3Shuffled[i]);
+                level1VisibleCards.Add(level1Shuffled[0]);
+                level2VisibleCards.Add(level2Shuffled[0]);
+                level3VisibleCards.Add(level3Shuffled[0]);
+
+                level1Shuffled.RemoveAt(0);
+                level2Shuffled.RemoveAt(0);
+                level3Shuffled.RemoveAt(0);
             }
         }
 
         List<Card> Shuffling(List<Card> lista, Random random)
         {
-            List<Card> wylosowaneKarty = new List<Card>();
+           List<Card> wylosowaneKarty = new List<Card>();
             
            for(int i = 0; i < lista.Count; i++)
            {
-            int index = random.Next(lista.Count);
-            wylosowaneKarty.Add(lista[index]);
-            lista.RemoveAt(index);               
+                int index = random.Next(lista.Count);
+                wylosowaneKarty.Add(lista[index]);
            }
 
            return wylosowaneKarty;
