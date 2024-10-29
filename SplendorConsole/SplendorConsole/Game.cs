@@ -33,6 +33,7 @@ namespace SplendorConsole
 
         public void GameStart()
         {
+            
             availableCards.LoadCardsFromExcel();
             Random random = new Random();
             listOfPlayers = SetNumberOfPlayers();
@@ -43,6 +44,7 @@ namespace SplendorConsole
             level3Shuffled = Shuffling(availableCards.level3Cards, random);
             AddResourcesToBank(bank, listOfPlayers.Count);
             SetVisibleCards();
+            Console.WriteLine("###########################START GRY TEGO TYPU###########################");
             GameLoop(listOfPlayers.Count);
         }
 
@@ -60,22 +62,9 @@ namespace SplendorConsole
         }
         List<Player> SetNumberOfPlayers()
         {
-            int numberOfPlayers;
-            do
-            {
-                Console.WriteLine("=== Podaj ilość graczy (od 2 do 4) ===");
-                string input = Console.ReadLine();
-
-                
-                if (!int.TryParse(input, out numberOfPlayers) || numberOfPlayers < 2 || numberOfPlayers > 4)
-                {
-                    Console.WriteLine("Nieprawidłowa liczba graczy. Wprowadź wartość od 2 do 4.");
-                }
-            } while (numberOfPlayers < 2 || numberOfPlayers > 4);
-
             List<Player> players = new List<Player>();
 
-            for (int i = 0; i < numberOfPlayers; i++)
+            for (int i = 0; i < 4; i++)
             {
                 players.Add(new Player());
             }
@@ -162,7 +151,6 @@ namespace SplendorConsole
                         if (actionSuccess)
                             break; // Jeśli operacja się powiedzie, wychodzimy z wewnętrznej pętli
 
-                        Console.WriteLine("Spróbuj ponownie.");
                     }
                     break;
 
@@ -173,7 +161,6 @@ namespace SplendorConsole
                         if (actionSuccess)
                             break;
 
-                        Console.WriteLine("Spróbuj ponownie.");
                     }
                     break;
 
