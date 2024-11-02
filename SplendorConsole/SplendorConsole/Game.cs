@@ -38,13 +38,14 @@ namespace SplendorConsole
             Random random = new Random();
             listOfPlayers = SetNumberOfPlayers();
             listOfNobles = SetNumberOfNobles(listOfPlayers.Count);
-
+            
             level1Shuffled = Shuffling(availableCards.level1Cards, random);
-            level2Shuffled = Shuffling(availableCards.level2Cards, random);
+            level2Shuffled = Shuffling(availableCards.level2Cards, random);                    
             level3Shuffled = Shuffling(availableCards.level3Cards, random);
+            
+           
             AddResourcesToBank(bank, listOfPlayers.Count);
-            SetVisibleCards();
-            Console.WriteLine("###########################START GRY TEGO TYPU###########################");
+            SetVisibleCards();          
             GameLoop(listOfPlayers.Count);
         }
 
@@ -339,24 +340,20 @@ namespace SplendorConsole
                 level1VisibleCards.Add(level1Shuffled[0]);
                 level2VisibleCards.Add(level2Shuffled[0]);
                 level3VisibleCards.Add(level3Shuffled[0]);
-
-                level1Shuffled.RemoveAt(0);
-                level2Shuffled.RemoveAt(0);
-                level3Shuffled.RemoveAt(0);
             }
         }
 
-        List<Card> Shuffling(List<Card> lista, Random random)
+        List<Card> Shuffling(List<Card> deck, Random random)
         {
-           List<Card> wylosowaneKarty = new List<Card>();
-            
-           for(int i = 0; i < lista.Count; i++)
-           {
-                int index = random.Next(lista.Count);
-                wylosowaneKarty.Add(lista[index]);
-           }
+            for (int i = deck.Count - 1; i > 0; i--)
+            {
+                int j = random.Next(i + 1);
 
-           return wylosowaneKarty;
+                Card temporary = deck[i];
+                deck[i] = deck[j];
+                deck[j] = temporary;
+            }
+            return deck;
         }
     }
 }

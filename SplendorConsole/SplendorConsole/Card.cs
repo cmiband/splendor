@@ -24,6 +24,11 @@ namespace SplendorConsole
             get { return detailedPrice; }
         }
 
+        public GemColor BonusColor
+        {
+            get => bonusColor;
+        }
+
         public Card(int level, GemColor bonusColor, int points, string illustration, Resources detailedPrice)
         {
             this.detailedPrice = detailedPrice;
