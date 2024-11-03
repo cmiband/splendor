@@ -44,14 +44,87 @@ namespace SplendorConsole
                 else this.resources.gems.Add(colors[i], 1);
             }
         }
-        public Noble GetNoble(Noble noble)
+
+        public void GettingNobles()
         {
-            throw new NotImplementedException();
+            if(CanGetMultipleNobles()==false)
+            {
+                foreach(Noble noble in VisibleNobles)
+                    if(CanGetNoble(noble))
+                        GetNoble(noble);
+            }
+            else
+            {
+                int[] AvailableIndexNobles=new Resources();
+                for(int i=0;i<VisibleNobles.Length;i++)
+                {
+                    Noble noble = VisibleNobles[i]
+                    if(CanGetNoble(noble))
+                        AvailableIndexNobles.Add(i);
+                }
+
+                Console.WriteLine("Arystokraci, których możesz zdobyć: ");
+                for int i=0;i<AvailableIndexNobles.Length;i++)
+                    Console.WriteLine(AvailableIndexNobles[i]);
+
+
+                bool IsChoiceMade=false;
+                while(IsChoiceMade==false)
+                {   
+                    try
+                    {
+                        Console.WriteLine("Wybierz arystokratę: ");
+                        choice = int.Parse(Console.ReadLine());
+                        IsChoiceMade=true;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Niepoprawny numer, podaj jeszcze raz");
+                    }
+                }
+
+                Noble playerChoice = VisibleNobles[choice];
+                GetNoble(playerChoice);
+                
         }
+        
+        public void GetNoble(Noble noble)
+        {
+                nobles.Add(noble);
+                Board.VisibleNobles.Remove(noble);
+                points+=noble.points;
+        }
+
+        public bool CanGetMultipleNobles()
+        {
+            int counter=0;
+            foreach(Noble noble in VisibleNobles)
+            {
+                if(CanGetNoble(noble))
+                    counter++;
+            }
+
+            if(counter>1)
+                return true;
+            else
+                return false;
+        }
+        
         public bool CanGetNoble(Noble noble)
         {
-            throw new NotImplementedException();
+            foreach (GetColor color in noble.requiredBonuses)
+            {
+                if(noble.requiredBonuses[color]<=bonusRecourses[color])
+                {
+                    continue;
+                }
+                else
+                    return false;
+            }
+            return true;
         }
+
+                    
         public bool CanAffordCard(Card card)
         {
             throw new NotImplementedException();
