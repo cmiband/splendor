@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +9,12 @@ namespace SplendorConsole
     internal class Board
     {
         private Noble[] nobles;
+        private Noble[] visibleNobles;
+        public Noble[] VisibleNobles
+        {
+            get=>visibleNobles;
+            set=>visibleNobles = value;
+        }
         private Stack<Card> level1Deck = new Stack<Card>();
         private Stack<Card> level2Deck = new Stack<Card>();
         private Stack<Card> level3Deck = new Stack<Card>();
