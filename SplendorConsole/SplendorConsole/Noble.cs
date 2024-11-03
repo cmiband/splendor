@@ -10,5 +10,6 @@ namespace SplendorConsole
     {
         private int points;
         private Resources requiredBonuses;
+        private string illustration;
     }
 }
