@@ -9,8 +9,8 @@ namespace SplendorConsole
     internal class Board
     {
         private Noble[] nobles;
-        private Noble[] visibleNobles;
-        public Noble[] VisibleNobles
+        private static Noble[] visibleNobles;
+        public static Noble[] VisibleNobles
         {
             get=>visibleNobles;
             set=>visibleNobles = value;
