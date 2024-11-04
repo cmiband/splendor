@@ -15,17 +15,6 @@ namespace SplendorConsole
         private Card[] reservedCard;
         private Noble[] nobles;
         private int points;
-
-        public Player(Resources resources, Resources bonusResources, Card[] hand, Card[] reservedCard, Noble[] nobles, int points)
-        {
-            this.resources = resources;
-            this.bonusResources = bonusResources;
-            this.hand = hand;
-            this.reservedCard = reservedCard;
-            this.nobles = nobles;
-            this.points = points;
-        }
-
         public void BuyCard(Card card)
         {
             throw new NotImplementedException();
