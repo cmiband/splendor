@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SplendorConsole
 {
-    public class Noble:IEnumerable<Resources>
+    public class Noble
     {
         private int points;
         public int Points
@@ -24,14 +24,5 @@ namespace SplendorConsole
         }
         private string illustration;
 
-        public IEnumerator<Resources> GetEnumerator()
-        {
-            return (IEnumerator<Resources>)requiredBonuses.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
     }
 }
