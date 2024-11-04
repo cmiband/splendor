@@ -49,7 +49,7 @@ namespace SplendorConsole
             GameLoop(listOfPlayers.Count);
         }
 
-        List<Noble> SetNumberOfNobles(int numberOfPlayers)
+        private List<Noble> SetNumberOfNobles(int numberOfPlayers)
         {
             int numberOfNobles = numberOfPlayers + 1;
             List<Noble> nobles = new List<Noble>();
@@ -61,7 +61,7 @@ namespace SplendorConsole
 
             return nobles;
         }
-        List<Player> SetNumberOfPlayers()
+        private List<Player> SetNumberOfPlayers()
         {
             List<Player> players = new List<Player>();
 
@@ -74,7 +74,7 @@ namespace SplendorConsole
         }
 
 
-        void AddResourcesToBank(Bank bank, int numberOfPlayers)
+        private void AddResourcesToBank(Bank bank, int numberOfPlayers)
         {
             if (numberOfPlayers == 2)
             {
@@ -105,7 +105,7 @@ namespace SplendorConsole
             }
         }
 
-        void GameLoop(int numberOfPlayers)
+        private void GameLoop(int numberOfPlayers)
         {
             while (true)
             {
@@ -118,14 +118,14 @@ namespace SplendorConsole
             }
         }
 
-        void Turn(Player player)
+        private void Turn(Player player)
         {
             ChoiceOfAction(player);
 
             // więcej logiki w turze?
         }
 
-        void ChoiceOfAction(Player player)
+        private void ChoiceOfAction(Player player)
         {
             int input;
             bool actionSuccess;
@@ -181,13 +181,13 @@ namespace SplendorConsole
 
         }
 
-        void Pass()
+        private void Pass()
         {
             //Implementacja logiki passa
             throw new NotImplementedException();
         }
 
-        bool TakeThreeDifferentGems(Player player)
+        private bool TakeThreeDifferentGems(Player player)
         {
             if (bank.resources.gems.Count < 3)
             {
@@ -204,7 +204,7 @@ namespace SplendorConsole
             return true;
         }
 
-        bool TakeTwoSameGems(Player player)
+        private bool TakeTwoSameGems(Player player)
         {
             bool hasSufficientGems = false;
             foreach (var gem in bank.resources.gems)
@@ -241,7 +241,7 @@ namespace SplendorConsole
         }
 
 
-        GemColor ChoiceOfColor()
+        private GemColor ChoiceOfColor()
         {
             List<GemColor> availableTokens = ShowAvaiableTokens();
             GemColor color;
@@ -272,7 +272,7 @@ namespace SplendorConsole
         }
 
 
-        GemColor[] ChoiceOfColors()
+        private GemColor[] ChoiceOfColors()
         {
             List<GemColor> availableTokens = ShowAvaiableTokens();
             GemColor[] colors = new GemColor[3];
@@ -319,7 +319,7 @@ namespace SplendorConsole
         }
 
 
-        List<GemColor> ShowAvaiableTokens()
+        private List<GemColor> ShowAvaiableTokens()
         {
             List<GemColor> avaiableTokens = new List<GemColor>();
 
@@ -333,7 +333,7 @@ namespace SplendorConsole
             return avaiableTokens;
         }
 
-        void SetVisibleCards()
+        private void SetVisibleCards()
         {
             for (int i = 0; i < 4; i++)
             {
@@ -341,13 +341,13 @@ namespace SplendorConsole
                 level2VisibleCards.Add(level2Shuffled[0]);
                 level3VisibleCards.Add(level3Shuffled[0]);
 
-                level1Shuffled.RemoveAt[0];
-                level2Shuffled.RemoveAt[0];
-                level3Shuffled.RemoveAt[0];
+                level1Shuffled.RemoveAt(0);
+                level2Shuffled.RemoveAt(0);
+                level3Shuffled.RemoveAt(0);
             }
         }
 
-        List<Card> Shuffling(List<Card> deck, Random random)
+        private List<Card> Shuffling(List<Card> deck, Random random)
         {
             for (int i = deck.Count - 1; i > 0; i--)
             {
