@@ -1,4 +1,5 @@
-﻿using System;
+using DocumentFormat.OpenXml.Presentation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,7 +31,7 @@ namespace SplendorConsole
                 this.resources.gems[color] += 2;
 
             }
-            else this.resources.gems.Add(color,2);
+            else this.resources.gems.Add(color, 2);
         }
         public void TakeThreeTokens(Resources resources, GemColor[] colors)
         {
@@ -44,14 +45,109 @@ namespace SplendorConsole
                 else this.resources.gems.Add(colors[i], 1);
             }
         }
-        public Noble GetNoble(Noble noble)
+
+        public void GettingNobles()
         {
-            throw new NotImplementedException();
+            if (CanGetMultipleNobles() == false)
+            {
+                foreach (Noble noble in Board.VisibleNobles)
+                    if (CanGetNoble(noble))
+                        GetNoble(noble);
+            }
+            else
+            {
+                List<int> AvailableIndexNobles = new List<int>();
+                for (int i = 0; i < Board.VisibleNobles.Length; i++)
+                {
+                    Noble noble = Board.VisibleNobles[i];
+                    if (CanGetNoble(noble))
+                        AvailableIndexNobles.Add(i);
+                }
+
+                Console.WriteLine("Arystokraci, których możesz zdobyć: ");
+                for (int i = 0; i < AvailableIndexNobles.Count; i++)
+                    Console.WriteLine(AvailableIndexNobles[i]);
+
+
+                bool IsChoiceMade = false;
+                int choice=0;
+                while (IsChoiceMade == false)
+                {
+                    try
+                    {
+                        Console.WriteLine("Wybierz arystokratę: ");
+                        choice = int.Parse(Console.ReadLine());
+                        IsChoiceMade = true;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Niepoprawny numer, podaj jeszcze raz");
+                    }
+                }
+
+                Noble playerChoice = Board.VisibleNobles[choice];
+                GetNoble(playerChoice);
+
+            }
+
         }
+        public void GetNoble(Noble noble)
+        {
+            for(int i=0;i<nobles.Length;i++)
+            {
+                if (nobles[i] == null)
+                    nobles[i] = noble;
+            }
+
+            Noble[] CopiedVisibleNobles = new Noble[Board.VisibleNobles.Length - 1];
+            int j = 0;
+            for(int i=0;i<Board.VisibleNobles.Length;i++)
+            {
+                if (Board.VisibleNobles[i] != noble)
+                {
+                    CopiedVisibleNobles[j] = Board.VisibleNobles[i];
+                    j++;
+                }
+            }
+
+            Array.Copy(CopiedVisibleNobles, Board.VisibleNobles, CopiedVisibleNobles.Length);
+
+
+            points += noble.Points;
+        }
+
+        public bool CanGetMultipleNobles()
+        {
+            int counter = 0;
+            foreach (Noble noble in Board.VisibleNobles)
+            {
+                if (CanGetNoble(noble))
+                    counter++;
+            }
+
+            if (counter > 1)
+                return true;
+            else
+                return false;
+        }
+
         public bool CanGetNoble(Noble noble)
         {
-            throw new NotImplementedException();
+            foreach (var requiredBonus in noble.RequiredBonuses)
+            {
+                GemColor color = requiredBonus.Key;
+                int requiredAmount = requiredBonus.Value;
+
+                if (noble.RequiredBonuses.gems[color] <= bonusResources.gems[color])
+                {
+                    continue;
+                }
+                else
+                    return false;
+            }
+            return true;
         }
+
         public bool CanAffordCard(Card card)
         {
             throw new NotImplementedException();
@@ -60,6 +156,5 @@ namespace SplendorConsole
         {
             throw new NotImplementedException();
         }
-
     }
 }
