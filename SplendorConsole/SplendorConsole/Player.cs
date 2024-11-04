@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Presentation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -11,14 +12,101 @@ namespace SplendorConsole
     {
         private Resources resources = new Resources();
         private Resources bonusResources = new Resources();
-        private Card[] hand;
+        private List<Card> hand;
         private Card[] reservedCard;
         private Noble[] nobles;
         private int points;
-        public void BuyCard(Card card)
+        public Player()
         {
-            throw new NotImplementedException();
+            hand = new List<Card>();
         }
+        public void BuyCard(Board board, Card card, Bank bank)
+        {
+            Console.WriteLine("Czy chcesz użyć złotego żetonu aby zapłacić za kartę?");
+            Console.WriteLine("1 - Tak");
+            Console.WriteLine("2 - Nie");
+            var choiceForGolden = WantToSpendGoldCoin();
+            GemColor colorOfChoice = GemColor.NONE;
+            if (choiceForGolden)
+            {
+                colorOfChoice = ColorToBePaidWithGolden();
+            }
+            if (!CanAffordCardWithGolden(card) && !CanAffordCard(card))
+            {
+                Console.WriteLine("Nie stać cię na tą kartę.");
+                return;
+            }
+            var cardToBuyLevel = card.Level;
+            int indexInVisibleCards;
+            if (cardToBuyLevel == 1)
+            {
+                indexInVisibleCards = GetIndex(card, board.Level1VisibleCards);
+                if (indexInVisibleCards == -1)
+                {
+                    Console.WriteLine("Karta nie jest widoczna na stole.");
+                    return;
+                }
+
+                var cardPrice = card.DetailedPrice.gems;
+
+                foreach (var colorOnCard in cardPrice)
+                {
+                    GemColor color = colorOnCard.Key;
+                    int requiredAmount = colorOnCard.Value;
+                    int bonusAmount = this.bonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+
+                    if (bonusAmount > 0)
+                    {
+                        int amountToUse = Math.Min(bonusAmount, requiredAmount);
+                        this.bonusResources.gems[color] -= amountToUse;
+                        requiredAmount -= amountToUse;
+                    }
+                    if (requiredAmount > 0)
+                    {
+                        int playerAmount = this.resources.gems.TryGetValue(color, out var player) ? player : 0;
+
+                        if (playerAmount >= requiredAmount)
+                        {
+                            this.resources.gems[color] -= requiredAmount;
+                        }
+                        else
+                        {
+                            int deficit = requiredAmount - playerAmount;
+
+                            if (choiceForGolden && colorOfChoice == color)
+                            {
+                                int goldenTokens = this.resources.gems.TryGetValue(GemColor.GOLDEN, out var golden) ? golden : 0;
+
+                                if (goldenTokens >= deficit)
+                                {
+                                    this.resources.gems[GemColor.GOLDEN] -= deficit;
+                                }
+                            }
+                        }
+                    }
+                }
+                AddCardToPlayer(card);
+                board.ReplaceMissingCard(cardToBuyLevel);
+                this.bonusResources.AddResource(card.BonusColor);
+                this.points += card.Points;
+
+            }
+            if (cardToBuyLevel == 2)
+            {
+                indexInVisibleCards = GetIndex(card, board.Level2VisibleCards);
+            }
+            if (cardToBuyLevel == 3)
+            {
+                indexInVisibleCards = GetIndex(card, board.Level3VisibleCards);
+            }        
+
+        }
+        private void AddCardToPlayer(Card card)
+        {
+            hand.Add(card);
+            Console.WriteLine($"Dodano kartę z następującą liczbą punktów: {card.Points}");
+        }
+
         public void ReserveCard(Card card)
         {
             throw new NotImplementedException();
@@ -55,14 +143,10 @@ namespace SplendorConsole
         }
         public bool CanAffordCard(Card card)
         {
-            var price = card.DetailedPrice.gems;
+            var cardPrice = card.DetailedPrice.gems;
             var playerResources = this.resources.gems;
             var playerBonuses = this.bonusResources.gems;
-            var wantToSpendGoldCoins = WantToSpendGoldCoin();
-
-            int goldTokens = playerResources.ContainsKey(GemColor.GOLDEN) ? playerResources[GemColor.GOLDEN] : 0;
-
-            foreach (var colorOnCard in price)
+            foreach (var colorOnCard in cardPrice)
             {
                 GemColor color = colorOnCard.Key;
                 int requiredAmount = colorOnCard.Value;
@@ -71,16 +155,40 @@ namespace SplendorConsole
                 int bonusAmount = playerBonuses.ContainsKey(color) ? playerBonuses[color] : 0;
                 int totalPlayersCoins = playerAmount + bonusAmount;
 
-                if (wantToSpendGoldCoins && totalPlayersCoins<requiredAmount)
-                {
-                    int deficit = requiredAmount - totalPlayersCoins;
-                    if (goldTokens>=deficit)
-                        goldTokens -=deficit;
-                    else
-                        return false;
-                }
-                if (!wantToSpendGoldCoins && totalPlayersCoins < requiredAmount)
+                if (totalPlayersCoins < requiredAmount)
                     return false;
+            }
+            return true;
+        }
+        public bool CanAffordCardWithGolden(Card card)
+        {
+            var cardPrice = card.DetailedPrice.gems;
+            var playerResources = this.resources.gems;
+            var playerBonuses = this.bonusResources.gems;
+            var wantToSpendGoldCoins = WantToSpendGoldCoin();
+
+            int goldTokens = playerResources.ContainsKey(GemColor.GOLDEN) ? playerResources[GemColor.GOLDEN] : 0;
+
+            foreach (var colorOnCard in cardPrice)
+            {
+                GemColor color = colorOnCard.Key;
+                int requiredAmount = colorOnCard.Value;
+
+                int playerAmount = playerResources.ContainsKey(color) ? playerResources[color] : 0; ;
+                int bonusAmount = playerBonuses.ContainsKey(color) ? playerBonuses[color] : 0;
+                int totalPlayersCoins = playerAmount + bonusAmount;
+
+                if (totalPlayersCoins < requiredAmount)
+                {
+                    if (wantToSpendGoldCoins)
+                    {
+                        int deficit = requiredAmount - totalPlayersCoins;
+                        if (goldTokens >= deficit)
+                            goldTokens -= deficit;
+                        else
+                            return false;
+                    }
+                }
             }
             return true;
         }
@@ -90,18 +198,47 @@ namespace SplendorConsole
         }
         public bool WantToSpendGoldCoin()
         {
-            Console.WriteLine("Czy chcesz użyć złotego żetonu aby płacić za kartę?");
-            Console.WriteLine("1 - Tak");
-            Console.WriteLine("2 - Nie");
-            var wantTo = Convert.ToInt32(Console.ReadLine());
+            int wantTo;
             while (true)
             {
+                wantTo = Convert.ToInt32(Console.ReadLine());
                 if (wantTo == 2)
                     return false;
                 else if (wantTo == 1)
                     return true;
                 else
-                    Console.WriteLine("Podano zły klawisz. 1 lub 2");
+                    Console.WriteLine("Podano zły klawisz. Podaj 1 lub 2");
+            }
+        }
+        public int GetIndex(Card card, Card[] cardsOnTable)
+        {
+            for (int i = 0; i < cardsOnTable.Length-1; i++)
+            {
+                if (card.Equals(cardsOnTable[i]))
+                    return i;
+            }
+            return -1;
+        }
+        public GemColor ColorToBePaidWithGolden()
+        {
+            Console.WriteLine("Podaj kolor żetonu, zamiast którego użyjesz złotego żetonu:");
+            Console.WriteLine("Opcje do wyboru: ");
+
+            foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+            {
+                if (color != GemColor.GOLDEN)
+                {
+                    Console.WriteLine($"- {color}");
+                }
+            }
+            int input;
+            while (true)
+            {
+                Console.Write("Wprowadź numer koloru: ");
+                if (int.TryParse(Console.ReadLine(), out input) && input > 0 && input <= Enum.GetValues(typeof(GemColor)).Length - 1)
+                    return (GemColor)(input - 1);
+                else
+                    Console.WriteLine("Niepoprawny wybór. Wprowadź numer odpowiadający dostępnym kolorom.");
             }
         }
     }

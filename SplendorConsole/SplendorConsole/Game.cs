@@ -341,9 +341,9 @@ namespace SplendorConsole
                 level2VisibleCards.Add(level2Shuffled[0]);
                 level3VisibleCards.Add(level3Shuffled[0]);
 
-                level1Shuffled.RemoveAt[0];
-                level2Shuffled.RemoveAt[0];
-                level3Shuffled.RemoveAt[0];
+                level1Shuffled.RemoveAt(0);
+                level2Shuffled.RemoveAt(0);
+                level3Shuffled.RemoveAt(0);
             }
         }
 
