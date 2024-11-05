@@ -13,6 +13,7 @@ namespace SplendorConsole
         GREEN,
         RED,
         BLACK,
-        GOLDEN
+        GOLDEN,
+        NONE
     }
 }
