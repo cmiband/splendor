@@ -117,21 +117,96 @@ namespace SplendorConsole
 
         void GameLoop(int numberOfPlayers)
         {
-            while (true)
+            bool gameInProgress = true;
+            while (gameInProgress)
             {
                 Console.WriteLine($"-----------------Aktualna kolejka należy do gracza {currentTurn}-----------------------");
                 Turn(listOfPlayers[currentTurn]);
 
                 // więcej logiki GameLoopa
                 currentTurn = (currentTurn + 1) % numberOfPlayers;
-
+                if (currentTurn==0)
+                {
+                    int winnersCount = 0;
+                    List<Player> winners = new List<Player>();
+                    foreach(Player player in listOfPlayers)
+                    {
+                        player.PointsCounter();
+                        if(CheckIfWinner(player))
+                        {
+                            winnersCount++;
+                            winners.Add(player);
+                        }
+                    }
+                    if(winnersCount==1)
+                    {
+                        Console.WriteLine($"Zwycięzca to gracz: {listOfPlayers.IndexOf(winners[0])}");
+                        Console.WriteLine($"Jego liczba punktów to: {winners[0].Points}");
+                        gameInProgress = false;
+                    }
+                    else if(winnersCount>1)
+                    {
+                        winnersCount = 0;
+                        int winnersPoints = 0;
+                        int playerIndex = 0;
+                        foreach(Player player in winners)
+                        {
+                            if (player.Points == winnersPoints) winnersCount++;
+                            if(player.Points > winnersPoints)
+                            {
+                                winnersPoints = player.Points;
+                                winnersCount = 1;
+                                playerIndex = listOfPlayers.IndexOf(player);
+                            }
+                        }
+                        if(winnersCount==1)
+                        {
+                            Console.WriteLine($"Zwycięzca to gracz: {playerIndex}");
+                            Console.WriteLine($"Jego liczba punktów to: {listOfPlayers[playerIndex].Points}");
+                        }
+                        else
+                        {
+                            Player OfficialWinner = MoreThan1Winner(winners);
+                            Console.WriteLine($"Zwycięzca to gracz: {listOfPlayers.IndexOf(OfficialWinner)}");
+                            Console.WriteLine($"Jego liczba punktów to: {OfficialWinner.Points}");
+                        }
+                        gameInProgress = false;
+                    }
+                }
             }
+            Console.WriteLine("Koniec gry :)");
         }
-
+        Player MoreThan1Winner(List<Player> winners)
+        {
+            int minimum = 100;
+            int playerIndex = 0;
+            int winnersCount = 0;
+            foreach(Player player in winners)
+            {
+                int cardsCount = player.hand.Count;
+                if (cardsCount == minimum) winnersCount++;
+                if(cardsCount < minimum )
+                {
+                    minimum = cardsCount;
+                    playerIndex = winners.IndexOf(player);
+                    winnersCount = 1;
+                }
+            }
+            if (winnersCount == 1)
+            {
+                return winners[playerIndex];
+            }
+            else throw new Exception("Remis");
+        }
+        bool CheckIfWinner(Player player)
+        {
+            player.PointsCounter();
+            if (player.Points >= 15) return true;
+            else return false;
+        }
         void Turn(Player player)
         {
             ChoiceOfAction(player);
-
             // więcej logiki w turze?
         }
 
@@ -189,8 +264,6 @@ namespace SplendorConsole
                     Pass();
                     break;
             }
-
-
         }
 
         void Pass()

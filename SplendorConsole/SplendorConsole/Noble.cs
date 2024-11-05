@@ -9,6 +9,10 @@ namespace SplendorConsole
     public class Noble
     {
         private int points;
+        public int Points
+        {
+            get => points;
+        }
         private Resources requiredBonuses;
     }
 }
