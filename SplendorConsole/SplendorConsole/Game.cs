@@ -17,6 +17,7 @@ namespace SplendorConsole
         private List<Card> level2Shuffled = new List<Card>();
         private List<Card> level3Shuffled = new List<Card>();
         private Bank bank = new Bank();
+        private Board board;
 
         private List<Card> level1VisibleCards = new List<Card>();
         private List<Card> level2VisibleCards = new List<Card>();
@@ -29,6 +30,7 @@ namespace SplendorConsole
         {
             get => bank;
         }
+        public Board Board { get => board; }
 
 
         public void GameStart()
@@ -45,7 +47,8 @@ namespace SplendorConsole
             
            
             AddResourcesToBank(bank, listOfPlayers.Count);
-            SetVisibleCards();          
+            SetVisibleCards();
+            board = new Board(level1VisibleCards, level2VisibleCards, level3VisibleCards);
             GameLoop(listOfPlayers.Count);
         }
 
@@ -246,8 +249,8 @@ namespace SplendorConsole
                     throw new NotImplementedException();
 
                 case 4:
-                    // Logika dla kupna karty niedorozwoju
-                    throw new NotImplementedException();
+                    player.BuyCardAction(this.board, this.bank);
+                    break;
 
                 case 5:
                     Pass();
