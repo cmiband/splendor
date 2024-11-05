@@ -38,16 +38,19 @@ namespace SplendorConsole
             }
             return hash;
         }
+        public override string ToString()
+        {
+            return string.Join(", ", gems.Select(gem => $"{gem.Key}: {gem.Value}"));
+        }
         public void AddResource(GemColor color)
         {
-            // Sprawdzenie, czy gracz już ma zasób tego koloru
             if (gems.ContainsKey(color))
             {
-                gems[color] += 1; // Dodajemy 1 do istniejącej ilości
+                gems[color] += 1;
             }
             else
             {
-                gems[color] = 1; // Tworzymy nowy wpis z 1 jednostką
+                gems[color] = 1;
             }
 
             Console.WriteLine($"Dodano 1 zasób koloru {color}. Łączna ilość: {gems[color]}.");

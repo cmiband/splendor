@@ -55,6 +55,10 @@ namespace SplendorConsole
         {
             return HashCode.Combine(level, bonusColor, points, illustration, detailedPrice);
         }
-
+        public override string ToString()
+        {
+            string priceDescription = DetailedPrice.ToString();
+            return $"Karta koloru: {bonusColor}, cena: {priceDescription}, dodająca {points} punktów.";
+        }
     }
 }
