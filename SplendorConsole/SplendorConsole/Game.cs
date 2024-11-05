@@ -79,33 +79,14 @@ namespace SplendorConsole
 
         private void AddResourcesToBank(Bank bank, int numberOfPlayers)
         {
-            if (numberOfPlayers == 2)
+            
+            foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
             {
-                foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
-                {
-                    if (color == GemColor.GOLDEN) break;
-                    bank.resources.gems.Add(color, 4);
-                }
-                bank.resources.gems.Add(GemColor.GOLDEN, 5);
+                if (color == GemColor.GOLDEN || color == GemColor.NONE) break;
+                bank.resources.gems.Add(color, 7);
             }
-            if (numberOfPlayers == 3)
-            {
-                foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
-                {
-                    if (color == GemColor.GOLDEN) break;
-                    bank.resources.gems.Add(color, 5);
-                }
-                bank.resources.gems.Add(GemColor.GOLDEN, 5);
-            }
-            if (numberOfPlayers == 4)
-            {
-                foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
-                {
-                    if (color == GemColor.GOLDEN) break;
-                    bank.resources.gems.Add(color, 7);
-                }
-                bank.resources.gems.Add(GemColor.GOLDEN, 5);
-            }
+            bank.resources.gems.Add(GemColor.GOLDEN, 5);
+            
         }
 
         private void GameLoop(int numberOfPlayers)
@@ -209,54 +190,52 @@ namespace SplendorConsole
             int input;
             bool actionSuccess;
 
-            Console.WriteLine("=== Wybierz akcję do wykonania ===");
-            Console.WriteLine("1. Weź 3 klejnoty różnych kolorów");
-            Console.WriteLine("2. Weź 2 klejnoty tego samego koloru");
-            Console.WriteLine("3. Zarezerwuj kartę niedorozwoju i weź złoty klejnot");
-            Console.WriteLine("4. Kup kartę niedorozwoju lub wcześniej zarezerwowaną kartę i puść złoty klejnot");
-            Console.WriteLine("5. Spasuj byczku sobie turke");
-            Console.Write("Wprowadź numer akcji (1-5): ");
-
-            while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 5)
+            do
             {
-                Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-5): ");
-            }
+                Console.WriteLine("=== Wybierz akcję do wykonania ===");
+                Console.WriteLine("1. Weź 3 klejnoty różnych kolorów");
+                Console.WriteLine("2. Weź 2 klejnoty tego samego koloru");
+                Console.WriteLine("3. Zarezerwuj kartę niedorozwoju i weź złoty klejnot");
+                Console.WriteLine("4. Kup kartę niedorozwoju lub wcześniej zarezerwowaną kartę i puść złoty klejnot");
+                Console.WriteLine("5. Spasuj byczku sobie turke");
+                Console.Write("Wprowadź numer akcji (1-5): ");
 
-            switch (input)
-            {
-                case 1:
-                    while (true)
-                    {
+                while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 5)
+                {
+                    Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-5): ");
+                }
+
+ 
+                actionSuccess = false;
+
+                switch (input)
+                {
+                    case 1:
                         actionSuccess = TakeThreeDifferentGems(player);
-                        if (actionSuccess)
-                            break; // Jeśli operacja się powiedzie, wychodzimy z wewnętrznej pętli
+                        break;
 
-                    }
-                    break;
-
-                case 2:
-                    while (true)
-                    {
+                    case 2:
                         actionSuccess = TakeTwoSameGems(player);
-                        if (actionSuccess)
-                            break;
+                        break;
 
-                    }
-                    break;
+                    case 3:
+                        
+                        throw new NotImplementedException();
 
-                case 3:
-                    // Logika dla rezerwacji karty niedorozwoju
-                    throw new NotImplementedException();
+                    case 4:
+                        player.BuyCardAction(this.board, this.bank);
+                        actionSuccess = true; 
+                        break;
 
-                case 4:
-                    player.BuyCardAction(this.board, this.bank);
-                    break;
+                    case 5:
+                        Pass();
+                        actionSuccess = true; 
+                        break;
+                }
 
-                case 5:
-                    Pass();
-                    break;
-            }
+            } while (!actionSuccess); 
         }
+
 
         private void Pass()
         {
@@ -266,9 +245,21 @@ namespace SplendorConsole
 
         private bool TakeThreeDifferentGems(Player player)
         {
-            if (bank.resources.gems.Count < 3)
+            bool hasSufficientGems = false;
+            int counter = 0;
+            foreach (var gem in bank.resources.gems)
             {
-                Console.WriteLine("Brak wystarczające ilośći klejnotów na planszy, wybierz inną akcję.");
+                if (gem.Value >= 1 && gem.Key != GemColor.GOLDEN)
+                {
+                    counter += 1;
+                }
+            }
+
+            if (counter > 3) hasSufficientGems = true;
+
+            if (!hasSufficientGems)
+            {
+                Console.WriteLine("Brak wystarczających klejnotów w banku. Wybierz inną akcję.");
                 return false;
             }
 
@@ -286,7 +277,7 @@ namespace SplendorConsole
             bool hasSufficientGems = false;
             foreach (var gem in bank.resources.gems)
             {
-                if (gem.Value >= 4) 
+                if (gem.Value >= 4 && gem.Key != GemColor.GOLDEN) 
                 {
                     hasSufficientGems = true;
                     break; 
