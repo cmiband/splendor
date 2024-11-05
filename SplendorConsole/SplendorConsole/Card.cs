@@ -12,10 +12,6 @@ namespace SplendorConsole
         private int level;
         private GemColor bonusColor;
         private int points;
-        public int Points
-        {
-            get => points;
-        }
         private string illustration;
         public int Points { get => points; }
 
@@ -33,6 +29,7 @@ namespace SplendorConsole
         {
             get => bonusColor;
         }
+        public int Points2 { get; internal set; }
 
         public Card(int level, GemColor bonusColor, int points, string illustration, Resources detailedPrice)
         {

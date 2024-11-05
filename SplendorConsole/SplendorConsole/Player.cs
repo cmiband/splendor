@@ -15,10 +15,7 @@ namespace SplendorConsole
         private Card[] reservedCard;
         private List<Noble> nobles = new List<Noble>();
         private int points;
-        public int Points
-        {
-            get => points;
-        }
+        public int Points { get => points; }
         public Player()
         {
             hand = new List<Card>();
@@ -289,7 +286,7 @@ namespace SplendorConsole
         }
         public void GetNoble(Noble noble)
         {
-            for(int i=0;i<nobles.Length;i++)
+            for(int i=0;i<nobles.Count;i++)
             {
                 if (nobles[i] == null)
                     nobles[i] = noble;
