@@ -12,7 +12,8 @@ namespace SplendorConsole
         private Resources resources = new Resources();
         private Resources bonusResources = new Resources();
         public List<Card> hand;
-        private Card[] reservedCard;
+        private Card[] reservedCard = new Card[3];
+        private int reservedCardsCounter = 0;
         private List<Noble> nobles = new List<Noble>();
         private int points;
         public int Points { get => points; }
@@ -20,6 +21,13 @@ namespace SplendorConsole
         {
             hand = new List<Card>();
         }
+        public int ReservedCardsCounter
+        {
+            set => reservedCardsCounter = value;
+            get { return reservedCardsCounter; }
+        }
+
+        public Resources Resources { get => resources; }
         public void BuyCardAction(Board board, Bank bank)
         {
             Console.WriteLine("Wybierz poziom karty do zakupu (1, 2 lub 3):");
@@ -48,7 +56,7 @@ namespace SplendorConsole
             if (success)
             {
                 Console.WriteLine("Karta została pomyślnie zakupiona!");
-                board.ReplaceMissingCard(level, cardIndex - 1);
+                board.ReplaceMissingCard(level);
             }
             else
                 Console.WriteLine("Operacja kupowania karty nie powiodła się.");
@@ -131,7 +139,7 @@ namespace SplendorConsole
             this.bonusResources.AddResource(card.BonusColor);
             this.points += card.Points;
 
-            board.ReplaceMissingCard(cardToBuyLevel, indexInVisibleCards);
+            board.ReplaceMissingCard(cardToBuyLevel);
             Console.WriteLine($"Karta {card.ToString()} została zakupiona!");
             return true;
         }
@@ -341,8 +349,10 @@ namespace SplendorConsole
             return true;
         }
         public void ReserveCard(Card card)
-        {
-            throw new NotImplementedException();
+        {    
+            reservedCard[reservedCardsCounter] = card;
+            reservedCardsCounter++;
+            
         }
         public void TakeTwoTokens(Resources resources, GemColor color)
         {

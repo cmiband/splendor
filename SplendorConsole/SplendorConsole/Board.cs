@@ -52,7 +52,7 @@ namespace SplendorConsole
                 _ => throw new ArgumentException("Niepoprawny poziom karty")
             };
         }
-        public void ReplaceMissingCard(int level, int index)
+        public void ReplaceMissingCard(int level)
         {
             throw new NotImplementedException();
         }

@@ -245,8 +245,19 @@ namespace SplendorConsole
                     break;
 
                 case 3:
-                    // Logika dla rezerwacji karty niedorozwoju
-                    throw new NotImplementedException();
+                    while (true)
+                    {
+                        actionSuccess = ReserveCard(player);
+                        if (actionSuccess)
+                            break;
+                        else
+                            Console.WriteLine("Nie możesz zarezerwowac więcej kart, wybierz inną akcje");
+                        Console.WriteLine();
+                        ChoiceOfAction(player);
+                        break;
+
+                    }
+                    break;
 
                 case 4:
                     player.BuyCardAction(this.board, this.bank);
@@ -435,6 +446,115 @@ namespace SplendorConsole
                 deck[j] = temporary;
             }
             return deck;
+        }
+        bool ReserveCard(Player player)
+        {
+            if (player.ReservedCardsCounter >= 3) return false;
+
+            Console.WriteLine("=== Wybierz metodę rezerwowania ===");
+            Console.WriteLine("1. Rezerwuj kartę ze stolika");
+            Console.WriteLine("2. Rezerwuj kartę w ciemno ze stosu");
+            int reserveinput;
+            while (!int.TryParse(Console.ReadLine(), out reserveinput) || reserveinput < 1 || reserveinput > 2)
+            {
+                Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-2): ");
+            }
+
+            if (bank.resources.gems[GemColor.GOLDEN] > 0)
+            {
+                if (player.Resources.gems.ContainsKey(GemColor.GOLDEN))
+                {
+                    player.Resources.gems[GemColor.GOLDEN] += 1;
+                }
+                else
+                {
+                    player.Resources.gems.Add(GemColor.GOLDEN, 1);
+                }
+            }
+
+            if (reserveinput == 1)
+            {
+                int input;
+                Console.WriteLine("=== Wybierz kartę do zarezerwowania ===");
+                Card[] cardsOnTable = VisibleCardsOnTable();
+                while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 12)
+                {
+                    Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-12): ");
+                }
+                player.ReserveCard(cardsOnTable[input - 1]);
+                board.ReplaceMissingCard((input - 1) / 4 + 1);
+            }
+            else
+            {
+                Console.WriteLine("=== Wybierz którego poziomu kartę chcesz zarezerwować ===");
+                Console.WriteLine("1 poziom");
+                Console.WriteLine("2 poziom");
+                Console.WriteLine("3 poziom");
+                int cardLevel;
+                while (!int.TryParse(Console.ReadLine(), out cardLevel) || cardLevel < 1 || cardLevel > 3)
+                {
+                    Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-3): ");
+                }
+                switch (cardLevel)
+                {
+                    case 1:
+                        Random randomLevel1Card = new Random();
+                        Card level1CardToReserve = level1Shuffled[randomLevel1Card.Next(level1Shuffled.Count)];
+                        player.ReserveCard(level1CardToReserve);
+                        level1Shuffled.Remove(level1CardToReserve);
+                        break;
+                    case 2:
+                        Random randomLevel2Card = new Random();
+                        Card level2CardToReserve = level2Shuffled[randomLevel2Card.Next(level2Shuffled.Count)];
+                        player.ReserveCard(level2CardToReserve);
+                        level2Shuffled.Remove(level2CardToReserve);
+                        break;
+                    case 3:
+                        Random randomLevel3Card = new Random();
+                        Card level3CardToReserve = level3Shuffled[randomLevel3Card.Next(level3Shuffled.Count)];
+                        player.ReserveCard(level3CardToReserve);
+                        level3Shuffled.Remove(level3CardToReserve);
+                        break;
+                }
+            }
+            return true;
+        }
+        Card[] VisibleCardsOnTable()
+        {
+            Card[] cardsOnTable = new Card[12];
+            for (int i = 0; i < cardsOnTable.Length; i++)
+            {
+                if (i < 4)
+                {
+                    cardsOnTable[i] = level1VisibleCards[i];
+                }
+                else if (i >= 4 && i < 8)
+                {
+                    cardsOnTable[i] = level2VisibleCards[i % 4];
+                }
+                else
+                {
+                    cardsOnTable[i] = level3VisibleCards[i % 4];
+                }
+            }
+            int j = 1;
+            foreach (Card card in cardsOnTable)
+            {
+                Console.WriteLine(j.ToString() + ". Level: " + card.Level + " Karta koloru: " + card.BonusColor + "  Cena: " + Cena(card));
+                j++;
+            }
+            return cardsOnTable;
+        }
+
+        string Cena(Card card)
+        {
+            string cena = "";
+            foreach (KeyValuePair<GemColor, int> tokens in card.DetailedPrice)
+            {
+                if (tokens.Value != 0)
+                    cena += tokens.Key + " " + tokens.Value.ToString() + " ";
+            }
+            return cena;
         }
     }
 }
