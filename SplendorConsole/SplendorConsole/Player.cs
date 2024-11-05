@@ -11,10 +11,14 @@ namespace SplendorConsole
     {
         private Resources resources = new Resources();
         private Resources bonusResources;
-        private Card[] hand;
+        public List<Card> hand = new List<Card>();
         private Card[] reservedCard;
-        private Noble[] nobles;
+        private List<Noble> nobles = new List<Noble>();
         private int points;
+        public int Points
+        {
+            get => points;
+        }
         public void BuyCard(Card card)
         {
             throw new NotImplementedException();
@@ -155,6 +159,19 @@ namespace SplendorConsole
         public void PassTurn()
         {
             throw new NotImplementedException();
+        }
+
+        public void PointsCounter()
+        {
+            this.points = 0;
+            foreach(Card card in this.hand)
+            {
+                points += card.Points;
+            }
+            foreach(Noble noble in this.nobles)
+            {
+                points += noble.Points;
+            }
         }
     }
 }
