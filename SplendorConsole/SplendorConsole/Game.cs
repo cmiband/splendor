@@ -33,20 +33,23 @@ namespace SplendorConsole
 
         public void GameStart()
         {
+            
             availableCards.LoadCardsFromExcel();
             Random random = new Random();
             listOfPlayers = SetNumberOfPlayers();
             listOfNobles = SetNumberOfNobles(listOfPlayers.Count);
-
+            
             level1Shuffled = Shuffling(availableCards.level1Cards, random);
-            level2Shuffled = Shuffling(availableCards.level2Cards, random);
+            level2Shuffled = Shuffling(availableCards.level2Cards, random);                    
             level3Shuffled = Shuffling(availableCards.level3Cards, random);
+            
+           
             AddResourcesToBank(bank, listOfPlayers.Count);
-            SetVisibleCards();
+            SetVisibleCards();          
             GameLoop(listOfPlayers.Count);
         }
 
-        List<Noble> SetNumberOfNobles(int numberOfPlayers)
+        private List<Noble> SetNumberOfNobles(int numberOfPlayers)
         {
             int numberOfNobles = numberOfPlayers + 1;
             List<Noble> nobles = new List<Noble>();
@@ -58,24 +61,11 @@ namespace SplendorConsole
 
             return nobles;
         }
-        List<Player> SetNumberOfPlayers()
+        private List<Player> SetNumberOfPlayers()
         {
-            int numberOfPlayers;
-            do
-            {
-                Console.WriteLine("=== Podaj ilość graczy (od 2 do 4) ===");
-                string input = Console.ReadLine();
-
-                
-                if (!int.TryParse(input, out numberOfPlayers) || numberOfPlayers < 2 || numberOfPlayers > 4)
-                {
-                    Console.WriteLine("Nieprawidłowa liczba graczy. Wprowadź wartość od 2 do 4.");
-                }
-            } while (numberOfPlayers < 2 || numberOfPlayers > 4);
-
             List<Player> players = new List<Player>();
 
-            for (int i = 0; i < numberOfPlayers; i++)
+            for (int i = 0; i < 4; i++)
             {
                 players.Add(new Player());
             }
@@ -84,7 +74,7 @@ namespace SplendorConsole
         }
 
 
-        void AddResourcesToBank(Bank bank, int numberOfPlayers)
+        private void AddResourcesToBank(Bank bank, int numberOfPlayers)
         {
             if (numberOfPlayers == 2)
             {
@@ -115,7 +105,7 @@ namespace SplendorConsole
             }
         }
 
-        void GameLoop(int numberOfPlayers)
+        private void GameLoop(int numberOfPlayers)
         {
             bool gameInProgress = true;
             while (gameInProgress)
@@ -204,13 +194,14 @@ namespace SplendorConsole
             if (player.Points >= 15) return true;
             else return false;
         }
-        void Turn(Player player)
+
+        private void Turn(Player player)
         {
             ChoiceOfAction(player);
             // więcej logiki w turze?
         }
 
-        void ChoiceOfAction(Player player)
+        private void ChoiceOfAction(Player player)
         {
             int input;
             bool actionSuccess;
@@ -237,7 +228,6 @@ namespace SplendorConsole
                         if (actionSuccess)
                             break; // Jeśli operacja się powiedzie, wychodzimy z wewnętrznej pętli
 
-                        Console.WriteLine("Spróbuj ponownie.");
                     }
                     break;
 
@@ -248,7 +238,6 @@ namespace SplendorConsole
                         if (actionSuccess)
                             break;
 
-                        Console.WriteLine("Spróbuj ponownie.");
                     }
                     break;
 
@@ -266,13 +255,13 @@ namespace SplendorConsole
             }
         }
 
-        void Pass()
+        private void Pass()
         {
             //Implementacja logiki passa
             throw new NotImplementedException();
         }
 
-        bool TakeThreeDifferentGems(Player player)
+        private bool TakeThreeDifferentGems(Player player)
         {
             if (bank.resources.gems.Count < 3)
             {
@@ -289,7 +278,7 @@ namespace SplendorConsole
             return true;
         }
 
-        bool TakeTwoSameGems(Player player)
+        private bool TakeTwoSameGems(Player player)
         {
             bool hasSufficientGems = false;
             foreach (var gem in bank.resources.gems)
@@ -326,7 +315,7 @@ namespace SplendorConsole
         }
 
 
-        GemColor ChoiceOfColor()
+        private GemColor ChoiceOfColor()
         {
             List<GemColor> availableTokens = ShowAvaiableTokens();
             GemColor color;
@@ -357,7 +346,7 @@ namespace SplendorConsole
         }
 
 
-        GemColor[] ChoiceOfColors()
+        private GemColor[] ChoiceOfColors()
         {
             List<GemColor> availableTokens = ShowAvaiableTokens();
             GemColor[] colors = new GemColor[3];
@@ -404,7 +393,7 @@ namespace SplendorConsole
         }
 
 
-        List<GemColor> ShowAvaiableTokens()
+        private List<GemColor> ShowAvaiableTokens()
         {
             List<GemColor> avaiableTokens = new List<GemColor>();
 
@@ -418,7 +407,7 @@ namespace SplendorConsole
             return avaiableTokens;
         }
 
-        void SetVisibleCards()
+        private void SetVisibleCards()
         {
             for (int i = 0; i < 4; i++)
             {
@@ -432,17 +421,17 @@ namespace SplendorConsole
             }
         }
 
-        List<Card> Shuffling(List<Card> lista, Random random)
+        private List<Card> Shuffling(List<Card> deck, Random random)
         {
-           List<Card> wylosowaneKarty = new List<Card>();
-            
-           for(int i = 0; i < lista.Count; i++)
-           {
-                int index = random.Next(lista.Count);
-                wylosowaneKarty.Add(lista[index]);
-           }
+            for (int i = deck.Count - 1; i > 0; i--)
+            {
+                int j = random.Next(i + 1);
 
-           return wylosowaneKarty;
+                Card temporary = deck[i];
+                deck[i] = deck[j];
+                deck[j] = temporary;
+            }
+            return deck;
         }
     }
 }

@@ -8,19 +8,11 @@
     ".NETCoreApp,Version=v6.0": {
       "SplendorConsole/1.0.0": {
         "dependencies": {
-          "Newtonsoft.Json": "13.0.3",
-          "ClosedXML": "0.104.1"
+          "ClosedXML": "0.104.1",
+          "Newtonsoft.Json": "13.0.3"
         },
         "runtime": {
           "SplendorConsole.dll": {}
-        }
-      },
-      "Newtonsoft.Json/13.0.3": {
-        "runtime": {
-          "lib/net6.0/Newtonsoft.Json.dll": {
-            "assemblyVersion": "13.0.0.0",
-            "fileVersion": "13.0.3.27908"
-          }
         }
       },
       "ClosedXML/0.104.1": {
@@ -77,6 +69,14 @@
           }
         }
       },
+      "Newtonsoft.Json/13.0.3": {
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.3.27908"
+          }
+        }
+      },
       "RBush/3.2.0": {
         "runtime": {
           "lib/net6.0/RBush.dll": {
@@ -108,13 +108,6 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
-    },
-    "Newtonsoft.Json/13.0.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
-      "path": "newtonsoft.json/13.0.3",
-      "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
     },
     "ClosedXML/0.104.1": {
       "type": "package",
@@ -150,6 +143,13 @@
       "sha512": "sha512-R3BVHPs9O+RkExbZYTGT0+9HLbi8ZrNij1Yziyw6znd3J7P3uoIR07uwTLGOogtz1p6+0sna66eBoXu7tBiVQA==",
       "path": "excelnumberformat/1.1.0",
       "hashPath": "excelnumberformat.1.1.0.nupkg.sha512"
+    },
+    "Newtonsoft.Json/13.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
+      "path": "newtonsoft.json/13.0.3",
+      "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
     },
     "RBush/3.2.0": {
       "type": "package",
