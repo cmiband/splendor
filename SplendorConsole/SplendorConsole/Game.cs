@@ -52,7 +52,7 @@ namespace SplendorConsole
             GameLoop(listOfPlayers.Count);
         }
 
-        List<Noble> SetNumberOfNobles(int numberOfPlayers)
+        private List<Noble> SetNumberOfNobles(int numberOfPlayers)
         {
             int numberOfNobles = numberOfPlayers + 1;
             List<Noble> nobles = new List<Noble>();
@@ -64,7 +64,7 @@ namespace SplendorConsole
 
             return nobles;
         }
-        List<Player> SetNumberOfPlayers()
+        private List<Player> SetNumberOfPlayers()
         {
             List<Player> players = new List<Player>();
 
@@ -77,7 +77,7 @@ namespace SplendorConsole
         }
 
 
-        void AddResourcesToBank(Bank bank, int numberOfPlayers)
+        private void AddResourcesToBank(Bank bank, int numberOfPlayers)
         {
             if (numberOfPlayers == 2)
             {
@@ -108,27 +108,103 @@ namespace SplendorConsole
             }
         }
 
-        void GameLoop(int numberOfPlayers)
+        private void GameLoop(int numberOfPlayers)
         {
-            while (true)
+            bool gameInProgress = true;
+            while (gameInProgress)
             {
                 Console.WriteLine($"-----------------Aktualna kolejka należy do gracza {currentTurn}-----------------------");
                 Turn(listOfPlayers[currentTurn]);
 
                 // więcej logiki GameLoopa
                 currentTurn = (currentTurn + 1) % numberOfPlayers;
-
+                if (currentTurn==0)
+                {
+                    int winnersCount = 0;
+                    List<Player> winners = new List<Player>();
+                    foreach(Player player in listOfPlayers)
+                    {
+                        player.PointsCounter();
+                        if(CheckIfWinner(player))
+                        {
+                            winnersCount++;
+                            winners.Add(player);
+                        }
+                    }
+                    if(winnersCount==1)
+                    {
+                        Console.WriteLine($"Zwycięzca to gracz: {listOfPlayers.IndexOf(winners[0])}");
+                        Console.WriteLine($"Jego liczba punktów to: {winners[0].Points}");
+                        gameInProgress = false;
+                    }
+                    else if(winnersCount>1)
+                    {
+                        winnersCount = 0;
+                        int winnersPoints = 0;
+                        int playerIndex = 0;
+                        foreach(Player player in winners)
+                        {
+                            if (player.Points == winnersPoints) winnersCount++;
+                            if(player.Points > winnersPoints)
+                            {
+                                winnersPoints = player.Points;
+                                winnersCount = 1;
+                                playerIndex = listOfPlayers.IndexOf(player);
+                            }
+                        }
+                        if(winnersCount==1)
+                        {
+                            Console.WriteLine($"Zwycięzca to gracz: {playerIndex}");
+                            Console.WriteLine($"Jego liczba punktów to: {listOfPlayers[playerIndex].Points}");
+                        }
+                        else
+                        {
+                            Player OfficialWinner = MoreThan1Winner(winners);
+                            Console.WriteLine($"Zwycięzca to gracz: {listOfPlayers.IndexOf(OfficialWinner)}");
+                            Console.WriteLine($"Jego liczba punktów to: {OfficialWinner.Points}");
+                        }
+                        gameInProgress = false;
+                    }
+                }
             }
+            Console.WriteLine("Koniec gry :)");
+        }
+        Player MoreThan1Winner(List<Player> winners)
+        {
+            int minimum = 100;
+            int playerIndex = 0;
+            int winnersCount = 0;
+            foreach(Player player in winners)
+            {
+                int cardsCount = player.hand.Count;
+                if (cardsCount == minimum) winnersCount++;
+                if(cardsCount < minimum )
+                {
+                    minimum = cardsCount;
+                    playerIndex = winners.IndexOf(player);
+                    winnersCount = 1;
+                }
+            }
+            if (winnersCount == 1)
+            {
+                return winners[playerIndex];
+            }
+            else throw new Exception("Remis");
+        }
+        bool CheckIfWinner(Player player)
+        {
+            player.PointsCounter();
+            if (player.Points >= 15) return true;
+            else return false;
         }
 
-        void Turn(Player player)
+        private void Turn(Player player)
         {
             ChoiceOfAction(player);
-
             // więcej logiki w turze?
         }
 
-        void ChoiceOfAction(Player player)
+        private void ChoiceOfAction(Player player)
         {
             int input;
             bool actionSuccess;
@@ -180,17 +256,15 @@ namespace SplendorConsole
                     Pass();
                     break;
             }
-
-
         }
 
-        void Pass()
+        private void Pass()
         {
             //Implementacja logiki passa
             throw new NotImplementedException();
         }
 
-        bool TakeThreeDifferentGems(Player player)
+        private bool TakeThreeDifferentGems(Player player)
         {
             if (bank.resources.gems.Count < 3)
             {
@@ -207,7 +281,7 @@ namespace SplendorConsole
             return true;
         }
 
-        bool TakeTwoSameGems(Player player)
+        private bool TakeTwoSameGems(Player player)
         {
             bool hasSufficientGems = false;
             foreach (var gem in bank.resources.gems)
@@ -244,7 +318,7 @@ namespace SplendorConsole
         }
 
 
-        GemColor ChoiceOfColor()
+        private GemColor ChoiceOfColor()
         {
             List<GemColor> availableTokens = ShowAvaiableTokens();
             GemColor color;
@@ -275,7 +349,7 @@ namespace SplendorConsole
         }
 
 
-        GemColor[] ChoiceOfColors()
+        private GemColor[] ChoiceOfColors()
         {
             List<GemColor> availableTokens = ShowAvaiableTokens();
             GemColor[] colors = new GemColor[3];
@@ -322,7 +396,7 @@ namespace SplendorConsole
         }
 
 
-        List<GemColor> ShowAvaiableTokens()
+        private List<GemColor> ShowAvaiableTokens()
         {
             List<GemColor> avaiableTokens = new List<GemColor>();
 
@@ -336,7 +410,7 @@ namespace SplendorConsole
             return avaiableTokens;
         }
 
-        void SetVisibleCards()
+        private void SetVisibleCards()
         {
             for (int i = 0; i < 4; i++)
             {
@@ -350,7 +424,7 @@ namespace SplendorConsole
             }
         }
 
-        List<Card> Shuffling(List<Card> deck, Random random)
+        private List<Card> Shuffling(List<Card> deck, Random random)
         {
             for (int i = deck.Count - 1; i > 0; i--)
             {

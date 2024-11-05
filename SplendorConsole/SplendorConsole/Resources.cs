@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SplendorConsole
 {
-    public class Resources
+    public class Resources : IEnumerable<KeyValuePair<GemColor, int>>
     {
         public Dictionary<GemColor, int> gems = new Dictionary<GemColor, int>();
         public override bool Equals(object obj)
@@ -55,6 +56,13 @@ namespace SplendorConsole
 
             Console.WriteLine($"Dodano 1 zasób koloru {color}. Łączna ilość: {gems[color]}.");
         }
-
+        public IEnumerator<KeyValuePair<GemColor, int>> GetEnumerator()
+        {
+            return gems.GetEnumerator();
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }

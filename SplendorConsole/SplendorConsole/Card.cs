@@ -12,6 +12,10 @@ namespace SplendorConsole
         private int level;
         private GemColor bonusColor;
         private int points;
+        public int Points
+        {
+            get => points;
+        }
         private string illustration;
         public int Points { get => points; }
 
