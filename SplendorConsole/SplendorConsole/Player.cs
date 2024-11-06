@@ -9,10 +9,13 @@ namespace SplendorConsole
 {
     internal class Player
     {
+        public bool BUYING_RESERVED_CARD = true;
+        public bool NOT_BUYING_RESERVED_CARD = false;
+
         private Resources resources = new Resources();
         private Resources bonusResources = new Resources();
         public List<Card> hand;
-        private Card[] reservedCard = new Card[3];
+        private List<Card> reservedCards = new List<Card>();
         private int reservedCardsCounter = 0;
         private List<Noble> nobles = new List<Noble>();
         private int points;
@@ -28,51 +31,98 @@ namespace SplendorConsole
         }
 
         public Resources Resources { get => resources; }
-        public void BuyCardAction(Board board, Bank bank)
+        public bool BuyCardAction(Board board, Bank bank)
         {
-            Console.WriteLine("Wybierz poziom karty do zakupu (1, 2 lub 3):");
-            int level;
-            while (!int.TryParse(Console.ReadLine(), out level) || level < 1 || level > 3)
+            Console.WriteLine("Chcesz kupić nową kartę czy kupić zarezerwowaną?");
+            Console.WriteLine("[1] Nowa");
+            Console.WriteLine("[2] Zarerwowana");
+
+            int opChoice;
+            while (!int.TryParse(Console.ReadLine(), out opChoice) || opChoice < 1 || opChoice > 2)
             {
-                Console.WriteLine("Niepoprawny poziom. Wprowadź 1, 2 lub 3:");
+                Console.WriteLine("Niepoprawny poziom. Wprowadź 1 lub 2");
             }
 
-            List<Card> visibleCards = board.GetVisibleCards(level);
-            Console.WriteLine("Wybierz numer karty do zakupu:");
-            for (int i = 0; i < visibleCards.Count; i++)
+            if(opChoice == 1)
             {
-                Console.WriteLine($"{i + 1}: {visibleCards[i]}");
-            }
+                Console.WriteLine("Wybierz poziom karty do zakupu (1, 2 lub 3):");
+                int level;
+                while (!int.TryParse(Console.ReadLine(), out level) || level < 1 || level > 3)
+                {
+                    Console.WriteLine("Niepoprawny poziom. Wprowadź 1, 2 lub 3:");
+                }
 
-            int cardIndex;
-            while (!int.TryParse(Console.ReadLine(), out cardIndex) || cardIndex < 1 || cardIndex > visibleCards.Count)
-            {
-                Console.WriteLine("Niepoprawny wybór. Wprowadź numer odpowiadający wybranej karcie:");
-            }
+                List<Card> visibleCards = board.GetVisibleCards(level);
+                Console.WriteLine("Wybierz numer karty do zakupu:");
+                for (int i = 0; i < visibleCards.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}: {visibleCards[i]}");
+                }
 
-            Card selectedCard = visibleCards[cardIndex - 1];
+                int cardIndex;
+                while (!int.TryParse(Console.ReadLine(), out cardIndex) || cardIndex < 1 || cardIndex > visibleCards.Count)
+                {
+                    Console.WriteLine("Niepoprawny wybór. Wprowadź numer odpowiadający wybranej karcie:");
+                }
 
-            var success = BuyCard(board, selectedCard, bank);
-            if (success)
-            {
-                Console.WriteLine("Karta została pomyślnie zakupiona!");
-                board.ReplaceMissingCard(level, selectedCard);
-            }
+                Card selectedCard = visibleCards[cardIndex - 1];
+
+                var success = BuyCard(board, selectedCard, bank, NOT_BUYING_RESERVED_CARD);
+                if (success)
+                {
+                    Console.WriteLine("Karta została pomyślnie zakupiona!");
+                    board.ReplaceMissingCard(level, selectedCard);
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Operacja kupowania karty nie powiodła się.");
+                    return false;
+                }
+            } 
             else
-                Console.WriteLine("Operacja kupowania karty nie powiodła się.");
-            
+            {
+                return this.HandleBuyReservedCard(board, bank);
+            }
         }
 
-        public bool BuyCard(Board board, Card card, Bank bank)
+        public bool HandleBuyReservedCard(Board board, Bank bank)
+        {
+            if(this.reservedCards.Count == 0)
+            {
+                Console.WriteLine("Nie masz zarezerwowanych kart.");
+                return false;
+            }
+
+            Console.WriteLine("Wybierz zarezerwowaną kartę, którą chcesz kupić: ");
+            for(int i = 0; i<this.reservedCards.Count; i++)
+            {
+                Console.WriteLine($"[{i+1}] {this.reservedCards[i]}");
+            }
+            int choice;
+            while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > this.reservedCards.Count)
+            {
+                Console.WriteLine("Niepoprawna karta.");
+            }
+
+            Card selectedCard = this.reservedCards[choice - 1];
+            this.reservedCards.Remove(selectedCard);
+
+            return this.BuyCard(board, selectedCard, bank, BUYING_RESERVED_CARD);
+        }
+
+        public bool BuyCard(Board board, Card card, Bank bank, bool isBuyingReservedCard)
         {
             Console.WriteLine("Czy chcesz użyć złotego żetonu aby zapłacić za kartę?");
             Console.WriteLine("1 - Tak");
             Console.WriteLine("2 - Nie");
             var choiceForGolden = WantToSpendGoldCoin();
+            GemColor colorReplacedWithGolden = GemColor.NONE;
             GemColor colorOfChoice = GemColor.NONE;
             if (choiceForGolden)
             {
                 colorOfChoice = ColorToBePaidWithGolden();
+                colorReplacedWithGolden = colorOfChoice;
             }
 
             if (!CanAffordCardWithGolden(card) && !CanAffordCard(card))
@@ -84,13 +134,14 @@ namespace SplendorConsole
             int cardToBuyLevel = card.Level;
             int indexInVisibleCards = board.GetCardIndexInVisibleCards(card, cardToBuyLevel);
 
-            if (indexInVisibleCards == -1)
+            if (indexInVisibleCards == -1 && !isBuyingReservedCard)
             {
                 Console.WriteLine("Karta nie jest widoczna na stole.");
                 return false;
             }
 
             var cardPrice = card.DetailedPrice.gems;
+            bool goldenWasUsed = false;
             foreach (var colorOnCard in cardPrice)
             {
                 GemColor color = colorOnCard.Key;
@@ -119,6 +170,8 @@ namespace SplendorConsole
                             if (goldenTokens >= deficit)
                             {
                                 this.resources.gems[GemColor.GOLDEN] -= deficit;
+                                goldenWasUsed = true;
+                                bank.AddGoldenGem();
                             }
                             else
                             {
@@ -140,7 +193,13 @@ namespace SplendorConsole
             this.points += card.Points;
 
             board.ReplaceMissingCard(cardToBuyLevel, card);
-            Console.WriteLine($"Karta {card.ToString()} została zakupiona!");
+            this.RefillBankResources(bank, card, colorReplacedWithGolden);
+            if(isBuyingReservedCard && !goldenWasUsed)
+            {
+                this.resources.gems[GemColor.GOLDEN]--;
+                bank.AddGoldenGem();
+            }
+            Console.WriteLine($"Karta {card} została zakupiona!");
             return true;
         }
 
@@ -148,6 +207,20 @@ namespace SplendorConsole
         {
             hand.Add(card);
             Console.WriteLine($"Dodano kartę z następującą liczbą punktów: {card.Points}");
+        }
+
+        private void RefillBankResources(Bank bank, Card card, GemColor colorReplacedWithGolden)
+        {
+            foreach(var x in card.DetailedPrice.gems)
+            {
+                int amountToReplace = x.Value;
+                if(x.Key == colorReplacedWithGolden)
+                {
+                    amountToReplace--;
+                }
+                
+                bank.AddResources(amountToReplace, x.Key);
+            }
         }
 
         public bool CanAffordCard(Card card)
@@ -349,10 +422,8 @@ namespace SplendorConsole
             return true;
         }
         public void ReserveCard(Card card)
-        {    
-            reservedCard[reservedCardsCounter] = card;
-            reservedCardsCounter++;
-            
+        {
+            this.reservedCards.Add(card);
         }
         public void TakeTwoTokens(Resources resources, GemColor color)
         {

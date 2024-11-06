@@ -141,8 +141,14 @@ namespace SplendorConsole
                         else
                         {
                             Player OfficialWinner = MoreThan1Winner(winners);
-                            Console.WriteLine($"Zwycięzca to gracz: {listOfPlayers.IndexOf(OfficialWinner)}");
-                            Console.WriteLine($"Jego liczba punktów to: {OfficialWinner.Points}");
+                            if(OfficialWinner != null)
+                            {
+                                Console.WriteLine($"Zwycięzca to gracz: {listOfPlayers.IndexOf(OfficialWinner)}");
+                                Console.WriteLine($"Jego liczba punktów to: {OfficialWinner.Points}");
+                            } else
+                            {
+                                Console.WriteLine("Remis");
+                            }
                         }
                         gameInProgress = false;
                     }
@@ -150,7 +156,7 @@ namespace SplendorConsole
             }
             Console.WriteLine("Koniec gry :)");
         }
-        Player MoreThan1Winner(List<Player> winners)
+        private Player? MoreThan1Winner(List<Player> winners)
         {
             int minimum = 100;
             int playerIndex = 0;
@@ -170,7 +176,8 @@ namespace SplendorConsole
             {
                 return winners[playerIndex];
             }
-            else throw new Exception("Remis");
+
+            return null;
         }
         bool CheckIfWinner(Player player)
         {
@@ -182,7 +189,6 @@ namespace SplendorConsole
         private void Turn(Player player)
         {
             ChoiceOfAction(player);
-            // więcej logiki w turze?
         }
 
         private void ChoiceOfAction(Player player)
@@ -195,9 +201,9 @@ namespace SplendorConsole
                 Console.WriteLine("=== Wybierz akcję do wykonania ===");
                 Console.WriteLine("1. Weź 3 klejnoty różnych kolorów");
                 Console.WriteLine("2. Weź 2 klejnoty tego samego koloru");
-                Console.WriteLine("3. Zarezerwuj kartę niedorozwoju i weź złoty klejnot");
-                Console.WriteLine("4. Kup kartę niedorozwoju lub wcześniej zarezerwowaną kartę i puść złoty klejnot");
-                Console.WriteLine("5. Spasuj byczku sobie turke");
+                Console.WriteLine("3. Zarezerwuj kartę i weź złoty klejnot");
+                Console.WriteLine("4. Kup kartę(nową lub zarezerwowaną)");
+                Console.WriteLine("5. Spasuj");
                 Console.Write("Wprowadź numer akcji (1-5): ");
 
                 while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 5)
@@ -223,8 +229,7 @@ namespace SplendorConsole
                         break;
 
                     case 4:
-                        player.BuyCardAction(this.board, this.bank);
-                        actionSuccess = true; 
+                        actionSuccess = player.BuyCardAction(this.board, this.bank);
                         break;
 
                     case 5:
@@ -234,14 +239,12 @@ namespace SplendorConsole
                 }
             } while (!actionSuccess);
             Console.Clear();
-
         }
 
 
         private void Pass()
         {
-            //Implementacja logiki passa
-            throw new NotImplementedException();
+            return;
         }
 
         private bool TakeThreeDifferentGems(Player player)
