@@ -428,7 +428,7 @@ namespace SplendorConsole
             return deck;
         }
 
-        bool ReserveCard(Player player)
+        private bool ReserveCard(Player player)
         {
             if (player.ReservedCardsCounter >= 3)
             {
@@ -514,7 +514,7 @@ namespace SplendorConsole
             }
             return true;
         }
-        Card[] VisibleCardsOnTable(int cardlevel)
+        private Card[] VisibleCardsOnTable(int cardlevel)
         {
             Card[] cardsOnTable = new Card[4];
             for (int i = 0; i < cardsOnTable.Length; i++)
@@ -535,21 +535,21 @@ namespace SplendorConsole
             int j = 1;
             foreach (Card card in cardsOnTable)
             {
-                Console.WriteLine(j.ToString() + ". Level: " + card.Level + " Karta koloru: " + card.BonusColor + "  Cena: " + Cena(card) + " Victory Points: " + card.Points);
+                Console.WriteLine(j.ToString() + ". Level: " + card.Level + " Karta koloru: " + card.BonusColor + "  Cena: " + Price(card) + " Victory Points: " + card.Points);
                 j++;
             }
             return cardsOnTable;
         }
 
-        string Cena(Card card)
+        private string Price(Card card)
         {
-            string cena = "";
+            string price = "";
             foreach (KeyValuePair<GemColor, int> tokens in card.DetailedPrice)
             {
                 if (tokens.Value != 0)
-                    cena += tokens.Key + " " + tokens.Value.ToString() + " ";
+                    price += tokens.Key + " " + tokens.Value.ToString() + " ";
             }
-            return cena;
+            return price;
         }
     }
 }
