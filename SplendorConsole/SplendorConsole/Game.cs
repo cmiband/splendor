@@ -48,7 +48,7 @@ namespace SplendorConsole
            
             AddResourcesToBank(bank, listOfPlayers.Count);
             SetVisibleCards();
-            board = new Board(level1VisibleCards, level2VisibleCards, level3VisibleCards, level1Shuffled, level2Shuffled, level3Shuffled);
+            board = new Board(level1VisibleCards, level2VisibleCards, level3VisibleCards);
             GameLoop(listOfPlayers.Count);
         }
 
@@ -79,33 +79,14 @@ namespace SplendorConsole
 
         private void AddResourcesToBank(Bank bank, int numberOfPlayers)
         {
-            if (numberOfPlayers == 2)
+            
+            foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
             {
-                foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
-                {
-                    if (color == GemColor.GOLDEN) break;
-                    bank.resources.gems.Add(color, 4);
-                }
-                bank.resources.gems.Add(GemColor.GOLDEN, 5);
+                if (color == GemColor.GOLDEN || color == GemColor.NONE) break;
+                bank.resources.gems.Add(color, 7);
             }
-            if (numberOfPlayers == 3)
-            {
-                foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
-                {
-                    if (color == GemColor.GOLDEN) break;
-                    bank.resources.gems.Add(color, 5);
-                }
-                bank.resources.gems.Add(GemColor.GOLDEN, 5);
-            }
-            if (numberOfPlayers == 4)
-            {
-                foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
-                {
-                    if (color == GemColor.GOLDEN) break;
-                    bank.resources.gems.Add(color, 7);
-                }
-                bank.resources.gems.Add(GemColor.GOLDEN, 5);
-            }
+            bank.resources.gems.Add(GemColor.GOLDEN, 5);
+            
         }
 
         private void GameLoop(int numberOfPlayers)
@@ -209,65 +190,52 @@ namespace SplendorConsole
             int input;
             bool actionSuccess;
 
-            Console.WriteLine("=== Wybierz akcję do wykonania ===");
-            Console.WriteLine("1. Weź 3 klejnoty różnych kolorów");
-            Console.WriteLine("2. Weź 2 klejnoty tego samego koloru");
-            Console.WriteLine("3. Zarezerwuj kartę niedorozwoju i weź złoty klejnot");
-            Console.WriteLine("4. Kup kartę niedorozwoju lub wcześniej zarezerwowaną kartę i puść złoty klejnot");
-            Console.WriteLine("5. Spasuj byczku sobie turke");
-            Console.Write("Wprowadź numer akcji (1-5): ");
-
-            while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 5)
+            do
             {
-                Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-5): ");
-            }
+                Console.WriteLine("=== Wybierz akcję do wykonania ===");
+                Console.WriteLine("1. Weź 3 klejnoty różnych kolorów");
+                Console.WriteLine("2. Weź 2 klejnoty tego samego koloru");
+                Console.WriteLine("3. Zarezerwuj kartę niedorozwoju i weź złoty klejnot");
+                Console.WriteLine("4. Kup kartę niedorozwoju lub wcześniej zarezerwowaną kartę i puść złoty klejnot");
+                Console.WriteLine("5. Spasuj byczku sobie turke");
+                Console.Write("Wprowadź numer akcji (1-5): ");
 
-            switch (input)
-            {
-                case 1:
-                    while (true)
-                    {
+                while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 5)
+                {
+                    Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-5): ");
+                }
+
+ 
+                actionSuccess = false;
+
+                switch (input)
+                {
+                    case 1:
                         actionSuccess = TakeThreeDifferentGems(player);
-                        if (actionSuccess)
-                            break; // Jeśli operacja się powiedzie, wychodzimy z wewnętrznej pętli
-
-                    }
-                    break;
-
-                case 2:
-                    while (true)
-                    {
-                        actionSuccess = TakeTwoSameGems(player);
-                        if (actionSuccess)
-                            break;
-
-                    }
-                    break;
-
-                case 3:
-                    while (true)
-                    {
-                        actionSuccess = ReserveCard(player);
-                        if (actionSuccess)
-                            break;
-                        else
-                            Console.WriteLine("Nie możesz zarezerwowac więcej kart, wybierz inną akcje");
-                        Console.WriteLine();
-                        ChoiceOfAction(player);
                         break;
 
-                    }
-                    break;
+                    case 2:
+                        actionSuccess = TakeTwoSameGems(player);
+                        break;
 
-                case 4:
-                    player.BuyCardAction(this.board, this.bank);
-                    break;
+                    case 3:
+                        
+                        throw new NotImplementedException();
 
-                case 5:
-                    Pass();
-                    break;
-            }
+                    case 4:
+                        player.BuyCardAction(this.board, this.bank);
+                        actionSuccess = true; 
+                        break;
+
+                    case 5:
+                        Pass();
+                        actionSuccess = true; 
+                        break;
+                }
+
+            } while (!actionSuccess); 
         }
+
 
         private void Pass()
         {
@@ -277,9 +245,21 @@ namespace SplendorConsole
 
         private bool TakeThreeDifferentGems(Player player)
         {
-            if (bank.resources.gems.Count < 3)
+            bool hasSufficientGems = false;
+            int counter = 0;
+            foreach (var gem in bank.resources.gems)
             {
-                Console.WriteLine("Brak wystarczające ilośći klejnotów na planszy, wybierz inną akcję.");
+                if (gem.Value >= 1 && gem.Key != GemColor.GOLDEN)
+                {
+                    counter += 1;
+                }
+            }
+
+            if (counter > 3) hasSufficientGems = true;
+
+            if (!hasSufficientGems)
+            {
+                Console.WriteLine("Brak wystarczających klejnotów w banku. Wybierz inną akcję.");
                 return false;
             }
 
@@ -297,7 +277,7 @@ namespace SplendorConsole
             bool hasSufficientGems = false;
             foreach (var gem in bank.resources.gems)
             {
-                if (gem.Value >= 4) 
+                if (gem.Value >= 4 && gem.Key != GemColor.GOLDEN) 
                 {
                     hasSufficientGems = true;
                     break; 
@@ -446,124 +426,6 @@ namespace SplendorConsole
                 deck[j] = temporary;
             }
             return deck;
-        }
-        bool ReserveCard(Player player)
-        {
-            if (player.ReservedCardsCounter >= 3) return false;
-
-            Console.WriteLine("=== Wybierz metodę rezerwowania ===");
-            Console.WriteLine("1. Rezerwuj kartę ze stolika");
-            Console.WriteLine("2. Rezerwuj kartę w ciemno ze stosu");
-            int reserveinput;
-            while (!int.TryParse(Console.ReadLine(), out reserveinput) || reserveinput < 1 || reserveinput > 2)
-            {
-                Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-2): ");
-            }
-
-            if (bank.resources.gems[GemColor.GOLDEN] > 0)
-            {
-                if (player.Resources.gems.ContainsKey(GemColor.GOLDEN))
-                {
-                    player.Resources.gems[GemColor.GOLDEN] += 1;
-                }
-                else
-                {
-                    player.Resources.gems.Add(GemColor.GOLDEN, 1);
-                }
-            }
-
-            if (reserveinput == 1)
-            {
-                Console.WriteLine("=== Wybierz którego poziomu kartę chcesz zarezerwować ===");
-                Console.WriteLine("1 poziom");
-                Console.WriteLine("2 poziom");
-                Console.WriteLine("3 poziom");
-                int cardLevel;
-                while (!int.TryParse(Console.ReadLine(), out cardLevel) || cardLevel < 1 || cardLevel > 3)
-                {
-                    Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-3): ");
-                }
-                int input;
-                Console.WriteLine("=== Wybierz kartę do zarezerwowania ===");
-                Card[] cardsOnTable = VisibleCardsOnTable(cardLevel);
-                while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 4)
-                {
-                    Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-4): ");
-                }
-                player.ReserveCard(cardsOnTable[input-1]);
-                board.ReplaceMissingCard(cardLevel, cardsOnTable[input-1]);
-            }
-            else
-            {
-                Console.WriteLine("=== Wybierz którego poziomu kartę chcesz zarezerwować ===");
-                Console.WriteLine("1 poziom");
-                Console.WriteLine("2 poziom");
-                Console.WriteLine("3 poziom");
-                int cardLevel;
-                while (!int.TryParse(Console.ReadLine(), out cardLevel) || cardLevel < 1 || cardLevel > 3)
-                {
-                    Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-3): ");
-                }
-                switch (cardLevel)
-                {
-                    case 1:
-                        Random randomLevel1Card = new Random();
-                        Card level1CardToReserve = level1Shuffled[randomLevel1Card.Next(level1Shuffled.Count)];
-                        player.ReserveCard(level1CardToReserve);
-                        level1Shuffled.Remove(level1CardToReserve);
-                        break;
-                    case 2:
-                        Random randomLevel2Card = new Random();
-                        Card level2CardToReserve = level2Shuffled[randomLevel2Card.Next(level2Shuffled.Count)];
-                        player.ReserveCard(level2CardToReserve);
-                        level2Shuffled.Remove(level2CardToReserve);
-                        break;
-                    case 3:
-                        Random randomLevel3Card = new Random();
-                        Card level3CardToReserve = level3Shuffled[randomLevel3Card.Next(level3Shuffled.Count)];
-                        player.ReserveCard(level3CardToReserve);
-                        level3Shuffled.Remove(level3CardToReserve);
-                        break;
-                }
-            }
-            return true;
-        }
-        Card[] VisibleCardsOnTable(int cardlevel)
-        {
-            Card[] cardsOnTable = new Card[4];
-            for (int i = 0; i < cardsOnTable.Length; i++)
-            {
-                if (cardlevel == 1)
-                {
-                    cardsOnTable[i] = level1VisibleCards[i];
-                }
-                else if (cardlevel == 2)
-                {
-                    cardsOnTable[i] = level2VisibleCards[i];
-                }
-                else
-                {
-                    cardsOnTable[i] = level3VisibleCards[i];
-                }
-            }
-            int j = 1;
-            foreach (Card card in cardsOnTable)
-            {
-                Console.WriteLine(j.ToString() + ". Level: " + card.Level + " Karta koloru: " + card.BonusColor + "  Cena: " + Cena(card) + " Victory Points: " + card.Points);
-                j++;
-            }
-            return cardsOnTable;
-        }
-
-        string Cena(Card card)
-        {
-            string cena = "";
-            foreach (KeyValuePair<GemColor, int> tokens in card.DetailedPrice)
-            {
-                if (tokens.Value != 0)
-                    cena += tokens.Key + " " + tokens.Value.ToString() + " ";
-            }
-            return cena;
         }
     }
 }
