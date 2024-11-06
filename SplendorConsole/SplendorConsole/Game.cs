@@ -48,7 +48,7 @@ namespace SplendorConsole
            
             AddResourcesToBank(bank, listOfPlayers.Count);
             SetVisibleCards();
-            board = new Board(level1VisibleCards, level2VisibleCards, level3VisibleCards);
+            board = new Board(level1VisibleCards, level2VisibleCards, level3VisibleCards, level1Shuffled, level2Shuffled, level3Shuffled);
             GameLoop(listOfPlayers.Count);
         }
 
@@ -474,15 +474,24 @@ namespace SplendorConsole
 
             if (reserveinput == 1)
             {
+                Console.WriteLine("=== Wybierz którego poziomu kartę chcesz zarezerwować ===");
+                Console.WriteLine("1 poziom");
+                Console.WriteLine("2 poziom");
+                Console.WriteLine("3 poziom");
+                int cardLevel;
+                while (!int.TryParse(Console.ReadLine(), out cardLevel) || cardLevel < 1 || cardLevel > 3)
+                {
+                    Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-3): ");
+                }
                 int input;
                 Console.WriteLine("=== Wybierz kartę do zarezerwowania ===");
-                Card[] cardsOnTable = VisibleCardsOnTable();
-                while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 12)
+                Card[] cardsOnTable = VisibleCardsOnTable(cardLevel);
+                while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 4)
                 {
-                    Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-12): ");
+                    Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-4): ");
                 }
-                player.ReserveCard(cardsOnTable[input - 1]);
-                board.ReplaceMissingCard((input - 1) / 4 + 1);
+                player.ReserveCard(cardsOnTable[input-1]);
+                board.ReplaceMissingCard(cardLevel, cardsOnTable[input-1]);
             }
             else
             {
@@ -519,28 +528,28 @@ namespace SplendorConsole
             }
             return true;
         }
-        Card[] VisibleCardsOnTable()
+        Card[] VisibleCardsOnTable(int cardlevel)
         {
-            Card[] cardsOnTable = new Card[12];
+            Card[] cardsOnTable = new Card[4];
             for (int i = 0; i < cardsOnTable.Length; i++)
             {
-                if (i < 4)
+                if (cardlevel == 1)
                 {
                     cardsOnTable[i] = level1VisibleCards[i];
                 }
-                else if (i >= 4 && i < 8)
+                else if (cardlevel == 2)
                 {
-                    cardsOnTable[i] = level2VisibleCards[i % 4];
+                    cardsOnTable[i] = level2VisibleCards[i];
                 }
                 else
                 {
-                    cardsOnTable[i] = level3VisibleCards[i % 4];
+                    cardsOnTable[i] = level3VisibleCards[i];
                 }
             }
             int j = 1;
             foreach (Card card in cardsOnTable)
             {
-                Console.WriteLine(j.ToString() + ". Level: " + card.Level + " Karta koloru: " + card.BonusColor + "  Cena: " + Cena(card));
+                Console.WriteLine(j.ToString() + ". Level: " + card.Level + " Karta koloru: " + card.BonusColor + "  Cena: " + Cena(card) + " Victory Points: " + card.Points);
                 j++;
             }
             return cardsOnTable;

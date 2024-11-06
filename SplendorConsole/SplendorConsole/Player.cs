@@ -56,7 +56,7 @@ namespace SplendorConsole
             if (success)
             {
                 Console.WriteLine("Karta została pomyślnie zakupiona!");
-                board.ReplaceMissingCard(level);
+                board.ReplaceMissingCard(level, selectedCard);
             }
             else
                 Console.WriteLine("Operacja kupowania karty nie powiodła się.");
@@ -139,7 +139,7 @@ namespace SplendorConsole
             this.bonusResources.AddResource(card.BonusColor);
             this.points += card.Points;
 
-            board.ReplaceMissingCard(cardToBuyLevel);
+            board.ReplaceMissingCard(cardToBuyLevel, card);
             Console.WriteLine($"Karta {card.ToString()} została zakupiona!");
             return true;
         }
