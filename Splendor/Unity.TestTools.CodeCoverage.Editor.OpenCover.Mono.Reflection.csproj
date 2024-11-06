@@ -61,9 +61,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library\PackageCache\com.unity.testtools.codecoverage@1.2.6\Editor\CoverageFormats\OpenCover\Mono.Reflection\ByteBuffer.cs" />
+    <Compile Include="Library\PackageCache\com.unity.testtools.codecoverage@1.2.6\Editor\CoverageFormats\OpenCover\Mono.Reflection\MethodBodyReader.cs" />
     <Compile Include="Library\PackageCache\com.unity.testtools.codecoverage@1.2.6\Editor\CoverageFormats\OpenCover\Mono.Reflection\Instruction.cs" />
     <Compile Include="Library\PackageCache\com.unity.testtools.codecoverage@1.2.6\Editor\CoverageFormats\OpenCover\Mono.Reflection\Disassembler.cs" />
-    <Compile Include="Library\PackageCache\com.unity.testtools.codecoverage@1.2.6\Editor\CoverageFormats\OpenCover\Mono.Reflection\MethodBodyReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\PackageCache\com.unity.testtools.codecoverage@1.2.6\Editor\CoverageFormats\OpenCover\Mono.Reflection\Reflection.asmdef" />
@@ -923,6 +923,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="UnityEditor.UI.csproj">
+      <Project>{D5093545-F30C-D6F8-F294-DF48FEF2684E}</Project>
+      <Name>UnityEditor.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityEngine.UI.csproj">
+      <Project>{76239A61-B56A-466E-79F1-80EC9D69ED53}</Project>
+      <Name>UnityEngine.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEngine.TestRunner.csproj">
       <Project>{DC2C7812-2830-0DC4-AC04-F4C3B1F5F09F}</Project>
       <Name>UnityEngine.TestRunner</Name>

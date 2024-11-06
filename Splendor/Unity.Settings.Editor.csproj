@@ -60,18 +60,18 @@
     <Analyzer Include="D:\Unity\UnityVersions\2022.3.50f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\ValueWrapper.cs" />
-    <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\UserSettingsProvider.cs" />
-    <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\UserSettings.cs" />
     <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\FileSettingsRepository.cs" />
-    <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\Settings.cs" />
     <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\UserSettingsRepository.cs" />
-    <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\SettingsDictionary.cs" />
     <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\PackageSettingsRepository.cs" />
     <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\ISettingsRepository.cs" />
     <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\ProjectUserSettings.cs" />
     <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\Attributes.cs" />
     <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\UserSetting.cs" />
+    <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\ValueWrapper.cs" />
+    <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\UserSettingsProvider.cs" />
+    <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\UserSettings.cs" />
+    <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\Settings.cs" />
+    <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\SettingsDictionary.cs" />
     <Compile Include="Library\PackageCache\com.unity.settings-manager@2.0.1\Editor\SettingsGUILayout.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -932,6 +932,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="UnityEditor.UI.csproj">
+      <Project>{D5093545-F30C-D6F8-F294-DF48FEF2684E}</Project>
+      <Name>UnityEditor.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityEngine.UI.csproj">
+      <Project>{76239A61-B56A-466E-79F1-80EC9D69ED53}</Project>
+      <Name>UnityEngine.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEngine.TestRunner.csproj">
       <Project>{DC2C7812-2830-0DC4-AC04-F4C3B1F5F09F}</Project>
       <Name>UnityEngine.TestRunner</Name>
