@@ -229,11 +229,12 @@ namespace SplendorConsole
 
                     case 5:
                         Pass();
-                        actionSuccess = true; 
+                        actionSuccess = true;                      
                         break;
                 }
+            } while (!actionSuccess);
+            Console.Clear();
 
-            } while (!actionSuccess); 
         }
 
 
