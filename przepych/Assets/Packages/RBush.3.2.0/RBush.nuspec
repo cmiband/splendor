@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>RBush</id>
+    <version>3.2.0</version>
+    <title>RBush</title>
+    <authors>viceroypenguin</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <readme>readme.md</readme>
+    <description>Spatial Index data structure; used to make it easier to find data points on a two dimensional plane.</description>
+    <copyright>Copyright © 2017-2022 Turning Code, LLC (and others)</copyright>
+    <tags>.NET R-Tree Algorithm tree search spatial index</tags>
+    <repository type="git" url="https://github.com/viceroypenguin/RBush" commit="7397997e71c6c426cde74292652f09082b58bde2" />
+    <dependencies>
+      <group targetFramework=".NETStandard1.2">
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETCoreApp3.1" />
+      <group targetFramework="net6.0" />
+    </dependencies>
+  </metadata>
+</package>
