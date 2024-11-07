@@ -425,5 +425,15 @@ namespace SplendorConsole
                 points += noble.Points;
             }
         }
+
+        public string handToString()
+        {
+            return string.Join("  ", hand);
+        }
+
+        public string nobleToString()
+        {
+            return string.Join(" ", nobles);
+        }
     }
 }

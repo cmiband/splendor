@@ -207,7 +207,9 @@ namespace SplendorConsole
                 Console.WriteLine("======================================================================");
                 Console.WriteLine("Twoje żetony: " + listOfPlayers[currentTurn].Resources.ToString());
                 Console.WriteLine("Twoje surowce z kopalń: " + listOfPlayers[currentTurn].BonusResources.ToString());
-                Console.WriteLine("Twoje zakupione karty: " + listOfPlayers[currentTurn].hand.ToString());
+                Console.WriteLine("Twoje zakupione karty: " + listOfPlayers[currentTurn].handToString());
+                Console.WriteLine("Punkty zwycięstwa: " + listOfPlayers[currentTurn].Points);
+                Console.WriteLine("Twoi arystokraci: " + listOfPlayers[currentTurn].nobleToString());
                 Console.WriteLine("======================================================================");
                 Console.Write("Wprowadź numer akcji (1-5): ");
 
