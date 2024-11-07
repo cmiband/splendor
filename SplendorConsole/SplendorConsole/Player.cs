@@ -14,12 +14,23 @@ namespace SplendorConsole
 
         private Resources resources = new Resources();
         private Resources bonusResources = new Resources();
+        public Resources BonusResources
+        {
+            get { return bonusResources; }
+            set { bonusResources = value; }
+
+        }
         public List<Card> hand;
         private List<Card> reservedCards = new List<Card>();
         private int reservedCardsCounter = 0;
         private List<Noble> nobles = new List<Noble>();
+        public List<Noble> Nobles
+        {
+            get => nobles;
+            set => nobles = value;
+        }
         private int points;
-        public int Points { get => points; }
+        public int Points { get => points; set => points = value; }
         public Player()
         {
             hand = new List<Card>();
@@ -320,51 +331,6 @@ namespace SplendorConsole
             throw new NotImplementedException();
         }
 
-        public void GettingNobles()
-        {
-            if (CanGetMultipleNobles() == false)
-            {
-                foreach (Noble noble in Board.VisibleNobles)
-                    if (CanGetNoble(noble))
-                        GetNoble(noble);
-            }
-            else
-            {
-                List<int> AvailableIndexNobles = new List<int>();
-                for (int i = 0; i < Board.VisibleNobles.Length; i++)
-                {
-                    Noble noble = Board.VisibleNobles[i];
-                    if (CanGetNoble(noble))
-                        AvailableIndexNobles.Add(i);
-                }
-
-                Console.WriteLine("Arystokraci, których możesz zdobyć: ");
-                for (int i = 0; i < AvailableIndexNobles.Count; i++)
-                    Console.WriteLine(AvailableIndexNobles[i]);
-
-
-                bool IsChoiceMade = false;
-                int choice=0;
-                while (IsChoiceMade == false)
-                {
-                    try
-                    {
-                        Console.WriteLine("Wybierz arystokratę: ");
-                        choice = int.Parse(Console.ReadLine());
-                        IsChoiceMade = true;
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Niepoprawny numer, podaj jeszcze raz");
-                    }
-                }
-
-                Noble playerChoice = Board.VisibleNobles[choice];
-                GetNoble(playerChoice);
-
-            }
-
-        }
         public void GetNoble(Noble noble)
         {
             for(int i=0;i<nobles.Count;i++)
@@ -458,6 +424,16 @@ namespace SplendorConsole
             {
                 points += noble.Points;
             }
+        }
+
+        public string handToString()
+        {
+            return string.Join("  ", hand);
+        }
+
+        public string nobleToString()
+        {
+            return string.Join(" ", nobles);
         }
     }
 }
