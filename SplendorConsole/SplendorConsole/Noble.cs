@@ -24,5 +24,10 @@ namespace SplendorConsole
         }
         private string illustration;
 
+        public override string ToString()
+        {
+            return $"Arystokrata dodający {points} punktów.";
+        }
+
     }
 }
