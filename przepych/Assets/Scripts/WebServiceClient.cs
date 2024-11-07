@@ -11,18 +11,6 @@ public delegate void FetchDataCallbackHandler(string data);
 
 public class WebServiceClient : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private const string CONNECTION_ERROR_MESSAGE = "Error occured while trying to connect to web socket";
     private const string SEND_DATA_EXCEPTION_MESSAGE = "Error occured while trying to send data to web socket";
     private const string SEND_AND_FETCH_EXCEPTION_MESSAGE = "Error occured while trying to send and fetch data from web socket";

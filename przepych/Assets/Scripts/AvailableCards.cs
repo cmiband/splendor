@@ -8,12 +8,6 @@ using UnityEngine;
 
 public class AvailableCards : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     public List<Card> level1Cards = new List<Card>();
     public List<Card> level2Cards = new List<Card>();
     public List<Card> level3Cards = new List<Card>();

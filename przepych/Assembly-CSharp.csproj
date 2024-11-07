@@ -433,48 +433,48 @@
       <HintPath>D:\Unity\UnityVersions\2022.3.50f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.Collections.LowLevel.ILSupport">
-      <HintPath>Library\PackageCache\com.unity.collections@1.2.4\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="ClosedXML">
-      <HintPath>Assets\Packages\ClosedXML.0.104.1\lib\netstandard2.1\ClosedXML.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.IO.Packaging">
-      <HintPath>Assets\Packages\System.IO.Packaging.8.0.0\lib\netstandard2.0\System.IO.Packaging.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Assets\Packages\System.Runtime.CompilerServices.Unsafe.4.7.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="ExcelNumberFormat">
-      <HintPath>Assets\Packages\ExcelNumberFormat.1.1.0\lib\netstandard2.0\ExcelNumberFormat.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SixLabors.Fonts">
-      <HintPath>Assets\Packages\SixLabors.Fonts.1.0.0\lib\netstandard2.1\SixLabors.Fonts.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DocumentFormat.OpenXml.Framework">
-      <HintPath>Assets\Packages\DocumentFormat.OpenXml.Framework.3.0.1\lib\netstandard2.0\DocumentFormat.OpenXml.Framework.dll</HintPath>
+    <Reference Include="ClosedXML.Parser">
+      <HintPath>Assets\Packages\ClosedXML.Parser.1.2.0\lib\netstandard2.1\ClosedXML.Parser.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RBush">
       <HintPath>Assets\Packages\RBush.3.2.0\lib\netstandard1.2\RBush.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.Collections.LowLevel.ILSupport">
+      <HintPath>Library\PackageCache\com.unity.collections@1.2.4\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ExcelNumberFormat">
+      <HintPath>Assets\Packages\ExcelNumberFormat.1.1.0\lib\netstandard2.0\ExcelNumberFormat.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml.Framework">
+      <HintPath>Assets\Packages\DocumentFormat.OpenXml.Framework.3.0.1\lib\netstandard2.0\DocumentFormat.OpenXml.Framework.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.Packaging">
+      <HintPath>Assets\Packages\System.IO.Packaging.8.0.0\lib\netstandard2.0\System.IO.Packaging.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SixLabors.Fonts">
+      <HintPath>Assets\Packages\SixLabors.Fonts.1.0.0\lib\netstandard2.1\SixLabors.Fonts.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DocumentFormat.OpenXml">
       <HintPath>Assets\Packages\DocumentFormat.OpenXml.3.0.1\lib\netstandard2.0\DocumentFormat.OpenXml.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ClosedXML.Parser">
-      <HintPath>Assets\Packages\ClosedXML.Parser.1.2.0\lib\netstandard2.1\ClosedXML.Parser.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>Assets\Packages\System.Runtime.CompilerServices.Unsafe.4.7.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ClosedXML">
+      <HintPath>Assets\Packages\ClosedXML.0.104.1\lib\netstandard2.1\ClosedXML.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="netstandard">
@@ -1049,12 +1049,12 @@
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
-      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="NuGetForUnity">
       <HintPath>Library\ScriptAssemblies\NuGetForUnity.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PsdPlugin">

@@ -6,18 +6,6 @@ using UnityEngine;
 
 public class Resources : MonoBehaviour, IEnumerable<KeyValuePair<GemColor, int>>
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public Dictionary<GemColor, int> gems = new Dictionary<GemColor, int>();
     public override bool Equals(object obj)
     {

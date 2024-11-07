@@ -5,18 +5,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public bool BUYING_RESERVED_CARD = true;
     public bool NOT_BUYING_RESERVED_CARD = false;
 

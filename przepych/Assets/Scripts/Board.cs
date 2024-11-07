@@ -5,18 +5,6 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private Noble[] nobles;
     private static Noble[] visibleNobles;
     public static Noble[] VisibleNobles
