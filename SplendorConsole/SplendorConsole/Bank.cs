@@ -12,7 +12,17 @@ namespace SplendorConsole
 
         public void TakeOutResources(int amount, GemColor color)
         {
-            resources.gems[color] -= amount;
+            this.resources.gems[color] -= amount;
+        }
+
+        public void AddResources(int amount, GemColor color)
+        {
+            this.resources.gems[color] += amount;
+        }
+
+        public void AddGoldenGem()
+        {
+            this.resources.gems[GemColor.GOLDEN]++;
         }
     }
 }
