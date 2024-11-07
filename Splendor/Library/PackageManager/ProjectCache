@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638663524027038090
-    m_Hash: 1092903220
+      ticks: 638666120356268553
+    m_Hash: 90976999
   m_LockFileStatus:
     m_FilePath: D:/Splendor/splendor/Splendor/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638663524028481363
-    m_Hash: 3333666261
+      ticks: 638666120356278549
+    m_Hash: 988573714
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_LocalPackages:
