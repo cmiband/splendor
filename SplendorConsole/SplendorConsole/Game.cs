@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -204,6 +204,13 @@ namespace SplendorConsole
                 Console.WriteLine("3. Zarezerwuj kartę i weź złoty klejnot");
                 Console.WriteLine("4. Kup kartę(nową lub zarezerwowaną)");
                 Console.WriteLine("5. Spasuj");
+                Console.WriteLine("======================================================================");
+                Console.WriteLine("Twoje żetony: " + listOfPlayers[currentTurn].Resources.ToString());
+                Console.WriteLine("Twoje surowce z kopalń: " + listOfPlayers[currentTurn].BonusResources.ToString());
+                Console.WriteLine("Twoje zakupione karty: " + listOfPlayers[currentTurn].handToString());
+                Console.WriteLine("Punkty zwycięstwa: " + listOfPlayers[currentTurn].Points);
+                Console.WriteLine("Twoi arystokraci: " + listOfPlayers[currentTurn].nobleToString());
+                Console.WriteLine("======================================================================");
                 Console.Write("Wprowadź numer akcji (1-5): ");
 
                 while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 5)
@@ -554,6 +561,53 @@ namespace SplendorConsole
                     price += tokens.Key + " " + tokens.Value.ToString() + " ";
             }
             return price;
+        }
+
+
+        public void GettingNobles()
+        {
+            if (listOfPlayers[currentTurn].CanGetMultipleNobles() == false)
+            {
+                foreach (Noble noble in Board.VisibleNobles)
+                    if (listOfPlayers[currentTurn].CanGetNoble(noble))
+                        listOfPlayers[currentTurn].GetNoble(noble);
+            }
+            else
+            {
+                List<int> AvailableIndexNobles = new List<int>();
+                for (int i = 0; i < Board.VisibleNobles.Length; i++)
+                {
+                    Noble noble = Board.VisibleNobles[i];
+                    if (listOfPlayers[currentTurn].CanGetNoble(noble))
+                        AvailableIndexNobles.Add(i);
+                }
+
+                Console.WriteLine("Arystokraci, których możesz zdobyć: ");
+                for (int i = 0; i < AvailableIndexNobles.Count; i++)
+                    Console.WriteLine(AvailableIndexNobles[i]);
+
+
+                bool IsChoiceMade = false;
+                int choice = 0;
+                while (IsChoiceMade == false)
+                {
+                    try
+                    {
+                        Console.WriteLine("Wybierz arystokratę: ");
+                        choice = int.Parse(Console.ReadLine());
+                        IsChoiceMade = true;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Niepoprawny numer, podaj jeszcze raz");
+                    }
+                }
+
+                Noble playerChoice = Board.VisibleNobles[choice];
+                listOfPlayers[currentTurn].GetNoble(playerChoice);
+
+            }
+
         }
     }
 }
