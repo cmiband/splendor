@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SplendorConsole")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+18296eb5edb92465c10102d10f634a3b2c1a1670")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2d5a1eb5583e84083874d49e07f95ef87b2f2898")]
 [assembly: System.Reflection.AssemblyProductAttribute("SplendorConsole")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SplendorConsole")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
