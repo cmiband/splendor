@@ -236,7 +236,7 @@ namespace SplendorConsole
                         break;
 
                     case 4:
-                        actionSuccess = player.BuyCardAction(this.board, this.bank);
+                        actionSuccess = player.BuyCardAction(this.board, this.bank, this);
                         break;
 
                     case 5:
@@ -608,6 +608,77 @@ namespace SplendorConsole
 
             }
 
+        }
+        public int BuyCardOption()
+        {
+            int opChoice;
+            while (!int.TryParse(Console.ReadLine(), out opChoice) || opChoice < 1 || opChoice > 2)
+            {
+                Console.WriteLine("Niepoprawny poziom. Wprowadź 1 lub 2");
+            }
+            return opChoice;
+        }
+        public int ChooseLevelOfCard()
+        {
+            int level;
+            while (!int.TryParse(Console.ReadLine(), out level) || level < 1 || level > 3)
+            {
+                Console.WriteLine("Niepoprawny poziom. Wprowadź 1, 2 lub 3:");
+            } 
+            return level;
+        }
+        public int ChooseCardIndex(List<Card> visibleCards)
+        {
+            int cardIndex;
+            while (!int.TryParse(Console.ReadLine(), out cardIndex) || cardIndex < 1 || cardIndex > visibleCards.Count)
+            {
+                Console.WriteLine("Niepoprawny wybór. Wprowadź numer odpowiadający wybranej karcie:");
+            }
+            return cardIndex;
+        }
+        public int ChooseReservedCardIndex(List<Card> reservedCards)
+        {
+            int choice;
+            while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > reservedCards.Count)
+            {
+                Console.WriteLine("Niepoprawna karta.");
+            }
+            return choice;
+        }
+        public bool WantToSpendGoldCoin()
+        {
+            int wantTo;
+            while (true)
+            {
+                wantTo = Convert.ToInt32(Console.ReadLine());
+                if (wantTo == 2)
+                    return false;
+                else if (wantTo == 1)
+                    return true;
+                else
+                    Console.WriteLine("Podano zły klawisz. Podaj 1 lub 2");
+            }
+        }
+        public GemColor ColorToBePaidWithGolden()
+        {
+            Console.WriteLine("Podaj kolor żetonu, zamiast którego użyjesz złotego żetonu:");
+            Console.WriteLine("Opcje do wyboru: ");
+            foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+            {
+                if (color != GemColor.GOLDEN)
+                {
+                    Console.WriteLine($"- {color}");
+                }
+            }
+            int input;
+            while (true)
+            {
+                Console.Write("Wprowadź numer koloru: ");
+                if (int.TryParse(Console.ReadLine(), out input) && input > 0 && input <= Enum.GetValues(typeof(GemColor)).Length - 1)
+                    return (GemColor)(input - 1);
+                else
+                    Console.WriteLine("Niepoprawny wybór. Wprowadź numer odpowiadający dostępnym kolorom.");
+            }
         }
     }
 }

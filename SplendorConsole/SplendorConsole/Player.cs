@@ -42,27 +42,17 @@ namespace SplendorConsole
         }
 
         public Resources Resources { get => resources; }
-        public bool BuyCardAction(Board board, Bank bank)
+        public bool BuyCardAction(Board board, Bank bank, Game game)
         {
             Console.WriteLine("Chcesz kupić nową kartę czy kupić zarezerwowaną?");
             Console.WriteLine("[1] Nowa");
             Console.WriteLine("[2] Zarerwowana");
-
-            int opChoice;
-            while (!int.TryParse(Console.ReadLine(), out opChoice) || opChoice < 1 || opChoice > 2)
-            {
-                Console.WriteLine("Niepoprawny poziom. Wprowadź 1 lub 2");
-            }
+            int opChoice = game.BuyCardOption();
 
             if(opChoice == 1)
             {
                 Console.WriteLine("Wybierz poziom karty do zakupu (1, 2 lub 3):");
-                int level;
-                while (!int.TryParse(Console.ReadLine(), out level) || level < 1 || level > 3)
-                {
-                    Console.WriteLine("Niepoprawny poziom. Wprowadź 1, 2 lub 3:");
-                }
-
+                int level = game.ChooseLevelOfCard();
                 List<Card> visibleCards = board.GetVisibleCards(level);
                 Console.WriteLine("Wybierz numer karty do zakupu:");
                 for (int i = 0; i < visibleCards.Count; i++)
@@ -70,15 +60,11 @@ namespace SplendorConsole
                     Console.WriteLine($"{i + 1}: {visibleCards[i]}");
                 }
 
-                int cardIndex;
-                while (!int.TryParse(Console.ReadLine(), out cardIndex) || cardIndex < 1 || cardIndex > visibleCards.Count)
-                {
-                    Console.WriteLine("Niepoprawny wybór. Wprowadź numer odpowiadający wybranej karcie:");
-                }
+                int cardIndex = game.ChooseCardIndex(visibleCards);
 
                 Card selectedCard = visibleCards[cardIndex - 1];
 
-                var success = BuyCard(board, selectedCard, bank, NOT_BUYING_RESERVED_CARD);
+                var success = BuyCard(board, selectedCard, bank, NOT_BUYING_RESERVED_CARD, game);
                 if (success)
                 {
                     Console.WriteLine("Karta została pomyślnie zakupiona!");
@@ -93,11 +79,11 @@ namespace SplendorConsole
             } 
             else
             {
-                return this.HandleBuyReservedCard(board, bank);
+                return this.HandleBuyReservedCard(board, bank, game);
             }
         }
 
-        public bool HandleBuyReservedCard(Board board, Bank bank)
+        public bool HandleBuyReservedCard(Board board, Bank bank, Game game)
         {
             if(this.reservedCards.Count == 0)
             {
@@ -110,29 +96,25 @@ namespace SplendorConsole
             {
                 Console.WriteLine($"[{i+1}] {this.reservedCards[i]}");
             }
-            int choice;
-            while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > this.reservedCards.Count)
-            {
-                Console.WriteLine("Niepoprawna karta.");
-            }
+            int choice = game.ChooseReservedCardIndex(this.reservedCards);
 
             Card selectedCard = this.reservedCards[choice - 1];
             this.reservedCards.Remove(selectedCard);
 
-            return this.BuyCard(board, selectedCard, bank, BUYING_RESERVED_CARD);
+            return this.BuyCard(board, selectedCard, bank, BUYING_RESERVED_CARD, game);
         }
 
-        public bool BuyCard(Board board, Card card, Bank bank, bool isBuyingReservedCard)
+        public bool BuyCard(Board board, Card card, Bank bank, bool isBuyingReservedCard, Game game)
         {
             Console.WriteLine("Czy chcesz użyć złotego żetonu aby zapłacić za kartę?");
             Console.WriteLine("1 - Tak");
             Console.WriteLine("2 - Nie");
-            var choiceForGolden = WantToSpendGoldCoin();
+            var choiceForGolden = game.WantToSpendGoldCoin();
             GemColor colorReplacedWithGolden = GemColor.NONE;
             GemColor colorOfChoice = GemColor.NONE;
             if (choiceForGolden)
             {
-                colorOfChoice = ColorToBePaidWithGolden();
+                colorOfChoice = game.ColorToBePaidWithGolden();
                 colorReplacedWithGolden = colorOfChoice;
             }
 
@@ -290,41 +272,6 @@ namespace SplendorConsole
                     return i;
             }
             return -1;
-        }
-        public bool WantToSpendGoldCoin()
-        {
-            int wantTo;
-            while (true)
-            {
-                wantTo = Convert.ToInt32(Console.ReadLine());
-                if (wantTo == 2)
-                    return false;
-                else if (wantTo == 1)
-                    return true;
-                else
-                    Console.WriteLine("Podano zły klawisz. Podaj 1 lub 2");
-            }
-        }
-        public GemColor ColorToBePaidWithGolden()
-        {
-            Console.WriteLine("Podaj kolor żetonu, zamiast którego użyjesz złotego żetonu:");
-            Console.WriteLine("Opcje do wyboru: ");
-            foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
-            {
-                if (color != GemColor.GOLDEN)
-                {
-                    Console.WriteLine($"- {color}");
-                }
-            }
-            int input;
-            while (true)
-            {
-                Console.Write("Wprowadź numer koloru: ");
-                if (int.TryParse(Console.ReadLine(), out input) && input > 0 && input <= Enum.GetValues(typeof(GemColor)).Length - 1)
-                    return (GemColor)(input - 1);
-                else
-                    Console.WriteLine("Niepoprawny wybór. Wprowadź numer odpowiadający dostępnym kolorom.");
-            }
         }
         public void PassTurn()
         {
