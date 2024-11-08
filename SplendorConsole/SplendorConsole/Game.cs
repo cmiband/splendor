@@ -94,7 +94,9 @@ namespace SplendorConsole
             bool gameInProgress = true;
             while (gameInProgress)
             {
-                Console.WriteLine($"-----------------Aktualna kolejka należy do gracza {currentTurn}-----------------------");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"----------------- Aktualna kolejka należy do gracza {currentTurn} -----------------------");
+                Console.ResetColor();
                 Turn(listOfPlayers[currentTurn]);
 
                 // więcej logiki GameLoopa
@@ -236,7 +238,7 @@ namespace SplendorConsole
                         break;
 
                     case 4:
-                        actionSuccess = player.BuyCardAction(this.board, this.bank);
+                        actionSuccess = BuyCardAction(this.board, this.bank, player);
                         break;
 
                     case 5:
@@ -608,6 +610,241 @@ namespace SplendorConsole
 
             }
 
+        }
+        public int BuyCardOption()
+        {
+            int opChoice;
+            while (!int.TryParse(Console.ReadLine(), out opChoice) || opChoice < 1 || opChoice > 2)
+            {
+                Console.WriteLine("Niepoprawny poziom. Wprowadź 1 lub 2");
+            }
+            return opChoice;
+        }
+        public int ChooseLevelOfCard()
+        {
+            int level;
+            while (!int.TryParse(Console.ReadLine(), out level) || level < 1 || level > 3)
+            {
+                Console.WriteLine("Niepoprawny poziom. Wprowadź 1, 2 lub 3:");
+            } 
+            return level;
+        }
+        public int ChooseCardIndex(List<Card> visibleCards)
+        {
+            int cardIndex;
+            while (!int.TryParse(Console.ReadLine(), out cardIndex) || cardIndex < 1 || cardIndex > visibleCards.Count)
+            {
+                Console.WriteLine("Niepoprawny wybór. Wprowadź numer odpowiadający wybranej karcie:");
+            }
+            return cardIndex;
+        }
+        public int ChooseReservedCardIndex(List<Card> reservedCards)
+        {
+            int choice;
+            while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > reservedCards.Count)
+            {
+                Console.WriteLine("Niepoprawna karta.");
+            }
+            return choice;
+        }
+        public bool WantToSpendGoldCoin()
+        {
+            int wantTo;
+            while (true)
+            {
+                wantTo = Convert.ToInt32(Console.ReadLine());
+                if (wantTo == 2)
+                    return false;
+                else if (wantTo == 1)
+                    return true;
+                else
+                    Console.WriteLine("Podano zły klawisz. Podaj 1 lub 2");
+            }
+        }
+        public GemColor ColorToBePaidWithGolden()
+        {
+            Console.WriteLine("Podaj kolor żetonu, zamiast którego użyjesz złotego żetonu:");
+            Console.WriteLine("Opcje do wyboru: ");
+            foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+            {
+                if (color != GemColor.GOLDEN)
+                {
+                    Console.WriteLine($"- {color}");
+                }
+            }
+            int input;
+            while (true)
+            {
+                Console.Write("Wprowadź numer koloru: ");
+                if (int.TryParse(Console.ReadLine(), out input) && input > 0 && input <= Enum.GetValues(typeof(GemColor)).Length - 1)
+                    return (GemColor)(input - 1);
+                else
+                    Console.WriteLine("Niepoprawny wybór. Wprowadź numer odpowiadający dostępnym kolorom.");
+            }
+        }
+        public bool BuyCardAction(Board board, Bank bank, Player player)
+        {
+            Console.WriteLine("Chcesz kupić nową kartę czy kupić zarezerwowaną?");
+            Console.WriteLine("[1] Nowa");
+            Console.WriteLine("[2] Zarerwowana");
+            int opChoice = BuyCardOption();
+
+            if (opChoice == 1)
+            {
+                Console.WriteLine("Wybierz poziom karty do zakupu (1, 2 lub 3):");
+                int level = ChooseLevelOfCard();
+                List<Card> visibleCards = board.GetVisibleCards(level);
+                Console.WriteLine("Wybierz numer karty do zakupu:");
+                for (int i = 0; i < visibleCards.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}: {visibleCards[i]}");
+                }
+
+                int cardIndex = ChooseCardIndex(visibleCards);
+
+                Card selectedCard = visibleCards[cardIndex - 1];
+
+                var success = BuyCard(board, selectedCard, bank, player.NOT_BUYING_RESERVED_CARD, player);
+                if (success)
+                {
+                    Console.WriteLine("Karta została pomyślnie zakupiona!");
+                    board.ReplaceMissingCard(level, selectedCard);
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Operacja kupowania karty nie powiodła się.");
+                    return false;
+                }
+            }
+            else
+            {
+                return HandleBuyReservedCard(board, bank, player);
+            }
+        }
+        public bool HandleBuyReservedCard(Board board, Bank bank, Player player)
+        {
+            if (player.ReservedCards.Count == 0)
+            {
+                Console.WriteLine("Nie masz zarezerwowanych kart.");
+                return false;
+            }
+
+            Console.WriteLine("Wybierz zarezerwowaną kartę, którą chcesz kupić: ");
+            for (int i = 0; i < player.ReservedCards.Count; i++)
+            {
+                Console.WriteLine($"[{i + 1}] {player.ReservedCards[i]}");
+            }
+            int choice = ChooseReservedCardIndex(player.ReservedCards);
+
+            Card selectedCard = player.ReservedCards[choice - 1];
+            player.ReservedCards.Remove(selectedCard);
+
+            return this.BuyCard(board, selectedCard, bank, player.BUYING_RESERVED_CARD, player);
+        }
+        public bool BuyCard(Board board, Card card, Bank bank, bool isBuyingReservedCard, Player player)
+        {
+            Console.WriteLine("Czy chcesz użyć złotego żetonu aby zapłacić za kartę?");
+            Console.WriteLine("1 - Tak");
+            Console.WriteLine("2 - Nie");
+            var choiceForGolden = WantToSpendGoldCoin();
+            GemColor colorReplacedWithGolden = GemColor.NONE;
+            GemColor colorOfChoice = GemColor.NONE;
+            if (choiceForGolden)
+            {
+                colorOfChoice = ColorToBePaidWithGolden();
+                colorReplacedWithGolden = colorOfChoice;
+            }
+
+            if (!player.CanAffordCardWithGolden(card) && !player.CanAffordCard(card))
+            {
+                Console.WriteLine("Nie stać cię na tę kartę.");
+                return false;
+            }
+
+            int cardToBuyLevel = card.Level;
+            int indexInVisibleCards = board.GetCardIndexInVisibleCards(card, cardToBuyLevel);
+
+            if (indexInVisibleCards == -1 && !isBuyingReservedCard)
+            {
+                Console.WriteLine("Karta nie jest widoczna na stole.");
+                return false;
+            }
+
+            var cardPrice = card.DetailedPrice.gems;
+            bool goldenWasUsed = false;
+            foreach (var colorOnCard in cardPrice)
+            {
+                GemColor color = colorOnCard.Key;
+                int requiredAmount = colorOnCard.Value;
+
+                int bonusAmount = player.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                if (bonusAmount > 0)
+                {
+                    int amountToUse = Math.Min(bonusAmount, requiredAmount);
+                    player.BonusResources.gems[color] -= amountToUse;
+                    requiredAmount -= amountToUse;
+                }
+                if (requiredAmount > 0)
+                {
+                    int playerAmount = player.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+                    if (playerAmount >= requiredAmount)
+                    {
+                        player.Resources.gems[color] -= requiredAmount;
+                    }
+                    else
+                    {
+                        int deficit = requiredAmount - playerAmount;
+                        if (choiceForGolden && colorOfChoice == color)
+                        {
+                            int goldenTokens = player.Resources.gems.TryGetValue(GemColor.GOLDEN, out var golden) ? golden : 0;
+                            if (goldenTokens >= deficit)
+                            {
+                                player.Resources.gems[GemColor.GOLDEN] -= deficit;
+                                goldenWasUsed = true;
+                                bank.AddGoldenGem();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Nie masz wystarczającej liczby złotych żetonów.");
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Nie masz wystarczającej ilości żetonów koloru {color}.");
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            player.AddCardToPlayer(card);
+            player.BonusResources.AddResource(card.BonusColor);
+            player.Points += card.Points;
+
+            board.ReplaceMissingCard(cardToBuyLevel, card);
+            this.RefillBankResources(bank, card, colorReplacedWithGolden);
+            if (isBuyingReservedCard && !goldenWasUsed)
+            {
+                player.Resources.gems[GemColor.GOLDEN]--;
+                bank.AddGoldenGem();
+            }
+            Console.WriteLine($"Karta {card} została zakupiona!");
+            return true;
+        }
+        private void RefillBankResources(Bank bank, Card card, GemColor colorReplacedWithGolden)
+        {
+            foreach (var x in card.DetailedPrice.gems)
+            {
+                int amountToReplace = x.Value;
+                if (x.Key == colorReplacedWithGolden)
+                {
+                    amountToReplace--;
+                }
+
+                bank.AddResources(amountToReplace, x.Key);
+            }
         }
     }
 }
