@@ -48,6 +48,7 @@ public class CardController : MonoBehaviour
                illustration == other.illustration &&
                detailedPrice.Equals(other.detailedPrice);
     }
+
     public override string ToString()
     {
         string priceDescription = DetailedPrice.ToString();
