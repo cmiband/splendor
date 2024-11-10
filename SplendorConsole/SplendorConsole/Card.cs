@@ -59,7 +59,7 @@ namespace SplendorConsole
         public override string ToString()
         {
             string priceDescription = DetailedPrice.ToString();
-            return $"Karta koloru: {bonusColor}, cena: {priceDescription}, dodająca {points} punktów.";
+            return $"Karta koloru: {bonusColor},\t cena: {priceDescription},\t dodająca {points} punktów.";
         }
     }
 }
