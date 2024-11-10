@@ -225,14 +225,36 @@ namespace SplendorConsole
                 {
                     case 1:
                         actionSuccess = TakeThreeDifferentGems(player);
+
+                        if (NumberOfPlayerTokens() > 10)
+                        {
+                            int leave = NumberOfPlayerTokens() - 10;
+                            Console.WriteLine("Posiadasz za dużo żetonów!");
+                            Console.WriteLine($"Musisz odrzucić zbędne żetony w liczbie: {leave}");
+                            ChoiceOfColorWithdraw(leave);
+                        }
                         break;
 
                     case 2:
                         actionSuccess = TakeTwoSameGems(player);
+                        if (NumberOfPlayerTokens() > 10)
+                        {
+                            int leave = NumberOfPlayerTokens() - 10;
+                            Console.WriteLine("Posiadasz za dużo żetonów!");
+                            Console.WriteLine($"Musisz odrzucić zbędne żetony w liczbie: {leave}");
+                            ChoiceOfColorWithdraw(leave);
+                        }
                         break;
 
                     case 3:
                         actionSuccess = ReserveCard(player);
+                        if (NumberOfPlayerTokens() > 10)
+                        {
+                            int leave = NumberOfPlayerTokens() - 10;
+                            Console.WriteLine("Posiadasz za dużo żetonów!");
+                            Console.WriteLine($"Musisz odrzucić zbędne żetony w liczbie: {leave}");
+                            ChoiceOfColorWithdraw(leave);
+                        }
                         break;
 
                     case 4:
@@ -349,7 +371,36 @@ namespace SplendorConsole
                 }
             }
         }
+        private void ChoiceOfColorWithdraw(int tokenNumber)
+        {
+            int i = 1;
+            List<GemColor> recources = new List<GemColor>();
 
+            for (int j = 0; j < tokenNumber; j++)
+            {
+                List<GemColor> playerTokens = ShowPlayerTokens();
+                Console.WriteLine("Twoje żetony: \n" + listOfPlayers[currentTurn].Resources.ToString());
+                int input;
+
+                while (true)
+                {
+                    Console.Write($"Wprowadź numer koloru {j + 1} (indeksowane od jedynki): ");
+
+                    if (int.TryParse(Console.ReadLine(), out input) && input >= 1 && input <= playerTokens.Count())
+                    {
+                        GemColor selectedColor = playerTokens[input - 1];
+                        listOfPlayers[currentTurn].RemoveOneToken(listOfPlayers[currentTurn].Resources, playerTokens[input - 1]);
+                        bank.resources.AddResource(selectedColor);
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Niepoprawny wybór. Wprowadź numer odpowiadający dostępnym kolorom.");
+                    }
+                }
+            }
+
+        }
 
         private GemColor[] ChoiceOfColors()
         {
@@ -411,7 +462,28 @@ namespace SplendorConsole
             }
             return avaiableTokens;
         }
+        
+        private List<GemColor> ShowPlayerTokens()
+        {
+            List<GemColor> playerTokens = new List<GemColor>();
 
+            foreach (KeyValuePair<GemColor, int> tokens in listOfPlayers[currentTurn].Resources.gems)
+            {
+                playerTokens.Add(tokens.Key);
+            }
+            return playerTokens;
+        }
+        
+        private int NumberOfPlayerTokens()
+        {
+            int counter = 0;
+            foreach (KeyValuePair<GemColor, int> token in listOfPlayers[currentTurn].Resources.gems)
+            {
+                counter += token.Value;
+            }
+            return counter;
+        }
+        
         private void SetVisibleCards()
         {
             for (int i = 0; i < 4; i++)
