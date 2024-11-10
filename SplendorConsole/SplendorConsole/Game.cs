@@ -213,6 +213,10 @@ namespace SplendorConsole
                 Console.WriteLine("Punkty zwycięstwa: " + listOfPlayers[currentTurn].Points);
                 Console.WriteLine("Twoi arystokraci: " + listOfPlayers[currentTurn].nobleToString());
                 Console.WriteLine("======================================================================");
+                Console.WriteLine("Karty 1 poziomu dostępne na stole: \n" + string.Join("\n", board.Level1VisibleCards) + "\n");
+                Console.WriteLine("Karty 2 poziomu dostępne na stole: \n" + string.Join("\n", board.Level2VisibleCards) + "\n");
+                Console.WriteLine("Karty 3 poziomu dostępne na stole: \n" + string.Join("\n", board.Level3VisibleCards));
+                Console.WriteLine("======================================================================");
                 Console.Write("Wprowadź numer akcji (1-5): ");
 
                 while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 5)
@@ -350,7 +354,7 @@ namespace SplendorConsole
             for (int j = 0; j < tokenNumber; j++)
             {
                 List<GemColor> playerTokens = ShowPlayerTokens();
-                Console.WriteLine("Twoje żetony: \n" + listOfPlayers[currentTurn].Resources.ToString());
+                Console.WriteLine("Twoje żetony: " + listOfPlayers[currentTurn].Resources.ToStringForWithdraw());
                 int input;
 
                 while (true)
