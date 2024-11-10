@@ -183,6 +183,19 @@ namespace SplendorConsole
                 else this.resources.gems.Add(colors[i], 1);
             }
         }
+        
+        public void RemoveOneToken(Resources resources, GemColor color)
+        {
+            if (this.resources.gems.ContainsKey(color) && resources.gems[color] > 1)
+            {
+                this.resources.gems[color] -= 1;
+            }
+            else
+            {
+                this.resources.gems.Remove(color);
+            }
+        }
+        
         public void PointsCounter()
         {
             this.points = 0;
