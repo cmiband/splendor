@@ -39,9 +39,21 @@ namespace SplendorConsole
             }
             return hash;
         }
+
         public override string ToString()
         {
             return string.Join(", ", gems.Select(gem => $"{gem.Key}: {gem.Value}"));
+        }
+        public string ToStringForWithdraw()
+        {     
+            int i = 1;
+            string gemsdate = "";
+            foreach (var singlegem in gems)
+            {
+                gemsdate += $"\n{i}. {singlegem.Key}:\t{singlegem.Value}";
+                i++;
+            }
+            return gemsdate;
         }
         public void AddResource(GemColor color)
         {
