@@ -20,14 +20,12 @@ public class CardStackController : MonoBehaviour
     public void SetCardsInStack(List<CardController> cards)
     {
         this.cardsInStack = cards;
-
-        Debug.Log("set card stack");
     }
 
     public CardController PopCardFromStack()
     {
         CardController targetedCard = this.cardsInStack[this.cardsInStack.Count - 1];
-        this.cardsInStack.Remove(targetedCard);
+        this.cardsInStack.RemoveAt(this.cardsInStack.Count - 1);
 
         return targetedCard;
     }

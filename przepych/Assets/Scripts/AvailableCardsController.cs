@@ -47,10 +47,7 @@ public class AvailableCardsController : MonoBehaviour
                 var card = new CardController(level, bonusColor, points, illustration, detailedPrice);
 
                 AddCard(card);
-                Debug.Log(level);
             }
-
-            Debug.Log("Loading finished");
         }
     }
     public void AddCard(CardController card)

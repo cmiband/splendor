@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class CardController : MonoBehaviour
 {
-    private ResourcesController detailedPrice;
-    private int level;
-    private GemColor bonusColor;
-    private int points;
-    private string illustration;
+    public ResourcesController detailedPrice;
+    public int level;
+    public GemColor bonusColor;
+    public int points;
+    public string illustration;
     public int Points { get => points; }
 
     public int Level
@@ -53,5 +53,14 @@ public class CardController : MonoBehaviour
     {
         string priceDescription = DetailedPrice.ToString();
         return $"Karta koloru: {bonusColor}, cena: {priceDescription}, dodaj�ca {points} punkt�w.";
+    }
+
+    public void InitCardData(CardController card)
+    {
+        this.level = card.level;
+        this.bonusColor = card.bonusColor;
+        this.detailedPrice = card.detailedPrice;
+        this.points = card.points;
+        this.illustration = card.illustration;
     }
 }

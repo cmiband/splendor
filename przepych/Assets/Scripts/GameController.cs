@@ -16,11 +16,9 @@ public class GameController : MonoBehaviour
 
         availableCardsController.LoadCardsFromExcel("Assets/ExternalResources/KartyWykaz.xlsx");
 
-        Debug.Log(boardController);
         boardController.SetDecks(availableCardsController.level1Cards, availableCardsController.level2Cards, availableCardsController.level3Cards);
         boardController.SetCardsInStacks();
-
-        Debug.Log("Finished init procedure");
+        boardController.CreateCardObjectsOnStart();
     }
 
     // Update is called once per frame
