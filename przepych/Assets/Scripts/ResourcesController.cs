@@ -9,13 +9,13 @@ public class ResourcesController : MonoBehaviour, IEnumerable<KeyValuePair<GemCo
     public Dictionary<GemColor, int> gems = new Dictionary<GemColor, int>();
     public override bool Equals(object obj)
     {
-        if (obj.GetType() != typeof(Resources))
+        if (obj.GetType() != typeof(ResourcesController))
             return false;
 
         if (obj == null)
             return false;
 
-        Resources otherResources = (Resources)obj;
+        ResourcesController otherResources = (ResourcesController)obj;
 
         if (gems.Count != otherResources.gems.Count)
             return false;
@@ -50,8 +50,6 @@ public class ResourcesController : MonoBehaviour, IEnumerable<KeyValuePair<GemCo
         {
             gems[color] = 1;
         }
-
-        Console.WriteLine($"Dodano 1 zas�b koloru {color}. ��czna ilo��: {gems[color]}.");
     }
     public IEnumerator<KeyValuePair<GemColor, int>> GetEnumerator()
     {

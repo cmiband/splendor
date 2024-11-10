@@ -25,6 +25,7 @@ public class BoardController : MonoBehaviour
     private CardStackController level1StackController;
     private CardStackController level2StackController;
     private CardStackController level3StackController;
+
     private List<CardController> level1LoadedCardControllers = new List<CardController>();
     private List<CardController> level2LoadedCardControllers = new List<CardController>();
     private List<CardController> level3LoadedCardControllers = new List<CardController>();
