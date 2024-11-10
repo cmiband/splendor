@@ -41,7 +41,14 @@ namespace SplendorConsole
         }
         public override string ToString()
         {
-            return string.Join(", ", gems.Select(gem => $"{gem.Key}: {gem.Value}"));
+            int i = 1;
+            string gemsdate = "";
+            foreach (var singlegem in gems)
+            {
+                gemsdate += $"{i}. {singlegem.Key}: {singlegem.Value}\n";
+                i++;
+            }
+            return gemsdate;
         }
         public void AddResource(GemColor color)
         {
