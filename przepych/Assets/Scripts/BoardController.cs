@@ -15,12 +15,19 @@ public class BoardController : MonoBehaviour
         set => visibleNobles = value;
     }*/
     public GameObject cardPrefab;
+    public GameObject gemPrefab;
     public GameObject level1Stack;
     public GameObject level2Stack;
     public GameObject level3Stack;
     public GameObject level1VisibleCards;
     public GameObject level2VisibleCards;
     public GameObject level3VisibleCards;
+    public GameObject whiteGemsStack;
+    public GameObject blackGemsStack;
+    public GameObject greenGemsStack;
+    public GameObject blueGemsStack;
+    public GameObject redGemsStack;
+    public GameObject goldenGemsStack;
 
     private CardStackController level1StackController;
     private CardStackController level2StackController;
@@ -38,6 +45,7 @@ public class BoardController : MonoBehaviour
         this.level1StackController = this.level1Stack.GetComponent<CardStackController>();
         this.level2StackController = this.level2Stack.GetComponent<CardStackController>();
         this.level3StackController = this.level3Stack.GetComponent<CardStackController>();
+        SetGems();
 
     }
 
@@ -112,6 +120,23 @@ public class BoardController : MonoBehaviour
             CardController temporary = deck[i];
             deck[i] = deck[j];
             deck[j] = temporary;
+        }
+    }
+
+    private void SetGems()
+    {
+        SetOneGemStack(whiteGemsStack);
+        SetOneGemStack(blueGemsStack);
+        SetOneGemStack(greenGemsStack);
+        SetOneGemStack(redGemsStack);
+        SetOneGemStack(blackGemsStack);
+    }
+
+    private void SetOneGemStack(GameObject gameObject)
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            Instantiate(gemPrefab).transform.parent = gameObject.transform;
         }
     }
 }

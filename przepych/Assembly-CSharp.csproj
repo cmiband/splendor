@@ -55,7 +55,6 @@
     <UnityVersion>2022.3.50f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.50f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.50f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
@@ -64,6 +63,7 @@
     <Compile Include="Assets\Scripts\GemColor.cs" />
     <Compile Include="Assets\Scripts\BankController.cs" />
     <Compile Include="Assets\Scripts\WebServiceClient.cs" />
+    <Compile Include="Assets\Scripts\TokenController.cs" />
     <Compile Include="Assets\Scripts\BoardController.cs" />
     <Compile Include="Assets\Scripts\BaseScripts\Bank.cs" />
     <Compile Include="Assets\Scripts\BaseScripts\Card.cs" />
