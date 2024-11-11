@@ -820,10 +820,17 @@ namespace SplendorConsole
         }
         public bool BuyCard(Board board, Card card, Bank bank, bool isBuyingReservedCard, Player player)
         {
-            Console.WriteLine("Czy chcesz użyć złotego żetonu aby zapłacić za kartę?");
-            Console.WriteLine("1 - Tak");
-            Console.WriteLine("2 - Nie");
-            var choiceForGolden = WantToSpendGoldCoin();
+            bool choiceForGolden = false;
+
+            if(!isBuyingReservedCard)
+            {
+                Console.WriteLine("Czy chcesz użyć złotego żetonu aby zapłacić za kartę?");
+                Console.WriteLine("1 - Tak");
+                Console.WriteLine("2 - Nie");
+
+                choiceForGolden = WantToSpendGoldCoin();
+            }
+
             GemColor colorReplacedWithGolden = GemColor.NONE;
             GemColor colorOfChoice = GemColor.NONE;
             if (choiceForGolden)
@@ -848,7 +855,6 @@ namespace SplendorConsole
             }
 
             var cardPrice = card.DetailedPrice.gems;
-            bool goldenWasUsed = false;
             foreach (var colorOnCard in cardPrice)
             {
                 GemColor color = colorOnCard.Key;
@@ -877,7 +883,6 @@ namespace SplendorConsole
                             if (goldenTokens >= deficit)
                             {
                                 player.Resources.gems[GemColor.GOLDEN] -= deficit;
-                                goldenWasUsed = true;
                                 bank.AddGoldenGem();
                             }
                             else
@@ -901,7 +906,7 @@ namespace SplendorConsole
 
             board.ReplaceMissingCard(cardToBuyLevel, card);
             this.RefillBankResources(bank, card, colorReplacedWithGolden);
-            if (isBuyingReservedCard && !goldenWasUsed)
+            if (isBuyingReservedCard)
             {
                 player.Resources.gems[GemColor.GOLDEN]--;
                 bank.AddGoldenGem();
@@ -909,6 +914,7 @@ namespace SplendorConsole
             Console.WriteLine($"Karta {card} została zakupiona!");
             return true;
         }
+
         private void RefillBankResources(Bank bank, Card card, GemColor colorReplacedWithGolden)
         {
             foreach (var x in card.DetailedPrice.gems)
