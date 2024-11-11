@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TokenController : MonoBehaviour
+public class GemsStackController : MonoBehaviour
 {
-
     public GemColor color;
     // Start is called before the first frame update
     void Start()

@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour
         boardController.SetDecks(availableCardsController.level1Cards, availableCardsController.level2Cards, availableCardsController.level3Cards);
         boardController.SetCardsInStacks();
         boardController.CreateCardObjectsOnStart();
+        boardController.SetGems();
     }
 
     // Update is called once per frame

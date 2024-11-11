@@ -45,7 +45,6 @@ public class BoardController : MonoBehaviour
         this.level1StackController = this.level1Stack.GetComponent<CardStackController>();
         this.level2StackController = this.level2Stack.GetComponent<CardStackController>();
         this.level3StackController = this.level3Stack.GetComponent<CardStackController>();
-        SetGems();
 
     }
 
@@ -123,7 +122,7 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    private void SetGems()
+    public void SetGems()
     {
         SetOneGemStack(whiteGemsStack);
         SetOneGemStack(blueGemsStack);
