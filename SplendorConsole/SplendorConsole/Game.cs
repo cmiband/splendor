@@ -207,6 +207,7 @@ namespace SplendorConsole
                 Console.WriteLine("4. Kup kartę(nową lub zarezerwowaną)");
                 Console.WriteLine("5. Spasuj");
                 Console.WriteLine("======================================================================");
+                Console.WriteLine("Żetony w banku:  " + this.bank.resources);
                 Console.WriteLine("Twoje żetony: " + listOfPlayers[currentTurn].Resources.ToString());
                 Console.WriteLine("Twoje surowce z kopalń: " + listOfPlayers[currentTurn].BonusResources.ToString());
                 Console.WriteLine("Twoje zakupione karty: " + listOfPlayers[currentTurn].handToString());
