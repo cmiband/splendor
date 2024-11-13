@@ -32,9 +32,9 @@ public class GameController : MonoBehaviour
         boardController.SetDecks(availableCardsController.level1Cards, availableCardsController.level2Cards, availableCardsController.level3Cards);
         boardController.SetCardsInStacks();
         boardController.CreateCardObjectsOnStart();
-        this.CreateFourPlayersDataOnInit();
 
         this.players = new List<GameObject> { currentPlayer, nextPlayerOne, nextPlayerTwo, nextPlayerThree };
+        this.CreateFourPlayersDataOnInit();  
         this.FillPlayersWithData();
 
         this.AddEventListeners();
@@ -52,6 +52,8 @@ public class GameController : MonoBehaviour
         {
             List<CardController> initHand = new List<CardController>();
 
+            PlayerController targetedPlayerController = this.players[i].GetComponent<PlayerController>();
+            targetedPlayerController.SetPlayerId(i);
             this.playerIdToHand.Add(i, initHand);
         }
     }

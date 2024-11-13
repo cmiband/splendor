@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public int currentPlayerId;
+    public int playerId;
     public bool BUYING_RESERVED_CARD = true;
     public bool NOT_BUYING_RESERVED_CARD = false;
 
@@ -42,5 +42,10 @@ public class PlayerController : MonoBehaviour
     public List<CardController> GetPlayerHand()
     {
         return this.hand;
+    }
+
+    public void SetPlayerId(int index)
+    {
+        this.playerId = index;
     }
 }
