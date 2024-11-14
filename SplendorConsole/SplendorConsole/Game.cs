@@ -541,6 +541,7 @@ namespace SplendorConsole
                 if (player.Resources.gems.ContainsKey(GemColor.GOLDEN))
                 {
                     player.Resources.gems[GemColor.GOLDEN] += 1;
+                    bank.resources.gems[GemColor.GOLDEN]--;
                 }
                 else
                 {
@@ -905,7 +906,7 @@ namespace SplendorConsole
             player.BonusResources.AddResource(card.BonusColor);
             player.Points += card.Points;
 
-            board.ReplaceMissingCard(cardToBuyLevel, card);
+            //board.ReplaceMissingCard(cardToBuyLevel, card);
             this.RefillBankResources(bank, card, colorReplacedWithGolden);
             if (isBuyingReservedCard)
             {
