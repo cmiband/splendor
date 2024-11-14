@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace SplendorConsole
@@ -13,18 +16,26 @@ namespace SplendorConsole
         private int currentTurn = 0;
         private AvailableCards availableCards = new AvailableCards();
 
-        private List<Card> level1Shuffled = new List<Card>();
-        private List<Card> level2Shuffled = new List<Card>();
-        private List<Card> level3Shuffled = new List<Card>();
+        private static List<Card> level1Shuffled = new List<Card>();
+        private static List<Card> level2Shuffled = new List<Card>();
+        private static List<Card> level3Shuffled = new List<Card>();
         private Bank bank = new Bank();
         private Board board;
+      
 
-        private List<Card> level1VisibleCards = new List<Card>();
-        private List<Card> level2VisibleCards = new List<Card>();
-        private List<Card> level3VisibleCards = new List<Card>();
+        private static List<Card> level1VisibleCards = new List<Card>();
+        private static List<Card> level2VisibleCards = new List<Card>();
+        private static List<Card> level3VisibleCards = new List<Card>();
 
         private List<Player> listOfPlayers = new List<Player>();
-        private List<Noble> listOfNobles = new List<Noble>();
+        private static List<Noble> listOfNobles = new List<Noble>();
+        public static List<Noble> ListOfNobles
+        {
+            get => listOfNobles;
+            set => listOfNobles = value;
+        }
+        
+
 
         public Bank Bank
         {
@@ -48,22 +59,47 @@ namespace SplendorConsole
            
             AddResourcesToBank(bank, listOfPlayers.Count);
             SetVisibleCards();
-            board = new Board(level1VisibleCards, level2VisibleCards, level3VisibleCards, level1Shuffled, level2Shuffled, level3Shuffled);
+            board = new Board(level1VisibleCards, level2VisibleCards, level3VisibleCards, level1Shuffled, level2Shuffled, level3Shuffled, listOfNobles);
             GameLoop(listOfPlayers.Count);
         }
 
+       
         private List<Noble> SetNumberOfNobles(int numberOfPlayers)
         {
             int numberOfNobles = numberOfPlayers + 1;
             List<Noble> nobles = new List<Noble>();
 
-            for (int i = 0; i < numberOfNobles; i++)
-            {
-                nobles.Add(new Noble());
-            }
+            Resources firstResources = new Resources();
+            firstResources.AddResource(GemColor.WHITE);
+            firstResources.AddResource(GemColor.RED);
+            firstResources.AddResource(GemColor.BLUE);
+            nobles.Add(new Noble(3, firstResources));
 
+            Resources secondResources = new Resources();
+            secondResources.AddResource(GemColor.WHITE);
+            secondResources.AddResource(GemColor.BLUE);
+            nobles.Add(new Noble(3, secondResources));
+
+            Resources thirdResources = new Resources();
+            thirdResources.AddResource(GemColor.BLACK);
+            thirdResources.AddResource(GemColor.GREEN);
+            nobles.Add(new Noble(3, thirdResources));
+
+            Resources fourthResources = new Resources();
+            fourthResources.AddResource(GemColor.BLACK);
+            fourthResources.AddResource(GemColor.BLUE);
+            fourthResources.AddResource(GemColor.GREEN);
+            nobles.Add(new Noble(3, fourthResources));
+
+            Resources fifthResources = new Resources();
+            fifthResources.AddResource(GemColor.WHITE);
+            fifthResources.AddResource(GemColor.WHITE);
+            fifthResources.AddResource(GemColor.WHITE);
+            nobles.Add(new Noble(3, fifthResources));
             return nobles;
         }
+
+        
         private List<Player> SetNumberOfPlayers()
         {
             List<Player> players = new List<Player>();
@@ -85,8 +121,7 @@ namespace SplendorConsole
                 if (color == GemColor.GOLDEN || color == GemColor.NONE) break;
                 bank.resources.gems.Add(color, 7);
             }
-            bank.resources.gems.Add(GemColor.GOLDEN, 5);
-            
+            bank.resources.gems.Add(GemColor.GOLDEN, 5);           
         }
 
         private void GameLoop(int numberOfPlayers)
@@ -218,6 +253,13 @@ namespace SplendorConsole
                 Console.WriteLine("Karty 2 poziomu dostępne na stole: \n" + string.Join("\n", board.Level2VisibleCards) + "\n");
                 Console.WriteLine("Karty 3 poziomu dostępne na stole: \n" + string.Join("\n", board.Level3VisibleCards));
                 Console.WriteLine("======================================================================");
+                Console.WriteLine("Arytokraci na stole: ");
+               
+                foreach(Noble noble in listOfNobles)
+                {
+                    Console.WriteLine(noble.ToString());
+                }
+               
                 Console.Write("Wprowadź numer akcji (1-5): ");
 
                 while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 5)
@@ -273,6 +315,7 @@ namespace SplendorConsole
                         break;
                 }
             } while (!actionSuccess);
+            GettingNobles();
             Console.Clear();
         }
 
@@ -641,29 +684,87 @@ namespace SplendorConsole
             }
             return price;
         }
+        
+        public bool CanGetNoble(Noble noble)
+        {
+            int counter = 0;
+            int noblesCounter = 0;
 
+            foreach (GemColor requiredBonus in noble.RequiredBonuses.gems.Keys)
+            {
+                
+                GemColor color = requiredBonus;
+                int requiredAmount = noble.RequiredBonuses.gems[requiredBonus];
+                int playerAmount = 0;
+
+
+
+                foreach (Card card in listOfPlayers[currentTurn].hand)
+                {
+                    if (listOfPlayers[currentTurn].BonusResources.gems.TryGetValue(color, out int count))
+                    {
+                        playerAmount = count;
+                        break;
+                    }
+                }
+
+                if (requiredAmount <= playerAmount)
+                {
+
+                    
+                    counter += 1;
+                    noblesCounter += 1;
+                }
+                else
+                    noblesCounter += 1;
+
+            }
+            if (counter != noblesCounter) return false;
+            else return true;
+        }
+
+        public bool CanGetMultipleNobles()
+        {
+            int counter = 0;
+            foreach (Noble noble in listOfNobles)
+            {
+                if (CanGetNoble(noble))
+                    counter++;
+            }
+            if (counter > 1)
+                return true;
+            else
+                return false;
+        }
 
         public void GettingNobles()
         {
-            if (listOfPlayers[currentTurn].CanGetMultipleNobles() == false)
+            if (CanGetMultipleNobles() == false)
             {
-                foreach (Noble noble in Board.VisibleNobles)
-                    if (listOfPlayers[currentTurn].CanGetNoble(noble))
+                foreach (Noble noble in listOfNobles)
+                    if (CanGetNoble(noble))
+                    {
                         listOfPlayers[currentTurn].GetNoble(noble);
+                        listOfNobles.Remove(noble);
+                        break;
+                    }                                                 
             }
             else
             {
                 List<int> AvailableIndexNobles = new List<int>();
-                for (int i = 0; i < Board.VisibleNobles.Length; i++)
+                for (int i = 0; i < listOfNobles.Count; i++)      
                 {
-                    Noble noble = Board.VisibleNobles[i];
-                    if (listOfPlayers[currentTurn].CanGetNoble(noble))
+                    Noble noble = listOfNobles[i];
+                    if (CanGetNoble(noble))
                         AvailableIndexNobles.Add(i);
                 }
 
                 Console.WriteLine("Arystokraci, których możesz zdobyć: ");
                 for (int i = 0; i < AvailableIndexNobles.Count; i++)
-                    Console.WriteLine(AvailableIndexNobles[i]);
+                {
+                    Console.WriteLine(AvailableIndexNobles[i] + " " + listOfNobles[i].ToString());
+                    
+                }                  
 
 
                 bool IsChoiceMade = false;
@@ -682,12 +783,16 @@ namespace SplendorConsole
                     }
                 }
 
-                Noble playerChoice = Board.VisibleNobles[choice];
+                Noble playerChoice = listOfNobles[choice];
                 listOfPlayers[currentTurn].GetNoble(playerChoice);
+                listOfNobles.Remove(playerChoice);
 
             }
-
+        
         }
+
+
+       
         public int BuyCardOption()
         {
             int opChoice;
