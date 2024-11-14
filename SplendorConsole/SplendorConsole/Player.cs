@@ -110,53 +110,9 @@ namespace SplendorConsole
         }
         public void GetNoble(Noble noble)
         {
-            for(int i=0;i<nobles.Count;i++)
-            {
-                if (nobles[i] == null)
-                    nobles[i] = noble;
-            }
-            Noble[] CopiedVisibleNobles = new Noble[Board.VisibleNobles.Length - 1];
-            int j = 0;
-            for(int i=0;i<Board.VisibleNobles.Length;i++)
-            {
-                if (Board.VisibleNobles[i] != noble)
-                {
-                    CopiedVisibleNobles[j] = Board.VisibleNobles[i];
-                    j++;
-                }
-            }
-            Array.Copy(CopiedVisibleNobles, Board.VisibleNobles, CopiedVisibleNobles.Length);
+            nobles.Add(noble);                 
             points += noble.Points;
-        }
-        public bool CanGetMultipleNobles()
-        {
-            int counter = 0;
-            foreach (Noble noble in Board.VisibleNobles)
-            {
-                if (CanGetNoble(noble))
-                    counter++;
-            }
-            if (counter > 1)
-                return true;
-            else
-                return false;
-        }
-        public bool CanGetNoble(Noble noble)
-        {
-            foreach (var requiredBonus in noble.RequiredBonuses)
-            {
-                GemColor color = requiredBonus.Key;
-                int requiredAmount = requiredBonus.Value;
-
-                if (noble.RequiredBonuses.gems[color] <= bonusResources.gems[color])
-                {
-                    continue;
-                }
-                else
-                    return false;
-            }
-            return true;
-        }
+        }     
         public void ReserveCard(Card card)
         {
             this.reservedCards.Add(card);
