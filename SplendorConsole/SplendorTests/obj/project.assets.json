@@ -464,7 +464,6 @@
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
           "ClosedXML": "0.104.1",
-          "NUnit3TestAdapter": "4.6.0",
           "Newtonsoft.Json": "13.0.3"
         },
         "compile": {
@@ -1014,23 +1013,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Bartek\\.nuget\\packages\\": {},
+    "C:\\Users\\gmitr\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Splendor\\splendor\\SplendorConsole\\SplendorTests\\SplendorTests.csproj",
+      "projectUniqueName": "C:\\Users\\gmitr\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorTests\\SplendorTests.csproj",
       "projectName": "SplendorTests",
-      "projectPath": "D:\\Splendor\\splendor\\SplendorConsole\\SplendorTests\\SplendorTests.csproj",
-      "packagesPath": "C:\\Users\\Bartek\\.nuget\\packages\\",
-      "outputPath": "D:\\Splendor\\splendor\\SplendorConsole\\SplendorTests\\obj\\",
+      "projectPath": "C:\\Users\\gmitr\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorTests\\SplendorTests.csproj",
+      "packagesPath": "C:\\Users\\gmitr\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\gmitr\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Bartek\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\gmitr\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -1039,14 +1038,15 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\Splendor\\splendor\\SplendorConsole\\SplendorConsole\\SplendorConsole.csproj": {
-              "projectPath": "D:\\Splendor\\splendor\\SplendorConsole\\SplendorConsole\\SplendorConsole.csproj"
+            "C:\\Users\\gmitr\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorConsole\\SplendorConsole.csproj": {
+              "projectPath": "C:\\Users\\gmitr\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorConsole\\SplendorConsole.csproj"
             }
           }
         }
@@ -1055,6 +1055,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -1085,12 +1090,26 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[6.0.27, 6.0.27]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[6.0.27, 6.0.27]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[6.0.27, 6.0.27]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }

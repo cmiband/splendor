@@ -293,8 +293,47 @@ namespace SplendorConsole
                     counter += 1;
                 }
             }
+            int wantToContinue;
+            GemColor[] colors;
+            if (counter >=3) 
+                hasSufficientGems = true;
 
-            if (counter > 3) hasSufficientGems = true;
+            if (counter==2)
+            {
+                Console.WriteLine("Zostały tylko 2 kolory klejnotów do wyboru. Możesz wziąć maksymalnie 2 różne spośród pozostałych");
+                Console.WriteLine("Czy chcesz kontynuować?");
+                Console.WriteLine("1 - Tak");
+                Console.WriteLine("2 - Nie");
+                wantToContinue = Convert.ToInt32(Console.ReadLine());
+                if (wantToContinue == 1)
+                {
+                    colors = ChoiceOfColors(2);
+                    player.TakeThreeTokens(bank.resources, colors);
+                    for (int i = 0; i < 2; i++)
+                    {
+                        bank.TakeOutResources(1, colors[i]);
+                    }
+                    return true;
+                }  
+                return false;
+            }
+
+            if (counter == 1)
+            {
+                Console.WriteLine("Został tylko 1 kolor klejnotów do wyboru. Możesz wziąć maksymalnie 1 różny spośród pozostałych");
+                Console.WriteLine("Czy chcesz kontynuować?");
+                Console.WriteLine("1 - Tak");
+                Console.WriteLine("2 - Nie");
+                wantToContinue = Convert.ToInt32(Console.ReadLine());
+                if (wantToContinue == 1)
+                {
+                    colors = ChoiceOfColors(1);
+                    player.TakeThreeTokens(bank.resources, colors);
+                    bank.TakeOutResources(1, colors[0]);
+                    return true;
+                }
+                return false;
+            }
 
             if (!hasSufficientGems)
             {
@@ -302,7 +341,7 @@ namespace SplendorConsole
                 return false;
             }
 
-            GemColor[] colors = ChoiceOfColors();
+            colors = ChoiceOfColors(3);
             player.TakeThreeTokens(bank.resources,colors);
             for (int i = 0; i < 3; i++)
             {
@@ -409,13 +448,13 @@ namespace SplendorConsole
         }
 
 
-        private GemColor[] ChoiceOfColors()
+        private GemColor[] ChoiceOfColors(int numberOfColors)
         {
             List<GemColor> availableTokens = ShowAvaiableTokens();
             GemColor[] colors = new GemColor[3];
 
             int i = 1;
-            Console.WriteLine("=== Wybierz kolory (3 różne) === ");
+            Console.WriteLine("=== Wybierz kolory (różne) === ");
             foreach (GemColor item in availableTokens)
             {
                 Console.WriteLine($"{i} {item}");
@@ -424,7 +463,7 @@ namespace SplendorConsole
 
             List<GemColor> selectedColors = new List<GemColor>();
 
-            for (int j = 0; j < 3; j++)
+            for (int j = 0; j < numberOfColors; j++)
             {
                 int input;
 
