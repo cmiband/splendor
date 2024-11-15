@@ -351,6 +351,7 @@ namespace SplendorConsole
                 if (wantToContinue == 1)
                 {
                     colors = ChoiceOfColors(2);
+                    if (colors == null) return false;
                     player.TakeThreeTokens(bank.resources, colors);
                     for (int i = 0; i < 2; i++)
                     {
@@ -371,6 +372,7 @@ namespace SplendorConsole
                 if (wantToContinue == 1)
                 {
                     colors = ChoiceOfColors(1);
+                    if (colors == null) return false;
                     player.TakeThreeTokens(bank.resources, colors);
                     bank.TakeOutResources(1, colors[0]);
                     return true;
@@ -385,6 +387,7 @@ namespace SplendorConsole
             }
 
             colors = ChoiceOfColors(3);
+            if (colors == null) return false;
             player.TakeThreeTokens(bank.resources,colors);
             for (int i = 0; i < 3; i++)
             {
@@ -412,6 +415,7 @@ namespace SplendorConsole
             }
 
             GemColor color = ChoiceOfColor();
+            if (color == GemColor.NONE) return false;
             if (bank.resources.gems[color] < 4)
             {
                 Console.WriteLine($"Brak wystarczającej ilości klejnotów koloru {color} na planszy, wybierz inną akcję.");
@@ -472,7 +476,7 @@ namespace SplendorConsole
                 Console.WriteLine($"{i} {item}");
                 i += 1;
             }
-
+            Console.WriteLine("Aby wrócić wpisz 0 :)");
             int input;
 
             while (true)
@@ -483,6 +487,7 @@ namespace SplendorConsole
                     color = availableTokens[input - 1];
                     return color;
                 }
+                else if(input == 0) return GemColor.NONE;
                 else
                 {
                     Console.WriteLine("Niepoprawny wybór. Wprowadź numer odpowiadający dostępnym kolorom.");
@@ -503,7 +508,7 @@ namespace SplendorConsole
                 Console.WriteLine($"{i} {item}");
                 i += 1;
             }
-
+            Console.WriteLine("Aby wrócić wpisz 0 :)");
             List<GemColor> selectedColors = new List<GemColor>();
 
             for (int j = 0; j < numberOfColors; j++)
@@ -526,6 +531,10 @@ namespace SplendorConsole
                         {
                             Console.WriteLine("Już wybrałeś ten kolor. Wybierz inny.");
                         }
+                    }
+                    else if (input == 0)
+                    {
+                        return null;
                     }
                     else
                     {
@@ -612,12 +621,13 @@ namespace SplendorConsole
             Console.WriteLine("=== Wybierz metodę rezerwowania ===");
             Console.WriteLine("1. Rezerwuj kartę ze stolika");
             Console.WriteLine("2. Rezerwuj kartę w ciemno ze stosu");
+            Console.WriteLine("3. Powrót");
             int reserveinput;
-            while (!int.TryParse(Console.ReadLine(), out reserveinput) || reserveinput < 1 || reserveinput > 2)
+            while (!int.TryParse(Console.ReadLine(), out reserveinput) || reserveinput < 1 || reserveinput > 3)
             {
-                Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-2): ");
+                Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-3): ");
             }
-
+            if (reserveinput == 3) return false;
             if (bank.resources.gems[GemColor.GOLDEN] > 0)
             {
                 if (player.Resources.gems.ContainsKey(GemColor.GOLDEN))
@@ -835,9 +845,9 @@ namespace SplendorConsole
         public int BuyCardOption()
         {
             int opChoice;
-            while (!int.TryParse(Console.ReadLine(), out opChoice) || opChoice < 1 || opChoice > 2)
+            while (!int.TryParse(Console.ReadLine(), out opChoice) || opChoice < 1 || opChoice > 3)
             {
-                Console.WriteLine("Niepoprawny poziom. Wprowadź 1 lub 2");
+                Console.WriteLine("Niepoprawny poziom. Wprowadź 1, 2 lub 3");
             }
             return opChoice;
         }
@@ -908,8 +918,9 @@ namespace SplendorConsole
             Console.WriteLine("Chcesz kupić nową kartę czy kupić zarezerwowaną?");
             Console.WriteLine("[1] Nowa");
             Console.WriteLine("[2] Zarerwowana");
+            Console.WriteLine("[3] Powrót");
             int opChoice = BuyCardOption();
-
+            if (opChoice == 3) return false;
             if (opChoice == 1)
             {
                 Console.WriteLine("Wybierz poziom karty do zakupu (1, 2 lub 3):");
