@@ -60,17 +60,25 @@
     <Analyzer Include="D:\Unity\UnityVersions\2022.3.50f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\GemColor.cs" />
+    <Compile Include="Assets\Scripts\BankController.cs" />
     <Compile Include="Assets\Scripts\WebServiceClient.cs" />
-    <Compile Include="Assets\Scripts\Resources.cs" />
-    <Compile Include="Assets\Scripts\Card.cs" />
-    <Compile Include="Assets\Scripts\Board.cs" />
-    <Compile Include="Assets\Scripts\Bank.cs" />
-    <Compile Include="Assets\Scripts\Noble.cs" />
-    <Compile Include="Assets\Scripts\AvailableCards.cs" />
-    <Compile Include="Assets\Scripts\Game.cs" />
-    <Compile Include="Assets\Scripts\Player.cs" />
-    <Compile Include="Assets\test.cs" />
+    <Compile Include="Assets\Scripts\BoardController.cs" />
+    <Compile Include="Assets\Scripts\BaseScripts\Bank.cs" />
+    <Compile Include="Assets\Scripts\BaseScripts\Card.cs" />
+    <Compile Include="Assets\Scripts\BaseScripts\Player.cs" />
+    <Compile Include="Assets\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\ResourcesController.cs" />
+    <Compile Include="Assets\Scripts\AvailableCardsController.cs" />
+    <Compile Include="Assets\Scripts\CardStackController.cs" />
+    <Compile Include="Assets\Scripts\BaseScripts\Noble.cs" />
+    <Compile Include="Assets\Scripts\CardController.cs" />
+    <Compile Include="Assets\Scripts\BaseScripts\AvailableCards.cs" />
+    <Compile Include="Assets\Scripts\BaseScripts\Resources.cs" />
+    <Compile Include="Assets\Scripts\BoughtCardsController.cs" />
+    <Compile Include="Assets\Scripts\BaseScripts\Game.cs" />
+    <Compile Include="Assets\Scripts\BaseScripts\Board.cs" />
     <Compile Include="Assets\Scripts\GameState.cs" />
   </ItemGroup>
   <ItemGroup>
