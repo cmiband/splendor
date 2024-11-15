@@ -266,6 +266,7 @@ namespace SplendorConsole
                 {
                     Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-5): ");
                 }
+                
 
  
                 actionSuccess = false;
@@ -303,6 +304,7 @@ namespace SplendorConsole
                             Console.WriteLine($"Musisz odrzucić zbędne żetony w liczbie: {leave}");
                             ChoiceOfColorWithdraw(leave);
                         }
+                       
                         break;
 
                     case 4:
@@ -608,6 +610,12 @@ namespace SplendorConsole
                 Console.WriteLine( );
                 return false;
             }
+            if (!bank.CanTakeGoldenGem())
+            {
+                Console.WriteLine("Nie ma już więcej złotych żetonów, wybierz inną akcję!");
+                Console.WriteLine();
+                return false;
+            }
 
             Console.WriteLine("=== Wybierz metodę rezerwowania ===");
             Console.WriteLine("1. Rezerwuj kartę ze stolika");
@@ -620,6 +628,7 @@ namespace SplendorConsole
 
             if (bank.resources.gems[GemColor.GOLDEN] > 0)
             {
+                
                 if (player.Resources.gems.ContainsKey(GemColor.GOLDEN))
                 {
                     player.Resources.gems[GemColor.GOLDEN] += 1;
@@ -628,6 +637,7 @@ namespace SplendorConsole
                 {
                     player.Resources.gems.Add(GemColor.GOLDEN, 1);
                 }
+                bank.TakeOutResources(1, GemColor.GOLDEN);
             }
 
             if (reserveinput == 1)
