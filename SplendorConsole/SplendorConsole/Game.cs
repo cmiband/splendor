@@ -21,7 +21,7 @@ namespace SplendorConsole
         private static List<Card> level3Shuffled = new List<Card>();
         private Bank bank = new Bank();
         private Board board;
-      
+
 
         private static List<Card> level1VisibleCards = new List<Card>();
         private static List<Card> level2VisibleCards = new List<Card>();
@@ -34,7 +34,7 @@ namespace SplendorConsole
             get => listOfNobles;
             set => listOfNobles = value;
         }
-        
+
 
 
         public Bank Bank
@@ -46,24 +46,24 @@ namespace SplendorConsole
 
         public void GameStart()
         {
-            
+
             availableCards.LoadCardsFromExcel();
             Random random = new Random();
             listOfPlayers = SetNumberOfPlayers();
             listOfNobles = SetNumberOfNobles(listOfPlayers.Count);
-            
+
             level1Shuffled = Shuffling(availableCards.level1Cards, random);
-            level2Shuffled = Shuffling(availableCards.level2Cards, random);                    
+            level2Shuffled = Shuffling(availableCards.level2Cards, random);
             level3Shuffled = Shuffling(availableCards.level3Cards, random);
-            
-           
+
+
             AddResourcesToBank(bank, listOfPlayers.Count);
             SetVisibleCards();
             board = new Board(level1VisibleCards, level2VisibleCards, level3VisibleCards, level1Shuffled, level2Shuffled, level3Shuffled, listOfNobles);
             GameLoop(listOfPlayers.Count);
         }
 
-       
+
         private List<Noble> SetNumberOfNobles(int numberOfPlayers)
         {
             int numberOfNobles = numberOfPlayers + 1;
@@ -99,7 +99,7 @@ namespace SplendorConsole
             return nobles;
         }
 
-        
+
         private List<Player> SetNumberOfPlayers()
         {
             List<Player> players = new List<Player>();
@@ -115,13 +115,13 @@ namespace SplendorConsole
 
         private void AddResourcesToBank(Bank bank, int numberOfPlayers)
         {
-            
+
             foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
             {
                 if (color == GemColor.GOLDEN || color == GemColor.NONE) break;
                 bank.resources.gems.Add(color, 7);
             }
-            bank.resources.gems.Add(GemColor.GOLDEN, 5);           
+            bank.resources.gems.Add(GemColor.GOLDEN, 5);
         }
 
         private void GameLoop(int numberOfPlayers)
@@ -136,41 +136,41 @@ namespace SplendorConsole
 
                 // więcej logiki GameLoopa
                 currentTurn = (currentTurn + 1) % numberOfPlayers;
-                if (currentTurn==0)
+                if (currentTurn == 0)
                 {
                     int winnersCount = 0;
                     List<Player> winners = new List<Player>();
-                    foreach(Player player in listOfPlayers)
+                    foreach (Player player in listOfPlayers)
                     {
                         player.PointsCounter();
-                        if(CheckIfWinner(player))
+                        if (CheckIfWinner(player))
                         {
                             winnersCount++;
                             winners.Add(player);
                         }
                     }
-                    if(winnersCount==1)
+                    if (winnersCount == 1)
                     {
                         Console.WriteLine($"Zwycięzca to gracz: {listOfPlayers.IndexOf(winners[0])}");
                         Console.WriteLine($"Jego liczba punktów to: {winners[0].Points}");
                         gameInProgress = false;
                     }
-                    else if(winnersCount>1)
+                    else if (winnersCount > 1)
                     {
                         winnersCount = 0;
                         int winnersPoints = 0;
                         int playerIndex = 0;
-                        foreach(Player player in winners)
+                        foreach (Player player in winners)
                         {
                             if (player.Points == winnersPoints) winnersCount++;
-                            if(player.Points > winnersPoints)
+                            if (player.Points > winnersPoints)
                             {
                                 winnersPoints = player.Points;
                                 winnersCount = 1;
                                 playerIndex = listOfPlayers.IndexOf(player);
                             }
                         }
-                        if(winnersCount==1)
+                        if (winnersCount == 1)
                         {
                             Console.WriteLine($"Zwycięzca to gracz: {playerIndex}");
                             Console.WriteLine($"Jego liczba punktów to: {listOfPlayers[playerIndex].Points}");
@@ -178,11 +178,12 @@ namespace SplendorConsole
                         else
                         {
                             Player OfficialWinner = MoreThan1Winner(winners);
-                            if(OfficialWinner != null)
+                            if (OfficialWinner != null)
                             {
                                 Console.WriteLine($"Zwycięzca to gracz: {listOfPlayers.IndexOf(OfficialWinner)}");
                                 Console.WriteLine($"Jego liczba punktów to: {OfficialWinner.Points}");
-                            } else
+                            }
+                            else
                             {
                                 Console.WriteLine("Remis");
                             }
@@ -198,11 +199,11 @@ namespace SplendorConsole
             int minimum = 100;
             int playerIndex = 0;
             int winnersCount = 0;
-            foreach(Player player in winners)
+            foreach (Player player in winners)
             {
                 int cardsCount = player.hand.Count;
                 if (cardsCount == minimum) winnersCount++;
-                if(cardsCount < minimum )
+                if (cardsCount < minimum)
                 {
                     minimum = cardsCount;
                     playerIndex = winners.IndexOf(player);
@@ -254,21 +255,21 @@ namespace SplendorConsole
                 Console.WriteLine("Karty 3 poziomu dostępne na stole: \n" + string.Join("\n", board.Level3VisibleCards));
                 Console.WriteLine("======================================================================");
                 Console.WriteLine("Arytokraci na stole: ");
-               
-                foreach(Noble noble in listOfNobles)
+
+                foreach (Noble noble in listOfNobles)
                 {
                     Console.WriteLine(noble.ToString());
                 }
-               
+
                 Console.Write("Wprowadź numer akcji (1-5): ");
 
                 while (!int.TryParse(Console.ReadLine(), out input) || input < 1 || input > 5)
                 {
                     Console.Write("Niepoprawny wybór. Wprowadź numer akcji (1-5): ");
                 }
-                
 
- 
+
+
                 actionSuccess = false;
 
                 switch (input)
@@ -304,7 +305,7 @@ namespace SplendorConsole
                             Console.WriteLine($"Musisz odrzucić zbędne żetony w liczbie: {leave}");
                             ChoiceOfColorWithdraw(leave);
                         }
-                       
+
                         break;
 
                     case 4:
@@ -313,7 +314,7 @@ namespace SplendorConsole
 
                     case 5:
                         Pass();
-                        actionSuccess = true;                      
+                        actionSuccess = true;
                         break;
                 }
             } while (!actionSuccess);
@@ -340,10 +341,10 @@ namespace SplendorConsole
             }
             int wantToContinue;
             GemColor[] colors;
-            if (counter >=3) 
+            if (counter >= 3)
                 hasSufficientGems = true;
 
-            if (counter==2)
+            if (counter == 2)
             {
                 Console.WriteLine("Zostały tylko 2 kolory klejnotów do wyboru. Możesz wziąć maksymalnie 2 różne spośród pozostałych");
                 Console.WriteLine("Czy chcesz kontynuować?");
@@ -360,7 +361,7 @@ namespace SplendorConsole
                         bank.TakeOutResources(1, colors[i]);
                     }
                     return true;
-                }  
+                }
                 return false;
             }
 
@@ -390,7 +391,7 @@ namespace SplendorConsole
 
             colors = ChoiceOfColors(3);
             if (colors == null) return false;
-            player.TakeThreeTokens(bank.resources,colors);
+            player.TakeThreeTokens(bank.resources, colors);
             for (int i = 0; i < 3; i++)
             {
                 bank.TakeOutResources(1, colors[i]);
@@ -403,10 +404,10 @@ namespace SplendorConsole
             bool hasSufficientGems = false;
             foreach (var gem in bank.resources.gems)
             {
-                if (gem.Value >= 4 && gem.Key != GemColor.GOLDEN) 
+                if (gem.Value >= 4 && gem.Key != GemColor.GOLDEN)
                 {
                     hasSufficientGems = true;
-                    break; 
+                    break;
                 }
             }
 
@@ -489,7 +490,7 @@ namespace SplendorConsole
                     color = availableTokens[input - 1];
                     return color;
                 }
-                else if(input == 0) return GemColor.NONE;
+                else if (input == 0) return GemColor.NONE;
                 else
                 {
                     Console.WriteLine("Niepoprawny wybór. Wprowadź numer odpowiadający dostępnym kolorom.");
@@ -527,7 +528,7 @@ namespace SplendorConsole
                         {
                             colors[j] = selectedColor;
                             selectedColors.Add(selectedColor);
-                            break; 
+                            break;
                         }
                         else
                         {
@@ -573,7 +574,7 @@ namespace SplendorConsole
             }
             return playerTokens;
         }
-        
+
         private int NumberOfPlayerTokens()
         {
             int counter = 0;
@@ -616,7 +617,7 @@ namespace SplendorConsole
             if (player.ReservedCardsCounter >= 3)
             {
                 Console.WriteLine("Nie mozna zarezerwowac wiecej kart!");
-                Console.WriteLine( );
+                Console.WriteLine();
                 return false;
             }
             if (!bank.CanTakeGoldenGem())
@@ -638,7 +639,7 @@ namespace SplendorConsole
             if (reserveinput == 3) return false;
             if (bank.resources.gems[GemColor.GOLDEN] > 0)
             {
-                
+
                 if (player.Resources.gems.ContainsKey(GemColor.GOLDEN))
                 {
                     player.Resources.gems[GemColor.GOLDEN] += 1;
@@ -743,7 +744,7 @@ namespace SplendorConsole
             }
             return price;
         }
-        
+
         public bool CanGetNoble(Noble noble)
         {
             int counter = 0;
@@ -751,7 +752,7 @@ namespace SplendorConsole
 
             foreach (GemColor requiredBonus in noble.RequiredBonuses.gems.Keys)
             {
-                
+
                 GemColor color = requiredBonus;
                 int requiredAmount = noble.RequiredBonuses.gems[requiredBonus];
                 int playerAmount = 0;
@@ -770,7 +771,7 @@ namespace SplendorConsole
                 if (requiredAmount <= playerAmount)
                 {
 
-                    
+
                     counter += 1;
                     noblesCounter += 1;
                 }
@@ -806,12 +807,12 @@ namespace SplendorConsole
                         listOfPlayers[currentTurn].GetNoble(noble);
                         listOfNobles.Remove(noble);
                         break;
-                    }                                                 
+                    }
             }
             else
             {
                 List<int> AvailableIndexNobles = new List<int>();
-                for (int i = 0; i < listOfNobles.Count; i++)      
+                for (int i = 0; i < listOfNobles.Count; i++)
                 {
                     Noble noble = listOfNobles[i];
                     if (CanGetNoble(noble))
@@ -822,8 +823,8 @@ namespace SplendorConsole
                 for (int i = 0; i < AvailableIndexNobles.Count; i++)
                 {
                     Console.WriteLine(AvailableIndexNobles[i] + " " + listOfNobles[i].ToString());
-                    
-                }                  
+
+                }
 
 
                 bool IsChoiceMade = false;
@@ -847,11 +848,11 @@ namespace SplendorConsole
                 listOfNobles.Remove(playerChoice);
 
             }
-        
+
         }
 
 
-       
+
         public int BuyCardOption()
         {
             int opChoice;
@@ -867,7 +868,7 @@ namespace SplendorConsole
             while (!int.TryParse(Console.ReadLine(), out level) || level < 1 || level > 3)
             {
                 Console.WriteLine("Niepoprawny poziom. Wprowadź 1, 2 lub 3:");
-            } 
+            }
             return level;
         }
         public int ChooseCardIndex(List<Card> visibleCards)
@@ -988,7 +989,7 @@ namespace SplendorConsole
         {
             bool choiceForGolden = false;
 
-            if(!isBuyingReservedCard)
+            if (!isBuyingReservedCard)
             {
                 Console.WriteLine("Czy chcesz użyć złotego żetonu aby zapłacić za kartę?");
                 Console.WriteLine("1 - Tak");
@@ -1030,7 +1031,6 @@ namespace SplendorConsole
                 if (bonusAmount > 0)
                 {
                     int amountToUse = Math.Min(bonusAmount, requiredAmount);
-                    player.BonusResources.gems[color] -= amountToUse;
                     requiredAmount -= amountToUse;
                 }
                 if (requiredAmount > 0)
@@ -1065,13 +1065,12 @@ namespace SplendorConsole
                     }
                 }
             }
+            this.RefillBankResources(bank, card, colorReplacedWithGolden, player);
 
             player.AddCardToPlayer(card);
             player.BonusResources.AddResource(card.BonusColor);
             player.Points += card.Points;
 
-            board.ReplaceMissingCard(cardToBuyLevel, card);
-            this.RefillBankResources(bank, card, colorReplacedWithGolden);
             if (isBuyingReservedCard)
             {
                 player.Resources.gems[GemColor.GOLDEN]--;
@@ -1081,17 +1080,20 @@ namespace SplendorConsole
             return true;
         }
 
-        private void RefillBankResources(Bank bank, Card card, GemColor colorReplacedWithGolden)
+        private void RefillBankResources(Bank bank, Card card, GemColor colorReplacedWithGolden, Player player)
         {
             foreach (var x in card.DetailedPrice.gems)
             {
-                int amountToReplace = x.Value;
+                int amountToSubtract = player.BonusResources.gems.GetValueOrDefault(x.Key, 0);
+                int amountToReplace = x.Value - amountToSubtract;
                 if (x.Key == colorReplacedWithGolden)
                 {
                     amountToReplace--;
                 }
-
-                bank.AddResources(amountToReplace, x.Key);
+                if (amountToReplace > 0)
+                {
+                    bank.AddResources(amountToReplace, x.Key);
+                }
             }
         }
     }
