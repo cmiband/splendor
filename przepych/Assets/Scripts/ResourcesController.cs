@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,14 @@ using UnityEngine;
 public class ResourcesController : MonoBehaviour, IEnumerable<KeyValuePair<GemColor, int>>
 {
     public Dictionary<GemColor, int> gems = new Dictionary<GemColor, int>();
+
+    private void Start()
+    {
+        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+        {
+            gems.Add(color, 0);
+        }
+    }
     public override bool Equals(object obj)
     {
         if (obj.GetType() != typeof(ResourcesController))
