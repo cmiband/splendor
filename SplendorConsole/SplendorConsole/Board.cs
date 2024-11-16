@@ -8,13 +8,14 @@ namespace SplendorConsole
 {
     internal class Board
     {
-        private Noble[] nobles;
-        private static Noble[] visibleNobles;
-        public static Noble[] VisibleNobles
+        private List<Noble> VisibleNobles = new List<Noble>();
+        public List<Noble> VisibleNobles2
         {
-            get=>visibleNobles;
-            set=>visibleNobles = value;
+            get => VisibleNobles;
+            set => VisibleNobles = value;   
         }
+        private Noble[] nobles;   
+        
         private List<Card> level1Deck = new List<Card>();
         private List<Card> level2Deck = new List<Card>();
         private List<Card> level3Deck = new List<Card>();
@@ -22,7 +23,7 @@ namespace SplendorConsole
         private List<Card> level2VisibleCards;
         private List<Card> level3VisibleCards;
 
-        public Board(List<Card> level1VisibleCards, List<Card> level2VisibleCards, List<Card> level3VisibleCards, List<Card> level1Deck, List<Card> level2Deck, List<Card> level3Deck)
+        public Board(List<Card> level1VisibleCards, List<Card> level2VisibleCards, List<Card> level3VisibleCards, List<Card> level1Deck, List<Card> level2Deck, List<Card> level3Deck, List<Noble> VisibleNobles)
         {
             this.level1VisibleCards = level1VisibleCards;
             this.level2VisibleCards = level2VisibleCards;
@@ -30,6 +31,7 @@ namespace SplendorConsole
             this.level1Deck = level1Deck;
             this.level2Deck = level2Deck;
             this.level3Deck = level3Deck;
+            this.VisibleNobles = VisibleNobles;
         }
 
         public List<Card> Level1VisibleCards { get => level1VisibleCards; }

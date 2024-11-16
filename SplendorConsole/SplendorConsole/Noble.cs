@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Office2013.Excel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +10,13 @@ namespace SplendorConsole
 {
     public class Noble
     {
+        
+        public Noble(int points, Resources requiredBonuses) 
+        {
+            Points = points;
+            RequiredBonuses = requiredBonuses;
+        }
+        
         private int points;
         public int Points
         {
@@ -24,10 +32,13 @@ namespace SplendorConsole
         }
         private string illustration;
 
+        
         public override string ToString()
         {
-            return $"Arystokrata dodający {points} punktów.";
+            return $"Arystokrata dodający {points} punktów. Wymagania: {requiredBonuses.ToString()}";
         }
+
+       
 
     }
 }
