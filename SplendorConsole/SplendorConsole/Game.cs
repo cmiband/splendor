@@ -989,14 +989,11 @@ namespace SplendorConsole
         {
             bool choiceForGolden = false;
 
-            if (!isBuyingReservedCard)
-            {
                 Console.WriteLine("Czy chcesz użyć złotego żetonu aby zapłacić za kartę?");
                 Console.WriteLine("1 - Tak");
                 Console.WriteLine("2 - Nie");
 
                 choiceForGolden = WantToSpendGoldCoin();
-            }
 
             GemColor colorReplacedWithGolden = GemColor.NONE;
             GemColor colorOfChoice = GemColor.NONE;
@@ -1071,11 +1068,6 @@ namespace SplendorConsole
             player.BonusResources.AddResource(card.BonusColor);
             player.Points += card.Points;
 
-            if (isBuyingReservedCard)
-            {
-                player.Resources.gems[GemColor.GOLDEN]--;
-                bank.AddGoldenGem();
-            }
             Console.WriteLine($"Karta {card} została zakupiona!");
             return true;
         }

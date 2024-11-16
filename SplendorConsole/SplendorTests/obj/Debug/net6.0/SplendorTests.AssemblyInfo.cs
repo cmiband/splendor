@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SplendorTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+006d6782586cf97bcf6c22123f7b69cc315c348d")]
 [assembly: System.Reflection.AssemblyProductAttribute("SplendorTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SplendorTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
