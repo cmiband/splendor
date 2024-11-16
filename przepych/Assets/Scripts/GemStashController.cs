@@ -11,11 +11,15 @@ public class GemStashController : MonoBehaviour
     public GameObject bank;
     public BankController bankController;
 
+
     void Start()
     {
         bankController = bank.GetComponent<BankController>();
         if (color != GemColor.GOLDEN) amountOfGems = 7;
         else amountOfGems = 5;
+
+        bankController.gemStashes.Add(this);
+
         UnityEngine.UI.Button openBoughtCardsButton = this.gameObject.GetComponent<UnityEngine.UI.Button>();
         openBoughtCardsButton.onClick.AddListener(() => OnClick(new EventArgs()));
     }

@@ -2,6 +2,7 @@ using ClosedXML.Excel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BankController : MonoBehaviour
@@ -11,6 +12,7 @@ public class BankController : MonoBehaviour
     public GameObject currentPlayer;
     public PlayerController playerController;
     public ResourcesController resourcesController = new ResourcesController();
+    public List<GemStashController> gemStashes = new List<GemStashController>();
 
     public bool areGemsTaken;
     void Start()
@@ -30,11 +32,20 @@ public class BankController : MonoBehaviour
     {
         foreach (GemColor color in gemsBeingChosen)
         {
+            // Reduce gems in the bank
             resourcesController.gems[color] -= 1;
+
+            // Find the corresponding GemStashController and decrement its amountOfGems
+            GemStashController stash = gemStashes.FirstOrDefault(s => s.color == color);
+            if (stash != null)
+            {
+                stash.amountOfGems -= 1;
+            }
         }
         playerController.TakeThreeTokens(gemsBeingChosen);
         areGemsTaken = true;
         gemsBeingChosen.Clear();
+
     }
 
     public void TwoGemsTaken()
