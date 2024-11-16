@@ -11,6 +11,9 @@ public class GameController : MonoBehaviour
     public BoardController boardController;
     public AvailableCardsController availableCardsController;
     public Dictionary<int, List<CardController>> playerIdToHand = new Dictionary<int, List<CardController>>();
+    public Dictionary<int, List<ResourcesController>> playerIdResources = new Dictionary<int, List<ResourcesController>>();
+
+
 
     public List<GameObject> players;
     public GameObject currentPlayer;
@@ -51,10 +54,17 @@ public class GameController : MonoBehaviour
         for(int i = 0; i<4; i++)
         {
             List<CardController> initHand = new List<CardController>();
+            List<ResourcesController> initResources = new List<ResourcesController>();
+
+            for (int j = 0; j < 40; j++)
+            {
+                initResources.Add(new ResourcesController());
+            }
 
             PlayerController targetedPlayerController = this.players[i].GetComponent<PlayerController>();
             targetedPlayerController.SetPlayerId(i);
             this.playerIdToHand.Add(i, initHand);
+            this.playerIdResources.Add(i, initResources);
         }
     }
 

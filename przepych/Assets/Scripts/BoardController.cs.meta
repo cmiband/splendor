@@ -3,7 +3,21 @@ guid: 1c11b1b307552f34eb19df9e096aa313
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - cardPrefab: {instanceID: 0}
+  - gemPrefab: {instanceID: 0}
+  - level1Stack: {instanceID: 0}
+  - level2Stack: {instanceID: 0}
+  - level3Stack: {instanceID: 0}
+  - level1VisibleCards: {instanceID: 0}
+  - level2VisibleCards: {instanceID: 0}
+  - level3VisibleCards: {instanceID: 0}
+  - whiteGemsStack: {fileID: 5486799387147047353, guid: 397d2e69e8bdb5a4980d85c05081d5d7, type: 3}
+  - blackGemsStack: {instanceID: 0}
+  - greenGemsStack: {instanceID: 0}
+  - blueGemsStack: {instanceID: 0}
+  - redGemsStack: {instanceID: 0}
+  - goldenGemsStack: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

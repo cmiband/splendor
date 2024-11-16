@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
 
     private ResourcesController resources = new ResourcesController();
     private ResourcesController bonusResources = new ResourcesController();
+
+    public Dictionary<GemColor, int> pom = new Dictionary<GemColor, int>();
     public ResourcesController BonusResources
     {
         get { return bonusResources; }
@@ -31,8 +33,33 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        pom = resources.gems;
         this.hand = new List<CardController>();
     }
+
+    public void TakeTwoTokens(GemColor color)
+    {
+
+        if (this.resources.gems.ContainsKey(color))
+        {
+            this.resources.gems[color] += 2;
+
+        }
+        else this.resources.gems.Add(color, 2);
+    }
+    public void TakeThreeTokens(List<GemColor> colors)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (this.resources.gems.ContainsKey(colors[i]))
+            {
+                this.resources.gems[colors[i]] += 1;
+
+            }
+            else this.resources.gems.Add(colors[i], 1);
+        }
+    }
+
 
     public void SetPlayerHand(List<CardController> cards)
     {
