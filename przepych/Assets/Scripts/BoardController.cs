@@ -6,7 +6,7 @@ using UnityEngine;
 public class BoardController : MonoBehaviour
 {
     public const int AMOUNT_OF_CARDS_VISIBLE_PER_LEVEL = 5;
-    public const int CARD_X_OFFSET = 70;
+    public const int CARD_X_OFFSET = 100;
     /*private Noble[] nobles;
     private static Noble[] visibleNobles;
     public static Noble[] VisibleNobles
