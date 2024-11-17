@@ -59,7 +59,7 @@ public class GemStashController : MonoBehaviour
         }
         else if(bankController.gemsBeingChosen.Count == 2)
         {
-            if (amountOfGems >= 1)
+            if (amountOfGems >= 1 && bankController.gemsBeingChosen[0] != color && bankController.gemsBeingChosen[1] != color)
             {
                 bankController.gemsBeingChosen.Add(color);
                 bankController.ThreeGemsTaken();
