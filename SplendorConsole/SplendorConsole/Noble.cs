@@ -38,7 +38,17 @@ namespace SplendorConsole
             return $"Arystokrata dodający {points} punktów. Wymagania: {requiredBonuses.ToString()}";
         }
 
-       
+
+        public int[] ToArray()
+        {
+            return new int[]   {points,
+                                requiredBonuses.gems[GemColor.WHITE],
+                                requiredBonuses.gems[GemColor.BLUE],
+                                requiredBonuses.gems[GemColor.GREEN],
+                                requiredBonuses.gems[GemColor.RED],
+                                requiredBonuses.gems[GemColor.BLACK]
+                                };
+        }
 
     }
 }
