@@ -37,7 +37,7 @@ public class GemStashController : MonoBehaviour
             {
                 bankController.gemsBeingChosen.Add(color);
             }
-            else Console.WriteLine("Nie mo縠sz wzi规 縠tonu o tym kolorze, bo ich nie ma");
+            else Debug.Log("Nie mo縠sz wzi规 縠tonu o tym kolorze, bo ich nie ma");
         }
         else if (bankController.gemsBeingChosen.Count == 1 && bankController.isPlayerTakingThreeGems)
         {
@@ -45,7 +45,7 @@ public class GemStashController : MonoBehaviour
             {
                 bankController.gemsBeingChosen.Add(color);
             }
-            else Console.WriteLine("Nie mo縠sz wzi规 縠tonu o tym kolorze, bo ich nie ma");
+            else Debug.Log("Nie mo縠sz wzi规 縠tonu o tym kolorze, bo ich nie ma");
         }
         else if(bankController.gemsBeingChosen.Count == 1 && !bankController.isPlayerTakingThreeGems)
         {
@@ -55,7 +55,7 @@ public class GemStashController : MonoBehaviour
 
                 bankController.TwoGemsTaken();
             }
-            else Console.WriteLine("Nie mo縠sz wzi规 2 縠ton體 tego samego koloru, bo nie ma ich conajmniej 4");
+            else Debug.Log("Nie mo縠sz wzi规 2 縠ton體 tego samego koloru, bo nie ma ich conajmniej 4");
         }
         else if(bankController.gemsBeingChosen.Count == 2)
         {
@@ -64,15 +64,7 @@ public class GemStashController : MonoBehaviour
                 bankController.gemsBeingChosen.Add(color);
                 bankController.ThreeGemsTaken();
             }
-            else Console.WriteLine("Nie mo縠sz wzi规 縠tonu o tym kolorze, bo ich nie ma");
+            else Debug.Log("Nie mo縠sz wzi规 縠tonu o tym kolorze, bo ich nie ma");
         }
-
     } 
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

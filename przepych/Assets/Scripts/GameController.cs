@@ -11,9 +11,8 @@ public class GameController : MonoBehaviour
     public BoardController boardController;
     public AvailableCardsController availableCardsController;
     public Dictionary<int, List<CardController>> playerIdToHand = new Dictionary<int, List<CardController>>();
-    public Dictionary<int, List<ResourcesController>> playerIdResources = new Dictionary<int, List<ResourcesController>>();
-
-
+    public Dictionary<int, ResourcesController> playerIdToResources = new Dictionary<int, ResourcesController>();
+    public int currentPlayerId;
 
     public List<GameObject> players;
     public GameObject currentPlayer;
@@ -23,6 +22,7 @@ public class GameController : MonoBehaviour
 
     public GameObject boughtCards;
     public GameObject openBoughtCards;
+    public GameObject pass;
 
     // Start is called before the first frame update
     private void Start()
@@ -39,6 +39,7 @@ public class GameController : MonoBehaviour
         this.players = new List<GameObject> { currentPlayer, nextPlayerOne, nextPlayerTwo, nextPlayerThree };
         this.CreateFourPlayersDataOnInit();  
         this.FillPlayersWithData();
+        this.currentPlayerId = 0;
 
         this.AddEventListeners();
     }
@@ -47,6 +48,9 @@ public class GameController : MonoBehaviour
     {
         UnityEngine.UI.Button openBoughtCardsButton = this.openBoughtCards.GetComponent<UnityEngine.UI.Button>();
         openBoughtCardsButton.onClick.AddListener(HandleOpenBoughtCards);
+
+        UnityEngine.UI.Button passButton = this.pass.GetComponent<UnityEngine.UI.Button>();
+        passButton.onClick.AddListener(HandlePass);
     }
 
     private void CreateFourPlayersDataOnInit()
@@ -54,17 +58,12 @@ public class GameController : MonoBehaviour
         for(int i = 0; i<4; i++)
         {
             List<CardController> initHand = new List<CardController>();
-            List<ResourcesController> initResources = new List<ResourcesController>();
-
-            for (int j = 0; j < 40; j++)
-            {
-                initResources.Add(new ResourcesController());
-            }
+            ResourcesController initResources = new ResourcesController();
 
             PlayerController targetedPlayerController = this.players[i].GetComponent<PlayerController>();
             targetedPlayerController.SetPlayerId(i);
             this.playerIdToHand.Add(i, initHand);
-            this.playerIdResources.Add(i, initResources);
+            this.playerIdToResources.Add(i, initResources);
         }
     }
 
@@ -87,11 +86,38 @@ public class GameController : MonoBehaviour
         BoughtCardsController boughtCardsController = this.boughtCards.GetComponent<BoughtCardsController>();
         boughtCardsController.OpenModal();
 
-        this.ChangeOpenButtonVisibility(false);
+        this.ChangeButtonsVisibility(false);
     }
 
-    public void ChangeOpenButtonVisibility(bool visibility)
+    public void ChangeButtonsVisibility(bool visibility)
     {
         this.openBoughtCards.SetActive(visibility);
+        this.pass.SetActive(visibility);
+    }
+
+    public void HandlePass()
+    {
+        this.ChangeTurn();
+    }
+
+    public void ChangeTurn()
+    {
+        this.currentPlayerId = (this.currentPlayerId + 1) % 4;
+
+        int targetedPlayerId = this.currentPlayerId;
+        foreach(GameObject player in this.players)
+        {
+            PlayerController playerController = player.GetComponent<PlayerController>();
+            playerController.SetPlayerId(targetedPlayerId);
+            playerController.SetPlayerHand(this.playerIdToHand[targetedPlayerId]);
+            playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId]);
+
+            targetedPlayerId = (targetedPlayerId + 1) % 4;
+        }
+    }
+
+    public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources)
+    {
+        this.playerIdToResources[playerId] = resources;
     }
 }

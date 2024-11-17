@@ -32,10 +32,8 @@ public class BankController : MonoBehaviour
     {
         foreach (GemColor color in gemsBeingChosen)
         {
-            // Reduce gems in the bank
             resourcesController.gems[color] -= 1;
 
-            // Find the corresponding GemStashController and decrement its amountOfGems
             GemStashController stash = gemStashes.FirstOrDefault(s => s.color == color);
             if (stash != null)
             {

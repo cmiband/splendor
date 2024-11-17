@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class BoardController : MonoBehaviour
 {
-    public const int AMOUNT_OF_CARDS_VISIBLE_PER_LEVEL = 5;
-    public const int CARD_X_OFFSET = 100;
+    public const int AMOUNT_OF_CARDS_VISIBLE_PER_LEVEL = 4;
+    public const float GAP_SIZE = 10;
     /*private Noble[] nobles;
     private static Noble[] visibleNobles;
     public static Noble[] VisibleNobles
@@ -80,13 +80,13 @@ public class BoardController : MonoBehaviour
 
     private void CreateCardObjectsInSelectedContainer(GameObject cardsContainer, CardStackController targetedStack, List<CardController> visibleCards)
     {
-        int currentXOffset = 0;
+        float currentXOffset = 0;
         for(int i = 0; i < AMOUNT_OF_CARDS_VISIBLE_PER_LEVEL; i++)
         {
             CardController cardToInsert = targetedStack.PopCardFromStack();
 
             this.CreateCardObject(cardToInsert, cardsContainer, currentXOffset);
-            currentXOffset += CARD_X_OFFSET;
+            currentXOffset += this.cardPrefab.GetComponent<RectTransform>().rect.width + GAP_SIZE;
 
             visibleCards.Add(cardToInsert);
         }
