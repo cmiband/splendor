@@ -61,5 +61,21 @@ namespace SplendorConsole
             string priceDescription = DetailedPrice.ToString();
             return $"Karta koloru: {bonusColor},\t cena: {priceDescription},\t dodająca {points} punktów.";
         }
+
+        public int[] ToArray()
+        {
+            return new int[] { points, 
+                               bonusColor == GemColor.WHITE  ?  1 : 0,
+                               bonusColor == GemColor.BLUE   ?  1 : 0,
+                               bonusColor == GemColor.GREEN  ?  1 : 0,
+                               bonusColor == GemColor.RED    ?  1 : 0,
+                               bonusColor == GemColor.BLACK  ?  1 : 0,
+                               detailedPrice.gems[GemColor.WHITE],
+                               detailedPrice.gems[GemColor.BLUE],
+                               detailedPrice.gems[GemColor.GREEN],
+                               detailedPrice.gems[GemColor.RED],
+                               detailedPrice.gems[GemColor.BLACK]
+                             };
+        }
     }
 }
