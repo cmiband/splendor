@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SplendorConsole
 {
-    internal class Bank
+    public class Bank
     {
         public Resources resources = new Resources();
 
