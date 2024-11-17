@@ -49,17 +49,17 @@ public class GemStashController : MonoBehaviour
         }
         else if(bankController.gemsBeingChosen.Count == 1 && !bankController.isPlayerTakingThreeGems)
         {
-            if (amountOfGems >= 3)
+            if (amountOfGems >= 4)
             {
                 bankController.gemsBeingChosen.Add(color);
-
+                amountOfGems -= 2;
                 bankController.TwoGemsTaken();
             }
             else Debug.Log("Nie mo¿esz wzi¹æ 2 ¿etonów tego samego koloru, bo nie ma ich conajmniej 4");
         }
         else if(bankController.gemsBeingChosen.Count == 2)
         {
-            if (amountOfGems >= 1)
+            if (amountOfGems >= 1 && bankController.gemsBeingChosen[0] != color && bankController.gemsBeingChosen[1] != color)
             {
                 bankController.gemsBeingChosen.Add(color);
                 bankController.ThreeGemsTaken();

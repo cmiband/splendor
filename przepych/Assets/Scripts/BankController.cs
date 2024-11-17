@@ -43,6 +43,7 @@ public class BankController : MonoBehaviour
         playerController.TakeThreeTokens(gemsBeingChosen);
         areGemsTaken = true;
         gemsBeingChosen.Clear();
+        isPlayerTakingThreeGems = false;
 
     }
 
@@ -51,6 +52,7 @@ public class BankController : MonoBehaviour
         resourcesController.gems[gemsBeingChosen[0]] -= 2;
         areGemsTaken = true;
         playerController.TakeTwoTokens(gemsBeingChosen[0]);
+
         gemsBeingChosen.Clear(); 
     }
 
