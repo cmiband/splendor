@@ -6,13 +6,13 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public int playerId;
-    public bool BUYING_RESERVED_CARD = true;
-    public bool NOT_BUYING_RESERVED_CARD = false;
+    public GameObject game;
+    public GameController mainGameController;
+    public string resourcesInfo = "";
 
     private ResourcesController resources = new ResourcesController();
     private ResourcesController bonusResources = new ResourcesController();
 
-    public Dictionary<GemColor, int> pom = new Dictionary<GemColor, int>();
     public ResourcesController BonusResources
     {
         get { return bonusResources; }
@@ -20,21 +20,13 @@ public class PlayerController : MonoBehaviour
 
     }
     public List<CardController> hand;
-    private List<CardController> reservedCards = new List<CardController>();
-    private int reservedCardsCounter = 0;
     public int points;
     public int Points { get => points; set => points = value; }
 
-    public int ReservedCardsCounter
-    {
-        set => reservedCardsCounter = value;
-        get { return reservedCardsCounter; }
-    }
-
     private void Start()
     {
-        pom = resources.gems;
         this.hand = new List<CardController>();
+        this.mainGameController = this.game.GetComponent<GameController>();
     }
 
     public void TakeTwoTokens(GemColor color)
@@ -43,9 +35,13 @@ public class PlayerController : MonoBehaviour
         if (this.resources.gems.ContainsKey(color))
         {
             this.resources.gems[color] += 2;
-
         }
-        else this.resources.gems.Add(color, 2);
+        else
+        {
+            this.resources.gems.Add(color, 2);
+        }
+
+        this.ConfirmPlayerMove();
     }
     public void TakeThreeTokens(List<GemColor> colors)
     {
@@ -54,16 +50,38 @@ public class PlayerController : MonoBehaviour
             if (this.resources.gems.ContainsKey(colors[i]))
             {
                 this.resources.gems[colors[i]] += 1;
-
             }
-            else this.resources.gems.Add(colors[i], 1);
+            else
+            {
+                this.resources.gems.Add(colors[i], 1);
+            }
         }
+
+        this.ConfirmPlayerMove();
     }
 
+    private void UpdatePlayersResources()
+    {
+        this.mainGameController.UpdateTargetedPlayerResources(this.playerId, this.resources);
+    }
+
+    private void ConfirmPlayerMove()
+    {
+        this.UpdatePlayersResources();
+
+        this.mainGameController.ChangeTurn();
+    }
 
     public void SetPlayerHand(List<CardController> cards)
     {
         this.hand = cards;
+    }
+
+    public void SetPlayerResources(ResourcesController resources)
+    {
+        this.resources = resources;
+
+        this.resourcesInfo = this.resources.ToString();
     }
 
     public List<CardController> GetPlayerHand()

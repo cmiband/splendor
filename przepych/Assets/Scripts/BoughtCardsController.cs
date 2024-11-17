@@ -8,7 +8,7 @@ using Unity.VisualScripting;
 
 public class BoughtCardsController : MonoBehaviour
 {
-    public static float CARD_X_OFFSET = 100;
+    private float CARD_X_OFFSET;
 
     public List<GameObject> players;
     public GameObject playerOneCards;
@@ -25,6 +25,7 @@ public class BoughtCardsController : MonoBehaviour
 
     private void InitComponents()
     {
+        this.CARD_X_OFFSET = this.cardPrefab.GetComponent<RectTransform>().rect.width+10;
         this.gameController = this.game.GetComponent<GameController>();
         this.gameObject.SetActive(false);
 
@@ -52,7 +53,7 @@ public class BoughtCardsController : MonoBehaviour
     public void CloseModal()
     {
         this.gameObject.SetActive(false);
-        this.gameController.ChangeOpenButtonVisibility(true);
+        this.gameController.ChangeButtonsVisibility(true);
 
         this.RemoveCardObjects();
     }
