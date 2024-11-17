@@ -31,5 +31,16 @@ namespace SplendorConsole
 
             return this.resources.gems[GemColor.GOLDEN] >0;
         }
+
+        public int[] ToArray()
+        {
+            return new int[] { resources.gems[GemColor.WHITE],
+                               resources.gems[GemColor.BLUE],
+                               resources.gems[GemColor.GREEN],
+                               resources.gems[GemColor.RED],
+                               resources.gems[GemColor.BLACK],
+                               resources.gems[GemColor.GOLDEN]
+                             };
+        }
     }
 }
