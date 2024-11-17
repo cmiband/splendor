@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -171,6 +172,44 @@ namespace SplendorConsole
         public string nobleToString()
         {
             return string.Join(" ", nobles);
+        }
+        public int[] ToArray()
+        {
+            int[] output = new int[45];
+            output[0] = points;
+            output[1] = bonusResources.gems[GemColor.WHITE];
+            output[2] = bonusResources.gems[GemColor.BLUE];
+            output[3] = bonusResources.gems[GemColor.GREEN];
+            output[4] = bonusResources.gems[GemColor.RED];
+            output[5] = bonusResources.gems[GemColor.BLACK];
+            output[6] = resources.gems[GemColor.WHITE];
+            output[7] = resources.gems[GemColor.BLUE];
+            output[8] = resources.gems[GemColor.GREEN];
+            output[9] = resources.gems[GemColor.RED];
+            output[10] = resources.gems[GemColor.BLACK];
+            int pointer = 11;
+            foreach (var item in reservedCards)
+            {
+                foreach(var parameter in item.ToArray())
+                {
+                    output[pointer++] = parameter;
+                }
+            }
+            for(int i=0; i<3-reservedCardsCounter; i++)
+            {
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 11;
+                output[pointer++] = 11;
+                output[pointer++] = 11; 
+                output[pointer++] = 11;
+                output[pointer++] = 11;
+            }
+            return output;
         }
     }
 }
