@@ -1088,5 +1088,43 @@ namespace SplendorConsole
                 }
             }
         }
+        public int[] ToArray()
+        {
+            int[] output = new int[348];
+            int pointer = 0;
+            foreach (var item in Board.ToArray())
+            {
+                output[pointer++] = item;
+            }
+            foreach (var item in Bank.ToArray())
+            {
+                output[pointer++] = item;
+            }
+            foreach (var item in listOfNobles)
+            {
+                foreach (var parameter in item.ToArray())
+                {
+                    output[pointer++] = parameter;
+                }
+            }
+            while(pointer<167)
+            {
+                output[pointer++] = 0;
+                output[pointer++] = 16;
+                output[pointer++] = 16;
+                output[pointer++] = 16;
+                output[pointer++] = 16;
+                output[pointer++] = 16;
+            }
+
+            for(int i=0; i<4; i++)
+            {
+                foreach (var item in listOfPlayers[(currentTurn+i)%4].ToArray())
+                {
+                    output[pointer++] = item;
+                }
+            }
+            return output;
+        }
     }
 }

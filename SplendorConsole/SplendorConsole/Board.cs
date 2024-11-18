@@ -89,5 +89,74 @@ namespace SplendorConsole
             }
 
         }
+        public int[] ToArray()
+        {
+            int[] output = new int[132];
+            int pointer=0;
+            foreach (var item in level1VisibleCards)
+            {
+                foreach (var parameter in item.ToArray())
+                {
+                    output[pointer++] = parameter;
+                }
+            }
+            while(pointer<=43)
+            {
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 11;
+                output[pointer++] = 11;
+                output[pointer++] = 11;
+                output[pointer++] = 11;
+                output[pointer++] = 11;
+            }
+            foreach (var item in level2VisibleCards)
+            {
+                foreach (var parameter in item.ToArray())
+                {
+                    output[pointer++] = parameter;
+                }
+            }
+            while (pointer <= 87)
+            {
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 11;
+                output[pointer++] = 11;
+                output[pointer++] = 11;
+                output[pointer++] = 11;
+                output[pointer++] = 11;
+            }
+            foreach (var item in level3VisibleCards)
+            {
+                foreach (var parameter in item.ToArray())
+                {
+                    output[pointer++] = parameter;
+                }
+            }
+            while (pointer < 131)
+            {
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 0;
+                output[pointer++] = 11;
+                output[pointer++] = 11;
+                output[pointer++] = 11;
+                output[pointer++] = 11;
+                output[pointer++] = 11;
+            }
+            return output;
+        }
     }
 }
