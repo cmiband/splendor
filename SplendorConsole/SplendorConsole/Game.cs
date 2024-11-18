@@ -620,12 +620,6 @@ namespace SplendorConsole
                 Console.WriteLine();
                 return false;
             }
-            if (!bank.CanTakeGoldenGem())
-            {
-                Console.WriteLine("Nie ma już więcej złotych żetonów, wybierz inną akcję!");
-                Console.WriteLine();
-                return false;
-            }
 
             Console.WriteLine("=== Wybierz metodę rezerwowania ===");
             Console.WriteLine("1. Rezerwuj kartę ze stolika");
@@ -981,9 +975,15 @@ namespace SplendorConsole
             int choice = ChooseReservedCardIndex(player.ReservedCards);
 
             Card selectedCard = player.ReservedCards[choice - 1];
-            player.ReservedCards.Remove(selectedCard);
+            if(this.BuyCard(board, selectedCard, bank, player.BUYING_RESERVED_CARD, player))
+            {
+                player.ReservedCards.Remove(selectedCard);
+                player.ReservedCardsCounter--;
+                return true;
+            }
 
-            return this.BuyCard(board, selectedCard, bank, player.BUYING_RESERVED_CARD, player);
+
+            return false;
         }
         public bool BuyCard(Board board, Card card, Bank bank, bool isBuyingReservedCard, Player player)
         {
