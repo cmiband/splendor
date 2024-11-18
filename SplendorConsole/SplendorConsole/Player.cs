@@ -117,6 +117,7 @@ namespace SplendorConsole
         public void ReserveCard(Card card)
         {
             this.reservedCards.Add(card);
+            reservedCardsCounter++;
         }
         public void TakeTwoTokens(Resources resources, GemColor color)
         {
