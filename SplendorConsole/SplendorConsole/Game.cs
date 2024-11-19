@@ -1126,5 +1126,38 @@ namespace SplendorConsole
             }
             return output;
         }
+
+        public float[] Standartize(int[] array)
+        {
+            int n = array.Length;
+            float sum = 0;
+
+            for (int i = 0; i < n; i++)
+            {
+              sum += array[i];
+            }
+
+            float mean = sum / n;
+
+            float q = 0;
+            for (int i = 0; i < n; i++)
+            {
+               float xiu = (float) Math.Pow((array[i] - mean), 2);
+                q += xiu;
+            }
+
+            float standardDeviation = (float)Math.Sqrt(q / n);
+
+            float[] finalZScore = new float[348];
+
+            for (int i = 0; i < n; i++)
+            {
+                float zScore = (array[i] - mean) / standardDeviation;
+                finalZScore[i] = zScore;
+            }
+
+            return finalZScore;
+
+        }
     }
 }
