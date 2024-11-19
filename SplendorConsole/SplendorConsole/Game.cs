@@ -1013,9 +1013,8 @@ namespace SplendorConsole
                         player.Resources.gems[color] -= requiredAmount;
                         requiredAmount = 0;
                     }
-                    else
+                    else if(choiceForGolden)
                     {
-
                         player.Resources.gems[color] = 0;
 
                         int deficit = requiredAmount - playerAmount;
@@ -1035,8 +1034,15 @@ namespace SplendorConsole
                             return false;
                         }
                     }
+                    else
+                    {
+                        Console.WriteLine("Nie stać cię na tę kartę");
+                        return false;
+                    }
+                        
                 }
             }
+
             this.RefillBankResources(bank, card, colorsPaidWithGolden, player);
 
             player.AddCardToPlayer(card);
@@ -1047,6 +1053,8 @@ namespace SplendorConsole
             return true;
         }
 
+
+
         private void RefillBankResources(Bank bank, Card card, IEnumerable<GemColor> colorsReplacedWithGolden, Player player)
         {
             foreach (var gemCost in card.DetailedPrice.gems)
@@ -1054,20 +1062,25 @@ namespace SplendorConsole
                 GemColor color = gemCost.Key;
                 int cost = gemCost.Value;
 
-                int bonusAmount = player.BonusResources.gems.GetValueOrDefault(color, 0);
+                int bonusAmount = player.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
                 int amountPaidWithColor = Math.Max(0, cost - bonusAmount);
 
                 if (colorsReplacedWithGolden.Contains(color))
-                {
-                    amountPaidWithColor--;
-                }
+                    amountPaidWithColor = 0;
 
                 if (amountPaidWithColor > 0)
                 {
-                    bank.AddResources(amountPaidWithColor, color);
+                    int currentBankAmount = bank.resources.gems.TryGetValue(color, out var bankAmount) ? bankAmount : 0;
+                    int amountToAdd = Math.Min(amountPaidWithColor, 7 - currentBankAmount);
+
+                    if (amountToAdd > 0)
+                    {
+                        bank.resources.gems[color] = currentBankAmount + amountToAdd;
+                    }
                 }
             }
         }
+
 
         public int[] ToArray()
         {
