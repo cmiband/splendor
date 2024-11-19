@@ -1130,33 +1130,33 @@ namespace SplendorConsole
         public float[] Standartize(int[] array)
         {
             int n = array.Length;
-float sum = 0;
+            float sum = 0;
 
-for (int i = 0; i < n; i++)
-{
-    sum += array[i];
-}
+            for (int i = 0; i < n; i++)
+            {
+              sum += array[i];
+            }
 
-float mean = sum / n;
+            float mean = sum / n;
 
-float q = 0;
-for (int i = 0; i < n; i++)
-{
-    float xiu = (float) Math.Pow((array[i] - mean), 2);
-    q += xiu;
-}
+            float q = 0;
+            for (int i = 0; i < n; i++)
+            {
+               float xiu = (float) Math.Pow((array[i] - mean), 2);
+                q += xiu;
+            }
 
-float standardDeviation = (float)Math.Sqrt(q / n);
+            float standardDeviation = (float)Math.Sqrt(q / n);
 
-float[] finalZScore = new float[348];
+            float[] finalZScore = new float[348];
 
-for (int i = 0; i < n; i++)
-{
-    float zScore = (array[i] - mean) / standardDeviation;
-    finalZScore[i] = zScore;
-}
+            for (int i = 0; i < n; i++)
+            {
+                float zScore = (array[i] - mean) / standardDeviation;
+                finalZScore[i] = zScore;
+            }
 
-return finalZScore;
+            return finalZScore;
 
         }
     }
