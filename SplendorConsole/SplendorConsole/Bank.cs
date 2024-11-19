@@ -21,9 +21,9 @@ namespace SplendorConsole
             this.resources.gems[color] += amount;
         }
 
-        public void AddGoldenGem()
+        public void AddGoldenGem(int amount)
         {
-            this.resources.gems[GemColor.GOLDEN]++;
+            this.resources.gems[GemColor.GOLDEN] += amount;
            
         }
         public bool CanTakeGoldenGem()
