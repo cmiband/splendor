@@ -975,18 +975,10 @@ namespace SplendorConsole
             choiceForGolden = WantToSpendGoldCoin();
 
             List<GemColor> colorsPaidWithGolden = new List<GemColor>();
+
             if (!player.CanAffordCardWithGolden(card) && !player.CanAffordCard(card))
             {
                 Console.WriteLine("Nie stać cię na tę kartę.");
-                return false;
-            }
-
-            int cardToBuyLevel = card.Level;
-            int indexInVisibleCards = board.GetCardIndexInVisibleCards(card, cardToBuyLevel);
-
-            if (indexInVisibleCards == -1 && !isBuyingReservedCard)
-            {
-                Console.WriteLine("Karta nie jest widoczna na stole.");
                 return false;
             }
 
@@ -1054,12 +1046,13 @@ namespace SplendorConsole
                     }
                     else if (choiceForGolden)
                     {
+
                         player.Resources.gems[color] = 0;
                         int deficit = requiredAmount - playerAmount;
 
-                        int goldenTokens = player.Resources.gems.TryGetValue(GemColor.GOLDEN, out var golden) ? golden : 0;
                         player.Resources.gems[GemColor.GOLDEN] -= deficit;
                         bank.AddGoldenGem(deficit);
+
                         colorsPaidWithGolden.Add(color);
                         requiredAmount = 0;
                     }
@@ -1075,6 +1068,8 @@ namespace SplendorConsole
             Console.WriteLine($"Karta {card} została zakupiona!");
             return true;
         }
+
+
         private void RefillBankResources(Bank bank, Card card, IEnumerable<GemColor> colorsReplacedWithGolden, Player player)
         {
             foreach (var gemCost in card.DetailedPrice.gems)
