@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Net.WebSockets;
 using System.Text;
+using System.Diagnostics;
 
 
 namespace SplendorConsole
@@ -18,12 +19,14 @@ namespace SplendorConsole
         private const string FETCH_DATA_EXCEPTION_MESSAGE = "Error occured while trying to fetch data from web socket";
         private const string FETCH_DATA_WITH_CALLBACK_EXCEPTION_MESSAGE = "Error occured while trying to fetch data and perform callback";
         private const string DISCONNECT_ERROR_MESSAGE = "Error occured while trying to disconnect from web socket";
+        private const string SERVER_START_FAILED_MESSAGE = "Error occured while trying to start the server";
         private const string CLOSING_STATUS = "Closing";
         private Uri serverEndpoint;
         private ClientWebSocket webSocket;
 
         public WebserviceClient(string endpoint)
         {
+            StartServer();
             serverEndpoint = new Uri(endpoint);
             webSocket = new ClientWebSocket();
         }
@@ -111,6 +114,18 @@ namespace SplendorConsole
             catch(Exception e)
             {
                 throw new WebserviceClientException(DISCONNECT_ERROR_MESSAGE, e);
+            }
+        }
+
+        public static void StartServer()
+        {
+            try
+            {
+                Process.Start(@"server.exe");
+            }
+            catch (Exception e)
+            {
+                throw new WebserviceClientException(SERVER_START_FAILED_MESSAGE, e);
             }
         }
 
