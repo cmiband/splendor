@@ -1035,12 +1035,18 @@ namespace SplendorConsole
                 if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
                 {
                     player.Resources.gems[resource.Key] -= resource.Value;
+                    if (player.Resources.gems[resource.Key] == 0)
+                        player.Resources.gems.Remove(resource.Key);
                 }
             }
 
             if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
             {
                 player.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                if (player.Resources.gems[GemColor.GOLDEN] == 0)
+                {
+                    player.Resources.gems.Remove(GemColor.GOLDEN);
+                }
             }
 
             RefillBankResources(bank, card, simulatedResourcesUsed);
