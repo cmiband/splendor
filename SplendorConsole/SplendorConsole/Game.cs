@@ -967,7 +967,6 @@ namespace SplendorConsole
         public bool BuyCard(Board board, Card card, Bank bank, bool isBuyingReservedCard, Player player)
         {
             bool choiceForGolden = false;
-            int usedGoldenCoins = 0;
 
             Console.WriteLine("Czy chcesz użyć złotego żetonu aby zapłacić za kartę?");
             Console.WriteLine("1 - Tak");
@@ -975,8 +974,11 @@ namespace SplendorConsole
 
             choiceForGolden = WantToSpendGoldCoin();
 
-            List<GemColor> colorsPaidWithGolden = new List<GemColor>();
-            Dictionary<GemColor, int> resourcesUsed = new Dictionary<GemColor, int>();
+            var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+            foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+            {
+                simulatedResourcesUsed[color] = 0;
+            }
 
             if (!player.CanAffordCardWithGolden(card) && !player.CanAffordCard(card))
             {
@@ -992,46 +994,7 @@ namespace SplendorConsole
                 int requiredAmount = colorOnCard.Value;
 
                 int bonusAmount = player.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
-                if (bonusAmount > 0)
-                {
-                    int amountToUse = Math.Min(bonusAmount, requiredAmount);
-                    requiredAmount -= amountToUse;
-                }
-
-                if (requiredAmount > 0)
-                {
-                    int playerAmount = player.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
-                    if (playerAmount < requiredAmount && !choiceForGolden)
-                    {
-                        Console.WriteLine("Nie stać cię na tę kartę");
-                        return false;
-                    }
-
-                    if (choiceForGolden)
-                    {
-                        int deficit = requiredAmount - playerAmount;
-                        int goldenTokens = player.Resources.gems.TryGetValue(GemColor.GOLDEN, out var golden) ? golden : 0;
-                        if (goldenTokens < deficit)
-                        {
-                            Console.WriteLine($"Nie masz wystarczającej liczby złotych żetonów, aby zapłacić za {color}.");
-                            return false;
-                        }
-                        usedGoldenCoins += deficit;
-                    }
-                }
-            }
-
-            foreach (var colorOnCard in cardPrice)
-            {
-                GemColor color = colorOnCard.Key;
-                int requiredAmount = colorOnCard.Value;
-
-                int bonusAmount = player.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
-                if (bonusAmount > 0)
-                {
-                    int amountToUse = Math.Min(bonusAmount, requiredAmount);
-                    requiredAmount -= amountToUse;
-                }
+                requiredAmount -= Math.Min(bonusAmount, requiredAmount);
 
                 if (requiredAmount > 0)
                 {
@@ -1039,30 +1002,48 @@ namespace SplendorConsole
 
                     if (playerAmount >= requiredAmount)
                     {
-                        player.Resources.gems[color] -= requiredAmount;
-                        resourcesUsed[color] = requiredAmount;
-                        requiredAmount = 0;
+                        simulatedResourcesUsed[color] += requiredAmount;
                     }
-                    else if (choiceForGolden)
+                    else
                     {
-                        int deficit = requiredAmount - playerAmount;
-                        player.Resources.gems[color] = 0;
-                        player.Resources.gems[GemColor.GOLDEN] -= deficit;
+                        if (choiceForGolden)
+                        {
+                            int deficit = requiredAmount - playerAmount;
 
-                        colorsPaidWithGolden.Add(color);
-                        resourcesUsed[color] = playerAmount;
-                        requiredAmount = 0;
+                            if (player.Resources.gems[GemColor.GOLDEN] >= deficit)
+                            {
+                                simulatedResourcesUsed[color] += playerAmount;
+
+                                simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Nie masz wystarczających zasobów.");
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Nie masz wystarczających zasobów.");
+                            return false;
+                        }
                     }
                 }
             }
 
-            this.RefillBankResources(bank, card, colorsPaidWithGolden, player, resourcesUsed);
-
-            if (usedGoldenCoins > 0)
+            foreach (var resource in simulatedResourcesUsed)
             {
-                bank.AddGoldenGem(usedGoldenCoins);
+                if (resource.Value > 0)
+                {
+                    player.Resources.gems[resource.Key] -= resource.Value;
+                }
             }
+            RefillBankResources(bank, card, simulatedResourcesUsed.Where(kvp => kvp.Value > 0).Select(kvp => kvp.Key), player, simulatedResourcesUsed);
 
+            if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+            {
+                bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+            }
             player.AddCardToPlayer(card);
             player.BonusResources.AddResource(card.BonusColor);
             player.Points += card.Points;
@@ -1071,31 +1052,37 @@ namespace SplendorConsole
             return true;
         }
 
+
+
+
         private void RefillBankResources(Bank bank, Card card, IEnumerable<GemColor> colorsReplacedWithGolden, Player player, Dictionary<GemColor, int> resourcesUsed)
         {
             foreach (var gemCost in card.DetailedPrice.gems)
             {
                 GemColor color = gemCost.Key;
-                int cost = gemCost.Value;
 
-                int bonusAmount = player.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
-                int amountPaidWithColor = Math.Max(0, cost - bonusAmount);
-
-                if (colorsReplacedWithGolden.Contains(color))
-                    amountPaidWithColor = 0;
-
-                if (amountPaidWithColor > 0 || resourcesUsed.ContainsKey(color))
+                if (resourcesUsed.TryGetValue(color, out int amountPaidWithColor))
                 {
+                    // Dodaj użyte zasoby do banku, niezależnie od tego, czy były zastąpione złotymi
                     int currentBankAmount = bank.resources.gems.TryGetValue(color, out var bankAmount) ? bankAmount : 0;
-                    int amountToAdd = Math.Min(amountPaidWithColor + resourcesUsed.GetValueOrDefault(color, 0), 7 - currentBankAmount);
 
+                    // Dodaj tyle, ile można, bez przekraczania limitu
+                    int amountToAdd = Math.Min(amountPaidWithColor, 7 - currentBankAmount);
                     if (amountToAdd > 0)
                     {
                         bank.resources.gems[color] = currentBankAmount + amountToAdd;
                     }
+
+                    // Informacja o ewentualnym przepełnieniu banku
+                    if (amountPaidWithColor > amountToAdd)
+                    {
+                        Console.WriteLine($"Nie można dodać {amountPaidWithColor - amountToAdd} zasobów {color} do banku, ponieważ jest pełny.");
+                    }
                 }
             }
         }
+
+
 
 
         public int[] ToArray()
