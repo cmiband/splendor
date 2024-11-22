@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SplendorConsole
 {
-    internal class Player
+    public class Player
     {
         public bool BUYING_RESERVED_CARD = true;
         public bool NOT_BUYING_RESERVED_CARD = false;
