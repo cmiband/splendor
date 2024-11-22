@@ -817,29 +817,22 @@ namespace SplendorConsole
                 Console.WriteLine("Arystokraci, których możesz zdobyć: ");
                 for (int i = 0; i < AvailableIndexNobles.Count; i++)
                 {
-                    Console.WriteLine(AvailableIndexNobles[i] + " " + listOfNobles[i].ToString());
+                    Console.WriteLine(AvailableIndexNobles[i] + ". " + listOfNobles[i].ToString());
 
                 }
 
-                bool IsChoiceMade = false;
                 int choice = 0;
-                while (IsChoiceMade == false)
+
+                while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > AvailableIndexNobles.Count)
                 {
-                    try
-                    {
-                        Console.WriteLine("Wybierz arystokratę: ");
-                        choice = int.Parse(Console.ReadLine());
-                        IsChoiceMade = true;
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Niepoprawny numer, podaj jeszcze raz");
-                    }
+                    Console.WriteLine("Niepoprawny numer. Podaj jeszcze raz.");
+                    Console.WriteLine("Wybierz arystokratę: ");
                 }
 
                 Noble playerChoice = listOfNobles[choice];
                 listOfPlayers[currentTurn].GetNoble(playerChoice);
                 listOfNobles.Remove(playerChoice);
+                Console.WriteLine("Wybrany arystokrata został dodany do gracza.");
 
             }
 
