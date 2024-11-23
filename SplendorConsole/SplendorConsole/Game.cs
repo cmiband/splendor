@@ -2,13 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Numerics;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Newtonsoft.Json.Linq;
+using static SplendorConsole.WebserviceClient;
 
 namespace SplendorConsole
 {
@@ -36,7 +42,7 @@ namespace SplendorConsole
             set => listOfNobles = value;
         }
 
-
+        private WebserviceClient client;
 
         public Bank Bank
         {
@@ -45,7 +51,7 @@ namespace SplendorConsole
         public Board Board { get => board; }
 
 
-        public void GameStart()
+        async public Task GameStart()
         {
 
             availableCards.LoadCardsFromExcel();
@@ -61,6 +67,16 @@ namespace SplendorConsole
             AddResourcesToBank(bank, listOfPlayers.Count);
             SetVisibleCards();
             board = new Board(level1VisibleCards, level2VisibleCards, level3VisibleCards, level1Shuffled, level2Shuffled, level3Shuffled, listOfNobles);
+
+            /* 
+            TE DWIE LINIJKI PRAWDOPODOBNIE BĘDĄ W TYM MIEJSCU, ODPALAJĄ POŁĄCZENIE Z SERWEREM
+            client = new WebserviceClient("ws://localhost:8765");
+            await client.ConnectToWebsocket();
+
+            PRZYKŁAD JAK UŻYWAĆ METODY RequestMovesListFromServer, przyjmuje ona inta ale domyślnie jest na zero ustawiony
+            int[] moves = await RequestMovesListFromServer();
+            */
+
             GameLoop(listOfPlayers.Count);
         }
 
@@ -1163,6 +1179,24 @@ namespace SplendorConsole
 
             return finalZScore;
 
+        }
+
+        async public Task<int[]?> RequestMovesListFromServer(int illegalMovesServedLastTurn = 0)
+        {
+            float[] gameState = Standartize(ToArray());
+
+            var request = new
+            {
+                IllegalMovesServedLastTurn = illegalMovesServedLastTurn, 
+                GameState = gameState
+            };
+
+            string response = await client.SendAndFetchDataFromSocket(JsonSerializer.Serialize(request));
+
+            JObject json = JObject.Parse(response);
+            var moves = json["MovesList"]?.ToObject<int[]>();
+
+            return moves;
         }
     }
 }

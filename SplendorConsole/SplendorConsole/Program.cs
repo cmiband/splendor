@@ -2,9 +2,9 @@
 
 public class Program
 {
-    public static void Main(string[] args)
+    async public static Task Main(string[] args)
     {
         Game game = new Game();
-        game.GameStart();
+        await game.GameStart();
     }
 }

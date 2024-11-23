@@ -70,12 +70,12 @@ namespace SplendorConsole
                                bonusColor == GemColor.GREEN  ?  1 : 0,
                                bonusColor == GemColor.RED    ?  1 : 0,
                                bonusColor == GemColor.BLACK  ?  1 : 0,
-                               detailedPrice.gems[GemColor.WHITE],
-                               detailedPrice.gems[GemColor.BLUE],
-                               detailedPrice.gems[GemColor.GREEN],
-                               detailedPrice.gems[GemColor.RED],
-                               detailedPrice.gems[GemColor.BLACK]
+                               detailedPrice.gems.ContainsKey(GemColor.WHITE) ? detailedPrice.gems[GemColor.WHITE] : 0,
+                               detailedPrice.gems.ContainsKey(GemColor.BLUE) ? detailedPrice.gems[GemColor.BLUE] : 0,
+                               detailedPrice.gems.ContainsKey(GemColor.GREEN) ? detailedPrice.gems[GemColor.GREEN] : 0,
+                               detailedPrice.gems.ContainsKey(GemColor.RED) ? detailedPrice.gems[GemColor.RED] : 0,
+                               detailedPrice.gems.ContainsKey(GemColor.BLACK) ? detailedPrice.gems[GemColor.BLACK] : 0
                              };
         }
-    }
+    } 
 }
