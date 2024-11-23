@@ -69,7 +69,7 @@ namespace SplendorConsole
             board = new Board(level1VisibleCards, level2VisibleCards, level3VisibleCards, level1Shuffled, level2Shuffled, level3Shuffled, listOfNobles);
 
             /* 
-            TE DWIE LINIJKI PRAWDOPODOBNIE BĘDĄ W TYM MIEJSCU, ODPALAJĄ POŁĄCSZENIE Z SERWEREM
+            TE DWIE LINIJKI PRAWDOPODOBNIE BĘDĄ W TYM MIEJSCU, ODPALAJĄ POŁĄCZENIE Z SERWEREM
             client = new WebserviceClient("ws://localhost:8765");
             await client.ConnectToWebsocket();
 
