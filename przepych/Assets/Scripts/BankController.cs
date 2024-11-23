@@ -14,12 +14,10 @@ public class BankController : MonoBehaviour
     public ResourcesController resourcesController = new ResourcesController();
     public List<GemStashController> gemStashes = new List<GemStashController>();
 
-    public bool areGemsTaken;
     void Start()
     {
         playerController = currentPlayer.GetComponent<PlayerController>();
         isPlayerTakingThreeGems = false;
-        areGemsTaken = false;
         Debug.Log(resourcesController.gems.Count);
         foreach (var item in resourcesController.gems)
         {
@@ -41,7 +39,6 @@ public class BankController : MonoBehaviour
             }
         }
         playerController.TakeThreeTokens(gemsBeingChosen);
-        areGemsTaken = true;
         gemsBeingChosen.Clear();
         isPlayerTakingThreeGems = false;
 
@@ -50,7 +47,6 @@ public class BankController : MonoBehaviour
     public void TwoGemsTaken()
     {
         resourcesController.gems[gemsBeingChosen[0]] -= 2;
-        areGemsTaken = true;
         playerController.TakeTwoTokens(gemsBeingChosen[0]);
 
         gemsBeingChosen.Clear(); 
