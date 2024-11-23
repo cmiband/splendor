@@ -42,11 +42,11 @@ namespace SplendorConsole
         public int[] ToArray()
         {
             return new int[]   {points,
-                                requiredBonuses.gems[GemColor.WHITE],
-                                requiredBonuses.gems[GemColor.BLUE],
-                                requiredBonuses.gems[GemColor.GREEN],
-                                requiredBonuses.gems[GemColor.RED],
-                                requiredBonuses.gems[GemColor.BLACK]
+                                requiredBonuses.gems.ContainsKey(GemColor.WHITE) ? requiredBonuses.gems[GemColor.WHITE] : 0,
+                                requiredBonuses.gems.ContainsKey(GemColor.BLUE) ? requiredBonuses.gems[GemColor.BLUE] : 0,
+                                requiredBonuses.gems.ContainsKey(GemColor.GREEN) ? requiredBonuses.gems[GemColor.GREEN] : 0,
+                                requiredBonuses.gems.ContainsKey(GemColor.RED) ? requiredBonuses.gems[GemColor.RED] : 0,
+                                requiredBonuses.gems.ContainsKey(GemColor.BLACK) ? requiredBonuses.gems[GemColor.BLACK] : 0
                                 };
         }
 
