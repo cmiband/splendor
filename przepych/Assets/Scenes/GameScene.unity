@@ -684,7 +684,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9094224824765345752, guid: 7ad7118bf7e8a72428642aa83a37dcfe, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 18.1
+      value: 66
       objectReference: {fileID: 0}
     - target: {fileID: 9094224824765345752, guid: 7ad7118bf7e8a72428642aa83a37dcfe, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -755,6 +755,7 @@ MonoBehaviour:
   playerId: 0
   game: {fileID: 2008468892}
   mainGameController: {fileID: 0}
+  resourcesInfo: 
   hand: []
   points: 0
 --- !u!1 &679956647
@@ -1104,7 +1105,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9094224824765345752, guid: 7ad7118bf7e8a72428642aa83a37dcfe, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 65.8
+      value: -73
       objectReference: {fileID: 0}
     - target: {fileID: 9094224824765345752, guid: 7ad7118bf7e8a72428642aa83a37dcfe, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1310,10 +1311,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 321321166}
-  - {fileID: 2044639994}
   - {fileID: 1427374289}
   - {fileID: 1592669694}
   - {fileID: 688963294}
+  - {fileID: 2044639994}
   - {fileID: 753459025}
   m_Father: {fileID: 526158503}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1414,7 +1415,6 @@ MonoBehaviour:
   playerController: {fileID: 0}
   resourcesController: {fileID: 679956648}
   gemStashes: []
-  areGemsTaken: 0
 --- !u!1001 &1222200208
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1979,7 +1979,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9094224824765345752, guid: 7ad7118bf7e8a72428642aa83a37dcfe, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -29.9
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 9094224824765345752, guid: 7ad7118bf7e8a72428642aa83a37dcfe, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2617,7 +2617,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9094224824765345752, guid: 7ad7118bf7e8a72428642aa83a37dcfe, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -75.3
+      value: -29
       objectReference: {fileID: 0}
     - target: {fileID: 9094224824765345752, guid: 7ad7118bf7e8a72428642aa83a37dcfe, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
