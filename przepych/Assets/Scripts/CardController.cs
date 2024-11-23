@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardController : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class CardController : MonoBehaviour
     public GemColor bonusColor;
     public int points;
     public string illustration;
+    public bool isSelected;
+    private Image selectedCardImage;
     public int Points { get => points; }
 
     public int Level
@@ -34,6 +37,10 @@ public class CardController : MonoBehaviour
         this.bonusColor = bonusColor;
         this.points = points;
         this.illustration = illustration;
+    }
+    private void Start()
+    {
+        selectedCardImage = GetComponent<Image>();
     }
     public override bool Equals(object obj)
     {
@@ -62,5 +69,26 @@ public class CardController : MonoBehaviour
         this.detailedPrice = card.detailedPrice;
         this.points = card.points;
         this.illustration = card.illustration;
+    }
+    private void OnMouseDown()
+    {
+        GameController gameController = FindObjectOfType<GameController>();
+        if (gameController != null)
+        {
+            gameController.SelectCard(this);
+        }
+    }
+    public void SetSelected(bool selected)
+    {
+        isSelected = selected;
+
+        if (selectedCardImage != null)
+        {
+            selectedCardImage.color = selected ? Color.yellow : Color.white;
+        }
+        else
+        {
+            Debug.LogWarning("Nie znaleziono komponentu Image na karcie!");
+        }
     }
 }

@@ -21,10 +21,12 @@ public class BankController : MonoBehaviour
         isPlayerTakingThreeGems = false;
         areGemsTaken = false;
         Debug.Log(resourcesController.gems.Count);
-        foreach (var item in resourcesController.gems)
+        foreach (var item in resourcesController.gems.ToList())
         {
-            if (item.Key != GemColor.GOLDEN) resourcesController.gems[item.Key] = 7;
-            else resourcesController.gems[item.Key] = 5;
+            if (item.Key != GemColor.GOLDEN)
+                resourcesController.gems[item.Key] = 7;
+            else
+                resourcesController.gems[item.Key] = 5;
         }
     }
 

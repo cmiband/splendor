@@ -1,7 +1,5 @@
-using DocumentFormat.OpenXml.Office.CustomUI;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,6 +21,9 @@ public class GameController : MonoBehaviour
     public GameObject boughtCards;
     public GameObject openBoughtCards;
     public GameObject pass;
+    public GameObject buyCard;
+
+    private CardController selectedToBuyCard;
 
     // Start is called before the first frame update
     private void Start()
@@ -37,25 +38,26 @@ public class GameController : MonoBehaviour
         boardController.CreateCardObjectsOnStart();
 
         this.players = new List<GameObject> { currentPlayer, nextPlayerOne, nextPlayerTwo, nextPlayerThree };
-        this.CreateFourPlayersDataOnInit();  
+        this.CreateFourPlayersDataOnInit();
         this.FillPlayersWithData();
         this.currentPlayerId = 0;
 
         this.AddEventListeners();
+        this.AssignClickListenersToAllCards();
     }
 
     private void AddEventListeners()
     {
-        UnityEngine.UI.Button openBoughtCardsButton = this.openBoughtCards.GetComponent<UnityEngine.UI.Button>();
+        Button openBoughtCardsButton = this.openBoughtCards.GetComponent<Button>();
         openBoughtCardsButton.onClick.AddListener(HandleOpenBoughtCards);
 
-        UnityEngine.UI.Button passButton = this.pass.GetComponent<UnityEngine.UI.Button>();
+        Button passButton = this.pass.GetComponent<Button>();
         passButton.onClick.AddListener(HandlePass);
     }
 
     private void CreateFourPlayersDataOnInit()
     {
-        for(int i = 0; i<4; i++)
+        for (int i = 0; i < 4; i++)
         {
             List<CardController> initHand = new List<CardController>();
             ResourcesController initResources = new ResourcesController();
@@ -69,7 +71,7 @@ public class GameController : MonoBehaviour
 
     private void FillPlayersWithData()
     {
-        for(int i = 0; i<this.players.Count; i++)
+        for (int i = 0; i < this.players.Count; i++)
         {
             this.FillPlayerWithData(this.players[i], i);
         }
@@ -93,6 +95,7 @@ public class GameController : MonoBehaviour
     {
         this.openBoughtCards.SetActive(visibility);
         this.pass.SetActive(visibility);
+        this.buyCard.SetActive(visibility);
     }
 
     public void HandlePass()
@@ -105,7 +108,7 @@ public class GameController : MonoBehaviour
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
 
         int targetedPlayerId = this.currentPlayerId;
-        foreach(GameObject player in this.players)
+        foreach (GameObject player in this.players)
         {
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerId(targetedPlayerId);
@@ -119,5 +122,60 @@ public class GameController : MonoBehaviour
     public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources)
     {
         this.playerIdToResources[playerId] = resources;
+    }
+
+    public void SelectCard(CardController card)
+    {
+        if (selectedToBuyCard != null && selectedToBuyCard != card)
+        {
+            selectedToBuyCard.SetSelected(false);
+        }
+
+        if (selectedToBuyCard == card)
+        {
+            selectedToBuyCard = null;
+        }
+        else
+        {
+            selectedToBuyCard = card;
+            selectedToBuyCard.SetSelected(true);
+        }
+    }
+
+    private void AssignClickListenersToAllCards()
+    {
+        Transform visibleCardsRoot = board.transform.Find("VisibleCards");
+        if (visibleCardsRoot == null)
+        {
+            Debug.LogError("VisibleCards root not found!");
+            return;
+        }
+
+        foreach (Transform levelTransform in visibleCardsRoot)
+        {
+            Debug.Log($"Assigning listeners for level: {levelTransform.name}");
+
+            foreach (Transform cardTransform in levelTransform)
+            {
+                Button button = cardTransform.GetComponent<Button>();
+                if (button == null)
+                {
+                    button = cardTransform.gameObject.AddComponent<Button>();
+                    button.targetGraphic = cardTransform.GetComponent<Image>();
+                }
+
+                button.onClick.AddListener(() => HandleCardClick(cardTransform.gameObject));
+            }
+        }
+    }
+
+    private void HandleCardClick(GameObject card)
+    {
+        Debug.Log($"Clicked on card: {card.name}");
+        CardController cardController = card.GetComponent<CardController>();
+        if (cardController != null)
+        {
+            SelectCard(cardController);
+        }
     }
 }
