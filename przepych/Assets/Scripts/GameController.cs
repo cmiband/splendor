@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour
     public GameObject pass;
     public GameObject buyCard;
 
-    private CardController selectedToBuyCard;
+    public CardController selectedToBuyCard;
 
     private void Start()
     {
@@ -54,9 +54,11 @@ public class GameController : MonoBehaviour
         passButton.onClick.AddListener(HandlePass);
 
         Button buyCardButton = this.buyCard.GetComponent<Button>();
-        buyCardButton.onClick.AddListener(HandleBuyCardButton);
+        buyCardButton.onClick.AddListener(currentPlayer.GetComponent<PlayerController>().HandleBuyCard);
     }
 
+
+    
     private void CreateFourPlayersDataOnInit()
     {
         for (int i = 0; i < 4; i++)
@@ -199,7 +201,7 @@ public class GameController : MonoBehaviour
 
         if (!CanAffordCard(currentPlayerController, cardCost))
         {
-            Debug.Log("Nie staæ ciê na tê kartê.");
+            Debug.Log("Nie staï¿½ ciï¿½ na tï¿½ kartï¿½.");
             return;
         }
 
@@ -216,7 +218,7 @@ public class GameController : MonoBehaviour
         selectedToBuyCard = null;
         ChangeTurn();
 
-        Debug.Log("Karta zosta³a zakupiona pomyœlnie!");
+        Debug.Log("Karta zostaï¿½a zakupiona pomyï¿½lnie!");
     }
 
 
