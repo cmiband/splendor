@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,23 +13,14 @@ public class CardController : MonoBehaviour
     public string illustration;
     public bool isSelected;
     private Image selectedCardImage;
-    public int Points { get => points; }
 
-    public int Level
-    {
-        get { return level; }
-    }
+    public int Points => points;
 
-    public ResourcesController DetailedPrice
-    {
-        get { return detailedPrice; }
-    }
+    public int Level => level;
 
-    public GemColor BonusColor
-    {
-        get => bonusColor;
-    }
-    public int Points2 { get; internal set; }
+    public ResourcesController DetailedPrice => detailedPrice;
+
+    public GemColor CardBonus => bonusColor;
 
     public CardController(int level, GemColor bonusColor, int points, string illustration, ResourcesController detailedPrice)
     {
@@ -38,13 +30,19 @@ public class CardController : MonoBehaviour
         this.points = points;
         this.illustration = illustration;
     }
+
     private void Start()
     {
         selectedCardImage = GetComponent<Image>();
+        if (selectedCardImage == null)
+        {
+            Debug.LogWarning("Nie znaleziono komponentu Image na karcie! Upewnij się, że karta ma komponent Image.");
+        }
     }
+
     public override bool Equals(object obj)
     {
-        if (obj.GetType() != typeof(CardController))
+        if (obj == null || obj.GetType() != typeof(CardController))
             return false;
 
         CardController other = (CardController)obj;
@@ -56,10 +54,15 @@ public class CardController : MonoBehaviour
                detailedPrice.Equals(other.detailedPrice);
     }
 
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(level, bonusColor, points, illustration, detailedPrice);
+    }
+
     public override string ToString()
     {
         string priceDescription = DetailedPrice.ToString();
-        return $"Karta koloru: {bonusColor}, cena: {priceDescription}, dodaj�ca {points} punkt�w.";
+        return $"Karta koloru: {bonusColor}, cena: {priceDescription}, dodająca {points} punktów.";
     }
 
     public void InitCardData(CardController card)
@@ -70,6 +73,7 @@ public class CardController : MonoBehaviour
         this.points = card.points;
         this.illustration = card.illustration;
     }
+
     private void OnMouseDown()
     {
         GameController gameController = FindObjectOfType<GameController>();
@@ -78,6 +82,7 @@ public class CardController : MonoBehaviour
             gameController.SelectCard(this);
         }
     }
+
     public void SetSelected(bool selected)
     {
         isSelected = selected;

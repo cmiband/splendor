@@ -17,8 +17,8 @@ public class PlayerController : MonoBehaviour
     {
         get { return bonusResources; }
         set { bonusResources = value; }
-
     }
+    public ResourcesController Resources { get => resources; set => resources = value; }
     public List<CardController> hand;
     public int points;
     public int Points { get => points; set => points = value; }
@@ -92,5 +92,13 @@ public class PlayerController : MonoBehaviour
     public void SetPlayerId(int index)
     {
         this.playerId = index;
+    }
+    public void AddBonusResource(GemColor bonusColor)
+    {
+        if (bonusColor != GemColor.NONE)
+        {
+            BonusResources.AddResource(bonusColor);
+            Debug.Log($"Dodano bonusowy zasób: {bonusColor}");
+        }
     }
 }

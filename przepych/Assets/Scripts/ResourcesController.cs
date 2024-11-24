@@ -59,6 +59,25 @@ public class ResourcesController : MonoBehaviour, IEnumerable<KeyValuePair<GemCo
             gems[color] = 1;
         }
     }
+    public void RemoveResource(GemColor color, int amount)
+    {
+        if (gems.TryGetValue(color, out int currentAmount))
+        {
+            gems[color] = Mathf.Max(0, currentAmount - amount);
+        }
+        else
+        {
+            Debug.LogWarning($"Próba usunięcia zasobów koloru {color}, którego nie ma w zasobach.");
+        }
+    }
+    public int GetResourceAmount(GemColor color)
+    {
+        if (gems.TryGetValue(color, out int amount))
+        {
+            return amount;
+        }
+        return 0;
+    }
     public IEnumerator<KeyValuePair<GemColor, int>> GetEnumerator()
     {
         return gems.GetEnumerator();

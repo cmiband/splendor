@@ -25,7 +25,6 @@ public class GameController : MonoBehaviour
 
     private CardController selectedToBuyCard;
 
-    // Start is called before the first frame update
     private void Start()
     {
         boardController = board.GetComponent<BoardController>();
@@ -53,6 +52,9 @@ public class GameController : MonoBehaviour
 
         Button passButton = this.pass.GetComponent<Button>();
         passButton.onClick.AddListener(HandlePass);
+
+        Button buyCardButton = this.buyCard.GetComponent<Button>();
+        buyCardButton.onClick.AddListener(HandleBuyCardButton);
     }
 
     private void CreateFourPlayersDataOnInit()
@@ -117,6 +119,8 @@ public class GameController : MonoBehaviour
 
             targetedPlayerId = (targetedPlayerId + 1) % 4;
         }
+
+        buyCard.SetActive(false);
     }
 
     public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources)
@@ -134,11 +138,13 @@ public class GameController : MonoBehaviour
         if (selectedToBuyCard == card)
         {
             selectedToBuyCard = null;
+            buyCard.SetActive(false);
         }
         else
         {
             selectedToBuyCard = card;
             selectedToBuyCard.SetSelected(true);
+            buyCard.SetActive(true);
         }
     }
 
@@ -177,5 +183,87 @@ public class GameController : MonoBehaviour
         {
             SelectCard(cardController);
         }
+    }
+
+    public void HandleBuyCardButton()
+    {
+        if (selectedToBuyCard == null)
+        {
+            Debug.LogWarning("Nie wybrano karty do zakupu!");
+            return;
+        }
+
+        PlayerController currentPlayerController = players[currentPlayerId].GetComponent<PlayerController>();
+        ResourcesController playerResources = playerIdToResources[currentPlayerId];
+        Dictionary<GemColor, int> cardCost = selectedToBuyCard.DetailedPrice.gems;
+
+        if (!CanAffordCard(currentPlayerController, cardCost))
+        {
+            Debug.Log("Nie staæ ciê na tê kartê.");
+            return;
+        }
+
+        PayForCard(playerResources, cardCost);
+        GemColor bonusColor = selectedToBuyCard.CardBonus;
+        if (bonusColor != GemColor.NONE)
+        {
+            currentPlayerController.AddBonusResource(bonusColor);
+        }
+
+        playerIdToHand[currentPlayerId].Add(selectedToBuyCard);
+
+        Destroy(selectedToBuyCard.gameObject);
+        selectedToBuyCard = null;
+        ChangeTurn();
+
+        Debug.Log("Karta zosta³a zakupiona pomyœlnie!");
+    }
+
+
+    private bool CanAffordCard(PlayerController player, Dictionary<GemColor, int> cardCost)
+    {
+        foreach (var cost in cardCost)
+        {
+            var color = cost.Key;
+            var requiredAmount = cost.Value;
+
+            var playerResources = player.Resources;
+
+            var playerBonusResources = player.BonusResources.gems[color];
+            var playerStandardResources = playerResources.GetResourceAmount(color);
+            var playerAmount = playerBonusResources + playerStandardResources;
+
+            if (playerAmount < requiredAmount)
+            {
+                int goldAvailable = playerResources.GetResourceAmount(GemColor.GOLDEN);
+                if (goldAvailable + playerAmount < requiredAmount)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private void PayForCard(ResourcesController playerResources, Dictionary<GemColor, int> cardCost)
+    {
+        foreach (var cost in cardCost)
+        {
+            GemColor color = cost.Key;
+            int requiredAmount = cost.Value;
+
+            int playerAmount = playerResources.GetResourceAmount(color);
+            if (playerAmount >= requiredAmount)
+            {
+                playerResources.RemoveResource(color, requiredAmount);
+            }
+            else
+            {
+                int deficit = requiredAmount - playerAmount;
+                playerResources.RemoveResource(color, playerAmount);
+                playerResources.RemoveResource(GemColor.GOLDEN, deficit);
+            }
+        }
+        UpdateTargetedPlayerResources(currentPlayerId, playerResources);
     }
 }
