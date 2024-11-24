@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour
     public GameObject pass;
     public GameObject buyCard;
 
-    private CardController selectedToBuyCard;
+    public CardController selectedToBuyCard;
 
     // Start is called before the first frame update
     private void Start()
@@ -53,8 +53,13 @@ public class GameController : MonoBehaviour
 
         Button passButton = this.pass.GetComponent<Button>();
         passButton.onClick.AddListener(HandlePass);
+
+        Button buyCardButton = this.buyCard.GetComponent<Button>();
+        buyCardButton.onClick.AddListener(currentPlayer.GetComponent<PlayerController>().HandleBuyCard);
     }
 
+
+    
     private void CreateFourPlayersDataOnInit()
     {
         for (int i = 0; i < 4; i++)

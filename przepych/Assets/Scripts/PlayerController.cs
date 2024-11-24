@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -27,6 +29,56 @@ public class PlayerController : MonoBehaviour
     {
         this.hand = new List<CardController>();
         this.mainGameController = this.game.GetComponent<GameController>();
+    }
+    
+    private void AddEventListeners()
+    {
+        
+    }
+    
+    public void HandleBuyCard()
+    {
+        int cardLevel = mainGameController.selectedToBuyCard.level;
+        PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
+        Vector3 vector = mainGameController.selectedToBuyCard.transform.position;
+        switch (cardLevel)
+        {
+            case 1:
+                {
+                    player.hand.Add(mainGameController.selectedToBuyCard);
+                    mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                    Debug.Log("Kupiono karte 1 poziomu");
+                    Destroy(mainGameController.selectedToBuyCard.gameObject);
+                    GameObject gameObject = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
+                    CardController cardController = gameObject.GetComponent<CardController>();
+                    cardController.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                    break;
+                }
+            case 2:
+                {
+                    player.hand.Add(mainGameController.selectedToBuyCard);
+                    mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                    Debug.Log("Kupiono karte 2 poziomu");
+                    Destroy(mainGameController.selectedToBuyCard.gameObject);
+                    GameObject gameObject = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
+                    CardController cardController = gameObject.GetComponent<CardController>();
+                    cardController.InitCardData(mainGameController.boardController.level2StackController.PopCardFromStack());
+                    break;
+                }
+            case 3:
+                {
+                    player.hand.Add(mainGameController.selectedToBuyCard);
+                    mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                    Debug.Log("Kupiono karte 3 poziomu");
+                    Destroy(mainGameController.selectedToBuyCard.gameObject);
+                    GameObject gameObject = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
+                    CardController cardController = gameObject.GetComponent<CardController>();
+                    cardController.InitCardData(mainGameController.boardController.level3StackController.PopCardFromStack());
+                    break;
+                }
+
+        }
+        mainGameController.ChangeTurn();
     }
 
     public void TakeTwoTokens(GemColor color)
