@@ -70,6 +70,11 @@ public class ResourcesController : MonoBehaviour, IEnumerable<KeyValuePair<GemCo
             Debug.LogWarning($"Próba usunięcia zasobów koloru {color}, którego nie ma w zasobach.");
         }
     }
+
+    public void AddResource(GemColor color, int amount)
+    {
+        gems[color] += amount;
+    }
     public int GetResourceAmount(GemColor color)
     {
         if (gems.TryGetValue(color, out int amount))

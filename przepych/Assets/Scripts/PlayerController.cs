@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public int playerId;
     public GameObject game;
     public GameController mainGameController;
+    public BankController bankController;
     public string resourcesInfo = "";
 
     private ResourcesController resources = new ResourcesController();
@@ -27,6 +28,7 @@ public class PlayerController : MonoBehaviour
     {
         this.hand = new List<CardController>();
         this.mainGameController = this.game.GetComponent<GameController>();
+        this.bankController = FindObjectOfType<BankController>();
     }
     
     private void AddEventListeners()
@@ -45,6 +47,37 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Nie staæ ciê na tê kartê!");
             return;
         }
+
+        Dictionary<GemColor, int> price = mainGameController.selectedToBuyCard.detailedPrice.gems;
+        
+        foreach(KeyValuePair<GemColor,int> keyValue in price)
+        {
+            if (keyValue.Value == 0) continue;
+            else if (!player.resources.gems.ContainsKey(keyValue.Key))
+            {
+                RemoveGemsOneColor(GemColor.GOLDEN, keyValue.Value);
+                continue;
+            }
+            else if(keyValue.Value > player.resources.gems[keyValue.Key])
+            {
+                int requiredGoldenGems = keyValue.Value - player.resources.gems[keyValue.Key];
+                if (player.resources.gems.ContainsKey(GemColor.GOLDEN))
+                {
+                    int goldenAmount = player.resources.gems[GemColor.GOLDEN];
+                    if(goldenAmount >= requiredGoldenGems)
+                    {
+                        RemoveGemsOneColor(GemColor.GOLDEN, requiredGoldenGems);
+                        continue;
+                    }
+                }
+            }
+            if(keyValue.Key != GemColor.NONE)
+            {
+                RemoveGemsOneColor(keyValue.Key, keyValue.Value);
+            }
+        }
+        bankController.AddGems();
+
 
         var copiedCard = CloneCard();
         player.hand.Add(copiedCard);
@@ -228,6 +261,19 @@ public class PlayerController : MonoBehaviour
         clonedCard.InitCardData(mainGameController.selectedToBuyCard);
 
         return clonedCard;
+    }
+
+    private void RemoveGemsOneColor(GemColor color, int amount)
+    {
+        if (amount == 0)
+        {
+            return;
+        }
+        for (int i = 0; i < amount; i++)
+        {
+            this.resources.gems[color] -= 1;
+            bankController.gemsBeingReturned.Add(color);
+        }
     }
 
 }
