@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\WebServiceClient.cs" />
     <Compile Include="Assets\Scripts\BoardController.cs" />
     <Compile Include="Assets\Scripts\BaseScripts\Bank.cs" />
+    <Compile Include="Assets\Scripts\PlayerGemInfoController.cs" />
     <Compile Include="Assets\Scripts\BaseScripts\Card.cs" />
     <Compile Include="Assets\Scripts\BaseScripts\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
@@ -83,30 +84,51 @@
     <Compile Include="Assets\Scripts\GameState.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\Packages\System.IO.Packaging.8.0.0\THIRD-PARTY-NOTICES.TXT" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\Packages\DocumentFormat.OpenXml.Framework.3.0.1\lib\netstandard2.0\DocumentFormat.OpenXml.Framework.xml" />
     <None Include="Assets\Packages\ClosedXML.Parser.1.2.0\lib\netstandard2.1\ClosedXML.Parser.dll" />
     <None Include="Assets\Packages\RBush.3.2.0\lib\netstandard1.2\RBush.dll" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\Packages\System.IO.Packaging.8.0.0\lib\netstandard2.0\System.IO.Packaging.xml" />
     <None Include="Assets\Packages\System.IO.Packaging.8.0.0\useSharedDesignerContext.txt" />
     <None Include="Assets\Packages\System.Runtime.CompilerServices.Unsafe.4.7.0\THIRD-PARTY-NOTICES.TXT" />
     <None Include="Assets\Packages\ExcelNumberFormat.1.1.0\lib\netstandard2.0\ExcelNumberFormat.dll" />
     <None Include="Assets\Packages\System.Runtime.CompilerServices.Unsafe.4.7.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.xml" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
     <None Include="Assets\Packages\ExcelNumberFormat.1.1.0\lib\netstandard2.0\ExcelNumberFormat.xml" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
     <None Include="Assets\Packages\ClosedXML.0.104.1\lib\netstandard2.1\ClosedXML.xml" />
     <None Include="Assets\Packages\System.Runtime.CompilerServices.Unsafe.4.7.0\useSharedDesignerContext.txt" />
     <None Include="Assets\Packages\System.Runtime.CompilerServices.Unsafe.4.7.0\version.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\Packages\DocumentFormat.OpenXml.3.0.1\lib\netstandard2.0\DocumentFormat.OpenXml.xml" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
+    <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF.shader" />
     <None Include="Assets\Packages\ClosedXML.Parser.1.2.0\lib\netstandard2.1\ClosedXML.Parser.xml" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
     <None Include="Assets\Packages\System.IO.Packaging.8.0.0\LICENSE.TXT" />
+    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\Packages\DocumentFormat.OpenXml.Framework.3.0.1\lib\netstandard2.0\DocumentFormat.OpenXml.Framework.dll" />
     <None Include="Assets\Packages\System.IO.Packaging.8.0.0\lib\netstandard2.0\System.IO.Packaging.dll" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\Packages\SixLabors.Fonts.1.0.0\lib\netstandard2.1\SixLabors.Fonts.dll" />
     <None Include="Assets\Packages\DocumentFormat.OpenXml.3.0.1\lib\netstandard2.0\DocumentFormat.OpenXml.dll" />
     <None Include="Assets\Packages\System.Runtime.CompilerServices.Unsafe.4.7.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll" />
     <None Include="Assets\Packages\ClosedXML.0.104.1\lib\netstandard2.1\ClosedXML.dll" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\Packages\System.Runtime.CompilerServices.Unsafe.4.7.0\LICENSE.TXT" />
+    <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
     <None Include="Assets\Packages\RBush.3.2.0\lib\netstandard1.2\RBush.xml" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
     <None Include="Assets\Packages\SixLabors.Fonts.1.0.0\lib\netstandard2.1\SixLabors.Fonts.xml" />
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,14 @@ public class PlayerController : MonoBehaviour
     public GameController mainGameController;
     public string resourcesInfo = "";
 
+    public Dictionary<GemColor, GameObject> gemColorToResourceGameObject = new Dictionary<GemColor, GameObject>();
+    public GameObject whiteGems;
+    public GameObject redGems;
+    public GameObject greenGems;
+    public GameObject blackGems;
+    public GameObject blueGems;
+    public GameObject goldGems;
+
     private ResourcesController resources = new ResourcesController();
     private ResourcesController bonusResources = new ResourcesController();
 
@@ -27,6 +35,8 @@ public class PlayerController : MonoBehaviour
     {
         this.hand = new List<CardController>();
         this.mainGameController = this.game.GetComponent<GameController>();
+
+        this.InitGemDictionary();
     }
 
     public void TakeTwoTokens(GemColor color)
@@ -82,6 +92,8 @@ public class PlayerController : MonoBehaviour
         this.resources = resources;
 
         this.resourcesInfo = this.resources.ToString();
+
+        this.SetGemInfo(this.resources);
     }
 
     public List<CardController> GetPlayerHand()
@@ -92,5 +104,24 @@ public class PlayerController : MonoBehaviour
     public void SetPlayerId(int index)
     {
         this.playerId = index;
+    }
+
+    private void InitGemDictionary()
+    {
+        this.gemColorToResourceGameObject.Add(GemColor.WHITE, whiteGems);
+        this.gemColorToResourceGameObject.Add(GemColor.RED, redGems);
+        this.gemColorToResourceGameObject.Add(GemColor.GREEN, greenGems);
+        this.gemColorToResourceGameObject.Add(GemColor.BLACK, blackGems);
+        this.gemColorToResourceGameObject.Add(GemColor.BLUE, blueGems);
+        this.gemColorToResourceGameObject.Add(GemColor.GOLDEN, goldGems);
+    }
+
+    private void SetGemInfo(ResourcesController resources)
+    {
+        foreach(KeyValuePair<GemColor, int> val in resources.gems)
+        {
+            GameObject targetedContainer = this.gemColorToResourceGameObject[val.Key];
+            targetedContainer.GetComponent<PlayerGemInfoController>().SetAmountOfGems(val.Value);
+        }
     }
 }
