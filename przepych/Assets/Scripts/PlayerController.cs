@@ -31,10 +31,6 @@ public class PlayerController : MonoBehaviour
         this.bankController = FindObjectOfType<BankController>();
     }
     
-    private void AddEventListeners()
-    {
-        
-    }
 
     public void HandleBuyCard()
     {
