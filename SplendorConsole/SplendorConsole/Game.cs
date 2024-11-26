@@ -822,24 +822,36 @@ namespace SplendorConsole
             }
             else
             {
+                int minIndex = -1;
+                int maxIndex = -1;
+                bool firstIndex = false;
                 List<int> AvailableIndexNobles = new List<int>();
                 for (int i = 0; i < listOfNobles.Count; i++)
                 {
                     Noble noble = listOfNobles[i];
                     if (CanGetNoble(noble))
+                    {
                         AvailableIndexNobles.Add(i);
+                        if(!firstIndex)
+                        {
+                            minIndex = i;
+                            firstIndex = true;
+                        }
+                        maxIndex = i;
+                    }
+                        
                 }
 
                 Console.WriteLine("Arystokraci, których możesz zdobyć: ");
                 for (int i = 0; i < AvailableIndexNobles.Count; i++)
                 {
-                    Console.WriteLine(AvailableIndexNobles[i] + ". " + listOfNobles[i].ToString());
+                    Console.WriteLine(AvailableIndexNobles[i] + ". " + listOfNobles[AvailableIndexNobles[i]].ToString());
 
                 }
 
                 int choice = 0;
 
-                while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > AvailableIndexNobles.Count)
+                while (!int.TryParse(Console.ReadLine(), out choice) || choice < minIndex || choice > maxIndex)
                 {
                     Console.WriteLine("Niepoprawny numer. Podaj jeszcze raz.");
                     Console.WriteLine("Wybierz arystokratę: ");
