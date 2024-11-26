@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -65,6 +66,7 @@ public class GameController : MonoBehaviour
         {
             List<CardController> initHand = new List<CardController>();
             ResourcesController initResources = new ResourcesController();
+            initResources.FillDictionaryWithZeros();
 
             PlayerController targetedPlayerController = this.players[i].GetComponent<PlayerController>();
             targetedPlayerController.SetPlayerId(i);

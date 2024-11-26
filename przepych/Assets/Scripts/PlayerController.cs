@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -223,9 +224,19 @@ public class PlayerController : MonoBehaviour
 
     private void SetGemInfo(ResourcesController resources)
     {
-        Debug.Log(resources.ToString() + "    res gems");
+        int currentPlayerId = this.mainGameController.currentPlayerId;
+        if(currentPlayerId != this.playerId)
+        {
+            return;
+        }
+
         foreach(KeyValuePair<GemColor, int> val in resources.gems)
         {
+            if(val.Key == GemColor.NONE)
+            {
+                continue;
+            }
+
             GameObject targetedContainer = this.gemColorToResourceGameObject[val.Key];
             targetedContainer.GetComponent<PlayerGemInfoController>().SetAmountOfGems(val.Value);
         }

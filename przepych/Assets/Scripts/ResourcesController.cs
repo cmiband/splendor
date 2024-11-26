@@ -10,10 +10,7 @@ public class ResourcesController : MonoBehaviour, IEnumerable<KeyValuePair<GemCo
 
     private void Start()
     {
-        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
-        {
-            gems.Add(color, 0);
-        }
+        this.FillDictionaryWithZeros();
     }
     public override bool Equals(object obj)
     {
@@ -90,5 +87,13 @@ public class ResourcesController : MonoBehaviour, IEnumerable<KeyValuePair<GemCo
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
+    }
+
+    public void FillDictionaryWithZeros()
+    {
+        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+        {
+            this.gems.Add(color, 0);
+        }
     }
 }
