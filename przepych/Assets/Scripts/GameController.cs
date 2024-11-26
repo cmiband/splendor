@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -65,6 +66,7 @@ public class GameController : MonoBehaviour
         {
             List<CardController> initHand = new List<CardController>();
             ResourcesController initResources = new ResourcesController();
+            initResources.FillDictionaryWithZeros();
 
             PlayerController targetedPlayerController = this.players[i].GetComponent<PlayerController>();
             targetedPlayerController.SetPlayerId(i);
@@ -109,9 +111,11 @@ public class GameController : MonoBehaviour
 
     public void ChangeTurn()
     {
+        Debug.Log("old player id:  " + this.currentPlayerId);
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
 
         int targetedPlayerId = this.currentPlayerId;
+        Debug.Log("new player id   " + targetedPlayerId);
         foreach (GameObject player in this.players)
         {
             PlayerController playerController = player.GetComponent<PlayerController>();
@@ -183,6 +187,7 @@ public class GameController : MonoBehaviour
         CardController cardController = card.GetComponent<CardController>();
         if (cardController != null)
         {
+            Debug.Log("card price:  " + cardController.detailedPrice.ToString());
             SelectCard(cardController);
         }
     }
