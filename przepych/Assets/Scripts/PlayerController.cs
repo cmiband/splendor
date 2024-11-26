@@ -223,6 +223,7 @@ public class PlayerController : MonoBehaviour
 
     private void SetGemInfo(ResourcesController resources)
     {
+        Debug.Log(resources.ToString() + "    res gems");
         foreach(KeyValuePair<GemColor, int> val in resources.gems)
         {
             GameObject targetedContainer = this.gemColorToResourceGameObject[val.Key];

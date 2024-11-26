@@ -109,9 +109,11 @@ public class GameController : MonoBehaviour
 
     public void ChangeTurn()
     {
+        Debug.Log("old player id:  " + this.currentPlayerId);
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
 
         int targetedPlayerId = this.currentPlayerId;
+        Debug.Log("new player id   " + targetedPlayerId);
         foreach (GameObject player in this.players)
         {
             PlayerController playerController = player.GetComponent<PlayerController>();
@@ -183,6 +185,7 @@ public class GameController : MonoBehaviour
         CardController cardController = card.GetComponent<CardController>();
         if (cardController != null)
         {
+            Debug.Log("card price:  " + cardController.detailedPrice.ToString());
             SelectCard(cardController);
         }
     }
