@@ -1,13 +1,14 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     public int playerId;
     public GameObject game;
     public GameController mainGameController;
+    public BankController bankController;
     public string resourcesInfo = "";
 
     private ResourcesController resources = new ResourcesController();
@@ -17,8 +18,8 @@ public class PlayerController : MonoBehaviour
     {
         get { return bonusResources; }
         set { bonusResources = value; }
-
     }
+    public ResourcesController Resources { get => resources; set => resources = value; }
     public List<CardController> hand;
     public int points;
     public int Points { get => points; set => points = value; }
@@ -27,6 +28,110 @@ public class PlayerController : MonoBehaviour
     {
         this.hand = new List<CardController>();
         this.mainGameController = this.game.GetComponent<GameController>();
+        this.bankController = FindObjectOfType<BankController>();
+    }
+    
+
+    public void HandleBuyCard()
+    {
+        int cardLevel = mainGameController.selectedToBuyCard.level;
+        PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
+        Vector3 vector = mainGameController.selectedToBuyCard.transform.position;
+
+        if (!CanAffordCardWithGolden(mainGameController.selectedToBuyCard) && !CanAffordCard(mainGameController.selectedToBuyCard))
+        {
+            Debug.Log("Nie staæ ciê na tê kartê!");
+            return;
+        }
+
+        Dictionary<GemColor, int> price = mainGameController.selectedToBuyCard.detailedPrice.gems;
+        
+        foreach(KeyValuePair<GemColor,int> keyValue in price)
+        {
+            Debug.Log(keyValue);
+            if (keyValue.Value == 0) continue;
+            else if (!player.resources.gems.ContainsKey(keyValue.Key))
+            {
+                RemoveGemsOneColor(GemColor.GOLDEN, keyValue.Value);
+                Debug.Log($"Zap³acono zó³tym ¿etonem w iloœci {keyValue.Value}");
+                continue;
+            }
+            else if(keyValue.Value > player.resources.gems[keyValue.Key])
+            {
+                int requiredGoldenGems = keyValue.Value - player.resources.gems[keyValue.Key];
+                if (player.resources.gems.ContainsKey(GemColor.GOLDEN))
+                {
+                    int goldenAmount = player.resources.gems[GemColor.GOLDEN];
+                    if(goldenAmount >= requiredGoldenGems)
+                    {
+                        RemoveGemsOneColor(GemColor.GOLDEN, requiredGoldenGems);
+                        Debug.Log($"Zap³acono zó³tym ¿etonem w iloœci {requiredGoldenGems}");
+                    }
+                    Debug.Log($"Zap³acono normalnym  ¿etonem w iloœci {player.resources.gems[keyValue.Key]}");
+                    RemoveGemsOneColor(keyValue.Key, player.resources.gems[keyValue.Key]);
+                    
+                    continue;
+                }
+            }
+            if(keyValue.Key != GemColor.NONE)
+            {
+                RemoveGemsOneColor(keyValue.Key, keyValue.Value);
+            }
+        }
+        bankController.AddGems();
+
+
+        var copiedCard = CloneCard();
+        player.hand.Add(copiedCard);
+
+        switch (cardLevel)
+        {
+            case 1:
+                mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                Debug.Log("Kupiono kartê 1 poziomu");
+                Destroy(mainGameController.selectedToBuyCard.gameObject);
+                GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
+                gameObject1.name = "Card_Level_" + cardLevel;
+                CardController cardController1 = gameObject1.GetComponent<CardController>();
+                cardController1.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                AddCardClickListener(gameObject1, cardController1);
+                break;
+
+            case 2:
+                mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                Debug.Log("Kupiono kartê 2 poziomu");
+                Destroy(mainGameController.selectedToBuyCard.gameObject);
+                GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
+                gameObject2.name = "Card_Level_" + cardLevel;
+                CardController cardController2 = gameObject2.GetComponent<CardController>();
+                cardController2.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                AddCardClickListener(gameObject2, cardController2);
+                break;
+
+            case 3:
+                mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                Debug.Log("Kupiono kartê 3 poziomu");
+                Destroy(mainGameController.selectedToBuyCard.gameObject);
+                GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
+                gameObject3.name = "Card_Level_" + cardLevel;
+                CardController cardController3 = gameObject3.GetComponent<CardController>();
+                cardController3.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                AddCardClickListener(gameObject3, cardController3);
+                break;
+        }
+
+        mainGameController.ChangeTurn();
+    }
+
+    private void AddCardClickListener(GameObject cardGameObject, CardController cardController)
+    {
+        Button button = cardGameObject.GetComponent<Button>();
+        if (button == null)
+        {
+            button = cardGameObject.AddComponent<Button>();
+            button.targetGraphic = cardGameObject.GetComponent<Image>();
+        }
+        button.onClick.AddListener(() => mainGameController.SelectCard(cardController));
     }
 
     public void TakeTwoTokens(GemColor color)
@@ -93,4 +198,84 @@ public class PlayerController : MonoBehaviour
     {
         this.playerId = index;
     }
+    public void AddBonusResource(GemColor bonusColor)
+    {
+        if (bonusColor != GemColor.NONE)
+        {
+            BonusResources.AddResource(bonusColor);
+            Debug.Log($"Dodano bonusowy zasób: {bonusColor}");
+        }
+    }
+    private bool CanAffordCard(CardController cardToBuy)
+    {
+        var cardPrice = cardToBuy.DetailedPrice.gems;
+        var playerResources = this.resources.gems;
+        var playerBonuses = this.bonusResources.gems;
+
+        foreach (var colorOnCard in cardPrice)
+        {
+            GemColor color = colorOnCard.Key;
+            int requiredAmount = colorOnCard.Value;
+
+            int playerAmount = playerResources.ContainsKey(color) ? playerResources[color] : 0;
+            int bonusAmount = playerBonuses.ContainsKey(color) ? playerBonuses[color] : 0;
+            int totalPlayersCoins = playerAmount + bonusAmount;
+
+            if (totalPlayersCoins < requiredAmount)
+                return false;
+        }
+        return true;
+    }
+    private bool CanAffordCardWithGolden(CardController cardToBuy)
+    {
+        var cardPrice = cardToBuy.DetailedPrice.gems;
+        var playerResources = this.resources.gems;
+        var playerBonuses = this.bonusResources.gems;
+
+        int goldTokens = playerResources.ContainsKey(GemColor.GOLDEN) ? playerResources[GemColor.GOLDEN] : 0;
+
+        foreach (var colorOnCard in cardPrice)
+        {
+            GemColor color = colorOnCard.Key;
+            int requiredAmount = colorOnCard.Value;
+
+            int playerAmount = playerResources.ContainsKey(color) ? playerResources[color] : 0;
+            int bonusAmount = playerBonuses.ContainsKey(color) ? playerBonuses[color] : 0;
+            int totalPlayersCoins = playerAmount + bonusAmount;
+
+            if (totalPlayersCoins < requiredAmount)
+            {
+                int deficit = requiredAmount - totalPlayersCoins;
+                if (goldTokens >= deficit)
+                    goldTokens -= deficit;
+                else
+                    return false;
+            }
+        }
+        return true;
+    }
+    private CardController CloneCard()
+    {
+        GameObject cardObject = Instantiate(mainGameController.selectedToBuyCard.gameObject);
+
+        CardController clonedCard = cardObject.GetComponent<CardController>();
+
+        clonedCard.InitCardData(mainGameController.selectedToBuyCard);
+
+        return clonedCard;
+    }
+
+    private void RemoveGemsOneColor(GemColor color, int amount)
+    {
+        if (amount == 0)
+        {
+            return;
+        }
+        for (int i = 0; i < amount; i++)
+        {
+            this.resources.gems[color] -= 1;
+            bankController.gemsBeingReturned.Add(color);
+        }
+    }
+
 }
