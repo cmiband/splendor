@@ -71,7 +71,10 @@ public class PlayerController : MonoBehaviour
                         RemoveGemsOneColor(GemColor.GOLDEN, requiredGoldenGems);
                         Debug.Log($"Zap³acono zó³tym ¿etonem w iloœci {requiredGoldenGems}");
                     }
+                    Debug.Log($"Zap³acono normalnym  ¿etonem w iloœci {player.resources.gems[keyValue.Key]}");
                     RemoveGemsOneColor(keyValue.Key, player.resources.gems[keyValue.Key]);
+                    
+                    continue;
                 }
             }
             if(keyValue.Key != GemColor.NONE)
