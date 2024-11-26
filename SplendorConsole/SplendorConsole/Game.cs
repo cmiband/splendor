@@ -832,7 +832,7 @@ namespace SplendorConsole
                     if (CanGetNoble(noble))
                     {
                         AvailableIndexNobles.Add(i);
-                        if(firstIndex==false)
+                        if(!firstIndex)
                         {
                             minIndex = i;
                             firstIndex = true;
