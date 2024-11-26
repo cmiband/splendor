@@ -29,16 +29,16 @@ public class BoardController : MonoBehaviour
     public GameObject redGemsStack;
     public GameObject goldenGemsStack;
 
-    private CardStackController level1StackController;
-    private CardStackController level2StackController;
-    private CardStackController level3StackController;
+    public CardStackController level1StackController;
+    public CardStackController level2StackController;
+    public CardStackController level3StackController;
 
     private List<CardController> level1LoadedCardControllers = new List<CardController>();
     private List<CardController> level2LoadedCardControllers = new List<CardController>();
     private List<CardController> level3LoadedCardControllers = new List<CardController>();
-    private List<CardController> level1VisibleCardControllers = new List<CardController>();
-    private List<CardController> level2VisibleCardControllers = new List<CardController>();
-    private List<CardController> level3VisibleCardControllers = new List<CardController>();
+    public List<CardController> level1VisibleCardControllers = new List<CardController>();
+    public List<CardController> level2VisibleCardControllers = new List<CardController>();
+    public List<CardController> level3VisibleCardControllers = new List<CardController>();
 
     private void Start()
     {
@@ -51,8 +51,8 @@ public class BoardController : MonoBehaviour
     public void SetVisibleCards(List<CardController> level1VisibleCards, List<CardController> level2VisibleCards, List<CardController> level3VisibleCards)
     {
         this.level1VisibleCardControllers = level1VisibleCards;
-        this.level1VisibleCardControllers = level2VisibleCards;
-        this.level1VisibleCardControllers = level3VisibleCards;
+        this.level2VisibleCardControllers = level2VisibleCards;
+        this.level3VisibleCardControllers = level3VisibleCards;
     }
 
     public void SetDecks(List<CardController> level1Deck, List<CardController> level2Deck, List<CardController> level3Deck)

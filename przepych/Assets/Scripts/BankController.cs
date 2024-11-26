@@ -8,6 +8,7 @@ using UnityEngine;
 public class BankController : MonoBehaviour
 {
     public List<GemColor> gemsBeingChosen = new List<GemColor>();
+    public List<GemColor> gemsBeingReturned = new List<GemColor>();
     public bool isPlayerTakingThreeGems;
     public GameObject currentPlayer;
     public PlayerController playerController;
@@ -19,10 +20,12 @@ public class BankController : MonoBehaviour
         playerController = currentPlayer.GetComponent<PlayerController>();
         isPlayerTakingThreeGems = false;
         Debug.Log(resourcesController.gems.Count);
-        foreach (var item in resourcesController.gems)
+        foreach (var item in resourcesController.gems.ToList())
         {
-            if (item.Key != GemColor.GOLDEN) resourcesController.gems[item.Key] = 7;
-            else resourcesController.gems[item.Key] = 5;
+            if (item.Key != GemColor.GOLDEN)
+                resourcesController.gems[item.Key] = 7;
+            else
+                resourcesController.gems[item.Key] = 5;
         }
     }
 
@@ -51,7 +54,16 @@ public class BankController : MonoBehaviour
 
         gemsBeingChosen.Clear(); 
     }
-
+    public void AddGems()
+    {
+        foreach (GemColor gemColor in gemsBeingReturned)
+        {
+            this.resourcesController.gems[gemColor] += 1;
+            GemStashController MatchingStash = gemStashes.Find(byColor => byColor.color == gemColor);
+            MatchingStash.amountOfGems += 1;
+        }
+        gemsBeingReturned.Clear();
+    }
     public void AddGoldengem()
     {
         this.resourcesController.gems[GemColor.GOLDEN] += 1;
