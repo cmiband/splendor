@@ -52,10 +52,12 @@ public class PlayerController : MonoBehaviour
         
         foreach(KeyValuePair<GemColor,int> keyValue in price)
         {
+            Debug.Log(keyValue);
             if (keyValue.Value == 0) continue;
             else if (!player.resources.gems.ContainsKey(keyValue.Key))
             {
                 RemoveGemsOneColor(GemColor.GOLDEN, keyValue.Value);
+                Debug.Log($"Zap³acono zó³tym ¿etonem w iloœci {keyValue.Value}");
                 continue;
             }
             else if(keyValue.Value > player.resources.gems[keyValue.Key])
@@ -67,8 +69,9 @@ public class PlayerController : MonoBehaviour
                     if(goldenAmount >= requiredGoldenGems)
                     {
                         RemoveGemsOneColor(GemColor.GOLDEN, requiredGoldenGems);
-                        continue;
+                        Debug.Log($"Zap³acono zó³tym ¿etonem w iloœci {requiredGoldenGems}");
                     }
+                    RemoveGemsOneColor(keyValue.Key, player.resources.gems[keyValue.Key]);
                 }
             }
             if(keyValue.Key != GemColor.NONE)
