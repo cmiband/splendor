@@ -16,18 +16,19 @@ public class GoldenGemStashController : MonoBehaviour
     {
         bankController = bank.GetComponent<BankController>();
         amountOfGems = 5;
-
-
-        UnityEngine.UI.Button openBoughtCardsButton = this.gameObject.GetComponent<UnityEngine.UI.Button>();
-        openBoughtCardsButton.onClick.AddListener(() => OnClick());
     }
 
-    public void OnClick()
+    public bool TakeOne()
     {
         if (amountOfGems >= 1)
         {
             amountOfGems -= 1;
-            bankController.GoldenGemTaken();
+            return true;
+        }
+        else
+        {
+            Debug.Log("Nie ma wystarczaj¹co ¿etonów");
+            return false;
         }
     }
 }
