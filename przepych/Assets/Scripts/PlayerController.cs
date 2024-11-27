@@ -176,6 +176,19 @@ public class PlayerController : MonoBehaviour
         this.ConfirmPlayerMove();
     }
 
+    public void TakeGoldenGem()
+    {
+        if (this.resources.gems.ContainsKey(GemColor.GOLDEN))
+        {
+            this.resources.gems[GemColor.GOLDEN] += 1;
+        }
+        else
+        {
+            this.resources.gems.Add(GemColor.GOLDEN, 1);
+        }
+        this.ConfirmPlayerMove();
+    }
+
     private void UpdatePlayersResources()
     {
         this.mainGameController.UpdateTargetedPlayerResources(this.playerId, this.resources);
