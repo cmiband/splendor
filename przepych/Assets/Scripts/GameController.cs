@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour
     public GameObject openBoughtCards;
     public GameObject pass;
     public GameObject buyCard;
+    public GameObject reserveCard;
 
     public CardController selectedToBuyCard;
 
@@ -56,6 +57,9 @@ public class GameController : MonoBehaviour
 
         Button buyCardButton = this.buyCard.GetComponent<Button>();
         buyCardButton.onClick.AddListener(currentPlayer.GetComponent<PlayerController>().HandleBuyCard);
+
+        Button reserveCardButton = this.reserveCard.GetComponent<Button>();
+        buyCardButton.onClick.AddListener(currentPlayer.GetComponent<PlayerController>().HandleReserveCard);
     }
 
 

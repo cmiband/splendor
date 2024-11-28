@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
 
     private ResourcesController resources = new ResourcesController();
     private ResourcesController bonusResources = new ResourcesController();
+    private GoldenGemStashController goldenGemStashController = new GoldenGemStashController();
 
     public ResourcesController BonusResources
     {
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
     }
     public ResourcesController Resources { get => resources; set => resources = value; }
     public List<CardController> hand;
+    public List<CardController> handReserved;
     public int points;
     public int Points { get => points; set => points = value; }
 
@@ -132,6 +134,60 @@ public class PlayerController : MonoBehaviour
         }
 
         mainGameController.ChangeTurn();
+    }
+
+    public void HandleReserveCard()
+    {
+        if(goldenGemStashController.TakeOne())
+        {
+            int cardLevel = mainGameController.selectedToBuyCard.level;
+            PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
+            Vector3 vector = mainGameController.selectedToBuyCard.transform.position;
+
+
+            var copiedCard = CloneCard();
+            player.handReserved.Add(copiedCard);
+
+            switch (cardLevel)
+            {
+                case 1:
+                    mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                    Debug.Log("Zarezerwowano kart� 1 poziomu");
+                    Destroy(mainGameController.selectedToBuyCard.gameObject);
+                    GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
+                    gameObject1.name = "Card_Level_" + cardLevel;
+                    CardController cardController1 = gameObject1.GetComponent<CardController>();
+                    cardController1.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                    AddCardClickListener(gameObject1, cardController1);
+                    break;
+
+                case 2:
+                    mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                    Debug.Log("Zarezerwowano kart� 2 poziomu");
+                    Destroy(mainGameController.selectedToBuyCard.gameObject);
+                    GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
+                    gameObject2.name = "Card_Level_" + cardLevel;
+                    CardController cardController2 = gameObject2.GetComponent<CardController>();
+                    cardController2.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                    AddCardClickListener(gameObject2, cardController2);
+                    break;
+
+                case 3:
+                    mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                    Debug.Log("Zarezerwowano kart� 3 poziomu");
+                    Destroy(mainGameController.selectedToBuyCard.gameObject);
+                    GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
+                    gameObject3.name = "Card_Level_" + cardLevel;
+                    CardController cardController3 = gameObject3.GetComponent<CardController>();
+                    cardController3.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                    AddCardClickListener(gameObject3, cardController3);
+                    break;
+            }
+        }
+        else
+        {
+            Debug.Log("Nie ma wystarczająco żetonów");
+        }
     }
 
     private void AddCardClickListener(GameObject cardGameObject, CardController cardController)
