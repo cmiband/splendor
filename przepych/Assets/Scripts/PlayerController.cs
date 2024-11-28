@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
 
         this.InitGemDictionary();
         this.bankController = FindObjectOfType<BankController>();
+        this.goldenGemStashController = FindObjectOfType<GoldenGemStashController>();
     }
     
 

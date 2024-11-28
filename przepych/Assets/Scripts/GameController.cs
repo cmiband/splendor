@@ -59,7 +59,7 @@ public class GameController : MonoBehaviour
         buyCardButton.onClick.AddListener(currentPlayer.GetComponent<PlayerController>().HandleBuyCard);
 
         Button reserveCardButton = this.reserveCard.GetComponent<Button>();
-        buyCardButton.onClick.AddListener(currentPlayer.GetComponent<PlayerController>().HandleReserveCard);
+        reserveCardButton.onClick.AddListener(currentPlayer.GetComponent<PlayerController>().HandleReserveCard);
     }
 
 

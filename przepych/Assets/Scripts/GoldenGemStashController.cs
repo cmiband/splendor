@@ -27,7 +27,6 @@ public class GoldenGemStashController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Nie ma wystarczaj¹co ¿etonów");
             return false;
         }
     }
