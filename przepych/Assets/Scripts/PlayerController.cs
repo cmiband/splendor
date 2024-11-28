@@ -139,8 +139,15 @@ public class PlayerController : MonoBehaviour
 
     public void HandleReserveCard()
     {
-        if(goldenGemStashController.TakeOne())
+        if(handReserved.Count < 3)
         {
+            if (goldenGemStashController.TakeOne())
+            {
+                TakeGoldenGem();
+                Debug.Log("Pobrano złoty żeton");
+            }
+            else Debug.Log("Nie ma już złotych żetonów");
+
             int cardLevel = mainGameController.selectedToBuyCard.level;
             PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
             Vector3 vector = mainGameController.selectedToBuyCard.transform.position;
@@ -187,8 +194,9 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Nie ma wystarczająco żetonów");
+            Debug.Log("Za dużo zarezerwowałeś kart");
         }
+        mainGameController.ChangeTurn();
     }
 
     private void AddCardClickListener(GameObject cardGameObject, CardController cardController)
@@ -243,7 +251,6 @@ public class PlayerController : MonoBehaviour
         {
             this.resources.gems.Add(GemColor.GOLDEN, 1);
         }
-        this.ConfirmPlayerMove();
     }
 
     private void UpdatePlayersResources()
