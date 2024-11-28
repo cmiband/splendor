@@ -1128,6 +1128,7 @@ MonoBehaviour:
   blueGems: {fileID: 715408227}
   goldGems: {fileID: 1976158548}
   hand: []
+  handReserved: []
   points: 0
 --- !u!1 &624715692 stripped
 GameObject:
@@ -2083,6 +2084,7 @@ RectTransform:
   - {fileID: 1592669694}
   - {fileID: 688963294}
   - {fileID: 2044639994}
+  - {fileID: 1902396833}
   m_Father: {fileID: 526158503}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
@@ -3469,6 +3471,58 @@ RectTransform:
   m_AnchoredPosition: {x: -336.61282, y: 47.296875}
   m_SizeDelta: {x: 51.9238, y: 67.6008}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1902396832
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1902396833}
+  - component: {fileID: 1902396834}
+  m_Layer: 5
+  m_Name: GoldenGemStack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1902396833
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1902396832}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1019770506}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1902396834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1902396832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4193d3185ce975e4487bfb2e698e0638, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: 5
+  amountOfGems: 0
+  bank: {fileID: 1058837121}
+  bankController: {fileID: 0}
 --- !u!1 &1929508601
 GameObject:
   m_ObjectHideFlags: 0
@@ -3586,7 +3640,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 1929508603}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -3637,6 +3691,7 @@ MonoBehaviour:
   openBoughtCards: {fileID: 962036000}
   pass: {fileID: 742799679}
   buyCard: {fileID: 678279601}
+  reserveCard: {fileID: 1929508601}
   selectedToBuyCard: {fileID: 0}
 --- !u!4 &2008468894
 Transform:

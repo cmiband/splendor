@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
     public BoardController boardController;
     public AvailableCardsController availableCardsController;
     public Dictionary<int, List<CardController>> playerIdToHand = new Dictionary<int, List<CardController>>();
+    public Dictionary<int, List<CardController>> playerIdToReserveHand = new Dictionary<int, List<CardController>>();
     public Dictionary<int, ResourcesController> playerIdToResources = new Dictionary<int, ResourcesController>();
     public int currentPlayerId;
 
@@ -125,6 +126,7 @@ public class GameController : MonoBehaviour
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerId(targetedPlayerId);
             playerController.SetPlayerHand(this.playerIdToHand[targetedPlayerId]);
+            playerController.SetPlayerReserveHand(this.playerIdToHand[targetedPlayerId]);
             playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId]);
 
             targetedPlayerId = (targetedPlayerId + 1) % 4;

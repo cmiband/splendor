@@ -270,6 +270,11 @@ public class PlayerController : MonoBehaviour
         this.hand = cards;
     }
 
+    public void SetPlayerReserveHand(List<CardController> cards)
+    {
+        this.handReserved = cards;
+    }
+
     public void SetPlayerResources(ResourcesController resources)
     {
         this.resources = resources;
