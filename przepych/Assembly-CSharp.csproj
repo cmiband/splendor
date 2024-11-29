@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\GemColor.cs" />
+    <Compile Include="Assets\Scripts\ReservedCardController.cs" />
     <Compile Include="Assets\Scripts\BankController.cs" />
     <Compile Include="Assets\Scripts\WebServiceClient.cs" />
     <Compile Include="Assets\Scripts\BoardController.cs" />

@@ -24,9 +24,11 @@ public class GameController : MonoBehaviour
     public GameObject openBoughtCards;
     public GameObject pass;
     public GameObject buyCard;
+    public GameObject reservedCards;
     public GameObject reserveCard;
+    public ReservedCardController reservedCardController;
 
-    public CardController selectedToBuyCard;
+    public CardController selectedCard;
 
     private void Start()
     {
@@ -38,6 +40,9 @@ public class GameController : MonoBehaviour
         boardController.SetDecks(availableCardsController.level1Cards, availableCardsController.level2Cards, availableCardsController.level3Cards);
         boardController.SetCardsInStacks();
         boardController.CreateCardObjectsOnStart();
+
+
+        reservedCardController = this.reservedCards.GetComponent<ReservedCardController>();
 
         this.players = new List<GameObject> { currentPlayer, nextPlayerOne, nextPlayerTwo, nextPlayerThree };
         this.CreateFourPlayersDataOnInit();
@@ -70,12 +75,14 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             List<CardController> initHand = new List<CardController>();
+            List<CardController> initReservedHand = new List<CardController>();
             ResourcesController initResources = new ResourcesController();
             initResources.FillDictionaryWithZeros();
 
             PlayerController targetedPlayerController = this.players[i].GetComponent<PlayerController>();
             targetedPlayerController.SetPlayerId(i);
             this.playerIdToHand.Add(i, initHand);
+            this.playerIdToReserveHand.Add(i, initReservedHand);
             this.playerIdToResources.Add(i, initResources);
         }
     }
@@ -92,6 +99,7 @@ public class GameController : MonoBehaviour
     {
         PlayerController targetedPlayerController = targetedPlayer.GetComponent<PlayerController>();
         targetedPlayerController.SetPlayerHand(this.playerIdToHand[targetedPlayerIndex]);
+        targetedPlayerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerIndex]);
     }
 
     private void HandleOpenBoughtCards()
@@ -126,11 +134,12 @@ public class GameController : MonoBehaviour
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerId(targetedPlayerId);
             playerController.SetPlayerHand(this.playerIdToHand[targetedPlayerId]);
-            playerController.SetPlayerReserveHand(this.playerIdToHand[targetedPlayerId]);
+            playerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerId]);
             playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId]);
-
             targetedPlayerId = (targetedPlayerId + 1) % 4;
         }
+        reservedCardController.UpdateReservedCards(this.currentPlayerId);
+
 
         buyCard.SetActive(false);
     }
@@ -142,20 +151,20 @@ public class GameController : MonoBehaviour
 
     public void SelectCard(CardController card)
     {
-        if (selectedToBuyCard != null && selectedToBuyCard != card)
+        if (selectedCard != null && selectedCard != card)
         {
-            selectedToBuyCard.SetSelected(false);
+            selectedCard.SetSelected(false);
         }
 
-        if (selectedToBuyCard == card)
+        if (selectedCard == card)
         {
-            selectedToBuyCard = null;
+            selectedCard = null;
             buyCard.SetActive(false);
         }
         else
         {
-            selectedToBuyCard = card;
-            selectedToBuyCard.SetSelected(true);
+            selectedCard = card;
+            selectedCard.SetSelected(true);
             buyCard.SetActive(true);
         }
     }

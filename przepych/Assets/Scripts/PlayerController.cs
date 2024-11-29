@@ -48,17 +48,17 @@ public class PlayerController : MonoBehaviour
 
     public void HandleBuyCard()
     {
-        int cardLevel = mainGameController.selectedToBuyCard.level;
+        int cardLevel = mainGameController.selectedCard.level;
         PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
-        Vector3 vector = mainGameController.selectedToBuyCard.transform.position;
+        Vector3 vector = mainGameController.selectedCard.transform.position;
 
-        if (!CanAffordCardWithGolden(mainGameController.selectedToBuyCard) && !CanAffordCard(mainGameController.selectedToBuyCard))
+        if (!CanAffordCardWithGolden(mainGameController.selectedCard) && !CanAffordCard(mainGameController.selectedCard))
         {
             Debug.Log("Nie sta� ci� na t� kart�!");
             return;
         }
 
-        Dictionary<GemColor, int> price = mainGameController.selectedToBuyCard.detailedPrice.gems;
+        Dictionary<GemColor, int> price = mainGameController.selectedCard.detailedPrice.gems;
         
         foreach(KeyValuePair<GemColor,int> keyValue in price)
         {
@@ -101,9 +101,9 @@ public class PlayerController : MonoBehaviour
         switch (cardLevel)
         {
             case 1:
-                mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
                 Debug.Log("Kupiono kart� 1 poziomu");
-                Destroy(mainGameController.selectedToBuyCard.gameObject);
+                Destroy(mainGameController.selectedCard.gameObject);
                 GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
                 gameObject1.name = "Card_Level_" + cardLevel;
                 CardController cardController1 = gameObject1.GetComponent<CardController>();
@@ -112,9 +112,9 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case 2:
-                mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
                 Debug.Log("Kupiono kart� 2 poziomu");
-                Destroy(mainGameController.selectedToBuyCard.gameObject);
+                Destroy(mainGameController.selectedCard.gameObject);
                 GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
                 gameObject2.name = "Card_Level_" + cardLevel;
                 CardController cardController2 = gameObject2.GetComponent<CardController>();
@@ -123,9 +123,9 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case 3:
-                mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
                 Debug.Log("Kupiono kart� 3 poziomu");
-                Destroy(mainGameController.selectedToBuyCard.gameObject);
+                Destroy(mainGameController.selectedCard.gameObject);
                 GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
                 gameObject3.name = "Card_Level_" + cardLevel;
                 CardController cardController3 = gameObject3.GetComponent<CardController>();
@@ -148,9 +148,9 @@ public class PlayerController : MonoBehaviour
             }
             else Debug.Log("Nie ma już złotych żetonów");
 
-            int cardLevel = mainGameController.selectedToBuyCard.level;
+            int cardLevel = mainGameController.selectedCard.level;
             PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
-            Vector3 vector = mainGameController.selectedToBuyCard.transform.position;
+            Vector3 vector = mainGameController.selectedCard.transform.position;
 
 
             var copiedCard = CloneCard();
@@ -159,9 +159,9 @@ public class PlayerController : MonoBehaviour
             switch (cardLevel)
             {
                 case 1:
-                    mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                    mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
                     Debug.Log("Zarezerwowano kart� 1 poziomu");
-                    Destroy(mainGameController.selectedToBuyCard.gameObject);
+                    Destroy(mainGameController.selectedCard.gameObject);
                     GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
                     gameObject1.name = "Card_Level_" + cardLevel;
                     CardController cardController1 = gameObject1.GetComponent<CardController>();
@@ -170,9 +170,9 @@ public class PlayerController : MonoBehaviour
                     break;
 
                 case 2:
-                    mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                    mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
                     Debug.Log("Zarezerwowano kart� 2 poziomu");
-                    Destroy(mainGameController.selectedToBuyCard.gameObject);
+                    Destroy(mainGameController.selectedCard.gameObject);
                     GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
                     gameObject2.name = "Card_Level_" + cardLevel;
                     CardController cardController2 = gameObject2.GetComponent<CardController>();
@@ -181,9 +181,9 @@ public class PlayerController : MonoBehaviour
                     break;
 
                 case 3:
-                    mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                    mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
                     Debug.Log("Zarezerwowano kart� 3 poziomu");
-                    Destroy(mainGameController.selectedToBuyCard.gameObject);
+                    Destroy(mainGameController.selectedCard.gameObject);
                     GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
                     gameObject3.name = "Card_Level_" + cardLevel;
                     CardController cardController3 = gameObject3.GetComponent<CardController>();
@@ -382,11 +382,11 @@ public class PlayerController : MonoBehaviour
     }
     private CardController CloneCard()
     {
-        GameObject cardObject = Instantiate(mainGameController.selectedToBuyCard.gameObject);
+        GameObject cardObject = Instantiate(mainGameController.selectedCard.gameObject);
 
         CardController clonedCard = cardObject.GetComponent<CardController>();
 
-        clonedCard.InitCardData(mainGameController.selectedToBuyCard);
+        clonedCard.InitCardData(mainGameController.selectedCard);
 
         return clonedCard;
     }
