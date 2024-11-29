@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Newtonsoft.Json.Linq;
@@ -2344,14 +2345,224 @@ namespace SplendorConsole
                     }
                     return false;
                 case 41:
-                    // Logic for case 41
-                    break;
+                    if (currentPlayer.ReservedCardsCounter > 0 && (currentPlayer.CanAffordCard(currentPlayer.ReservedCards[0]) || currentPlayer.CanAffordCardWithGolden(currentPlayer.ReservedCards[0])))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = currentPlayer.ReservedCards[0].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, currentPlayer.ReservedCards[0], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(currentPlayer.ReservedCards[0]);
+                        currentPlayer.BonusResources.AddResource(currentPlayer.ReservedCards[0].BonusColor);
+                        currentPlayer.Points += currentPlayer.ReservedCards[0].Points;
+
+                        //dodane w stosunku do respo 2-13
+                        Card selectedCard = currentPlayer.ReservedCards[0];
+
+                        currentPlayer.ReservedCards.Remove(selectedCard);
+                        currentPlayer.ReservedCardsCounter--;
+
+                        return true;
+                    }
+                    return false;
                 case 42:
-                    // Logic for case 42
-                    break;
+                    if (currentPlayer.ReservedCardsCounter > 1 && (currentPlayer.CanAffordCard(currentPlayer.ReservedCards[1]) || currentPlayer.CanAffordCardWithGolden(currentPlayer.ReservedCards[1])))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = currentPlayer.ReservedCards[1].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, currentPlayer.ReservedCards[1], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(currentPlayer.ReservedCards[1]);
+                        currentPlayer.BonusResources.AddResource(currentPlayer.ReservedCards[1].BonusColor);
+                        currentPlayer.Points += currentPlayer.ReservedCards[1].Points;
+
+                        //dodane w stosunku do respo 2-13
+                        Card selectedCard = currentPlayer.ReservedCards[1];
+
+                        currentPlayer.ReservedCards.Remove(selectedCard);
+                        currentPlayer.ReservedCardsCounter--;
+
+                        return true;
+                    }
+                    return false;
                 case 43:
-                    // Logic for case 43
-                    break;
+                    if (currentPlayer.ReservedCardsCounter == 3 && (currentPlayer.CanAffordCard(currentPlayer.ReservedCards[2]) || currentPlayer.CanAffordCardWithGolden(currentPlayer.ReservedCards[2])))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = currentPlayer.ReservedCards[2].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, currentPlayer.ReservedCards[2], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(currentPlayer.ReservedCards[2]);
+                        currentPlayer.BonusResources.AddResource(currentPlayer.ReservedCards[2].BonusColor);
+                        currentPlayer.Points += currentPlayer.ReservedCards[2].Points;
+
+                        //dodane w stosunku do respo 2-13
+                        Card selectedCard = currentPlayer.ReservedCards[2];
+
+                        currentPlayer.ReservedCards.Remove(selectedCard);
+                        currentPlayer.ReservedCardsCounter--;
+
+                        return true;
+                    }
+                    return false;
             }
             return false;
         }
