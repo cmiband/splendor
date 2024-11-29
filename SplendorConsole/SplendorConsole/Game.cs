@@ -1299,27 +1299,753 @@ namespace SplendorConsole
                     }
                     return false;
                 case 3:
-                    return currentPlayer.CanAffordCard(level1VisibleCards[1]);
+                    if (currentPlayer.CanAffordCard(level1VisibleCards[1]) || currentPlayer.CanAffordCardWithGolden(level1VisibleCards[1]))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = level1VisibleCards[1].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, level1VisibleCards[1], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(level1VisibleCards[1]);
+                        currentPlayer.BonusResources.AddResource(level1VisibleCards[1].BonusColor);
+                        currentPlayer.Points += level1VisibleCards[1].Points;
+
+                        board.ReplaceMissingCard(1, level1VisibleCards[1]);
+                        return true;
+                    }
+                    return false;
                 case 4:
-                    return currentPlayer.CanAffordCard(level1VisibleCards[2]);
+                    if (currentPlayer.CanAffordCard(level1VisibleCards[2]) || currentPlayer.CanAffordCardWithGolden(level1VisibleCards[2]))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = level1VisibleCards[2].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, level1VisibleCards[2], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(level1VisibleCards[2]);
+                        currentPlayer.BonusResources.AddResource(level1VisibleCards[2].BonusColor);
+                        currentPlayer.Points += level1VisibleCards[2].Points;
+
+                        board.ReplaceMissingCard(1, level1VisibleCards[2]);
+                        return true;
+                    }
+                    return false;
                 case 5:
-                    return currentPlayer.CanAffordCard(level1VisibleCards[3]);
+                    if (currentPlayer.CanAffordCard(level1VisibleCards[3]) || currentPlayer.CanAffordCardWithGolden(level1VisibleCards[3]))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = level1VisibleCards[3].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, level1VisibleCards[3], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(level1VisibleCards[3]);
+                        currentPlayer.BonusResources.AddResource(level1VisibleCards[3].BonusColor);
+                        currentPlayer.Points += level1VisibleCards[3].Points;
+
+                        board.ReplaceMissingCard(1, level1VisibleCards[3]);
+                        return true;
+                    }
+                    return false;
                 case 6:
-                    return currentPlayer.CanAffordCard(level2VisibleCards[0]);
+                    if (currentPlayer.CanAffordCard(level2VisibleCards[0]) || currentPlayer.CanAffordCardWithGolden(level2VisibleCards[0]))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = level2VisibleCards[0].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, level2VisibleCards[0], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(level2VisibleCards[0]);
+                        currentPlayer.BonusResources.AddResource(level2VisibleCards[0].BonusColor);
+                        currentPlayer.Points += level2VisibleCards[0].Points;
+
+                        board.ReplaceMissingCard(2, level2VisibleCards[0]);
+                        return true;
+                    }
+                    return false;
                 case 7:
-                    return currentPlayer.CanAffordCard(level2VisibleCards[1]);
+                    if (currentPlayer.CanAffordCard(level2VisibleCards[1]) || currentPlayer.CanAffordCardWithGolden(level2VisibleCards[1]))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = level2VisibleCards[1].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, level2VisibleCards[1], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(level2VisibleCards[1]);
+                        currentPlayer.BonusResources.AddResource(level2VisibleCards[1].BonusColor);
+                        currentPlayer.Points += level2VisibleCards[1].Points;
+
+                        board.ReplaceMissingCard(2, level2VisibleCards[1]);
+                        return true;
+                    }
+                    return false;
                 case 8:
-                    return currentPlayer.CanAffordCard(level2VisibleCards[2]);
+                    if (currentPlayer.CanAffordCard(level2VisibleCards[2]) || currentPlayer.CanAffordCardWithGolden(level2VisibleCards[2]))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = level2VisibleCards[2].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, level2VisibleCards[2], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(level2VisibleCards[2]);
+                        currentPlayer.BonusResources.AddResource(level2VisibleCards[2].BonusColor);
+                        currentPlayer.Points += level2VisibleCards[2].Points;
+
+                        board.ReplaceMissingCard(2, level2VisibleCards[2]);
+                        return true;
+                    }
+                    return false;
                 case 9:
-                    return currentPlayer.CanAffordCard(level2VisibleCards[3]);
+                    if (currentPlayer.CanAffordCard(level2VisibleCards[3]) || currentPlayer.CanAffordCardWithGolden(level2VisibleCards[3]))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = level2VisibleCards[3].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, level2VisibleCards[3], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(level2VisibleCards[3]);
+                        currentPlayer.BonusResources.AddResource(level2VisibleCards[3].BonusColor);
+                        currentPlayer.Points += level2VisibleCards[3].Points;
+
+                        board.ReplaceMissingCard(2, level2VisibleCards[3]);
+                        return true;
+                    }
+                    return false;
                 case 10:
-                    return currentPlayer.CanAffordCard(level3VisibleCards[0]);
+                    if (currentPlayer.CanAffordCard(level3VisibleCards[0]) || currentPlayer.CanAffordCardWithGolden(level3VisibleCards[0]))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = level3VisibleCards[0].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, level3VisibleCards[0], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(level3VisibleCards[0]);
+                        currentPlayer.BonusResources.AddResource(level3VisibleCards[0].BonusColor);
+                        currentPlayer.Points += level3VisibleCards[0].Points;
+
+                        board.ReplaceMissingCard(3, level3VisibleCards[0]);
+                        return true;
+                    }
+                    return false;
                 case 11:
-                    return currentPlayer.CanAffordCard(level3VisibleCards[1]);
+                    if (currentPlayer.CanAffordCard(level3VisibleCards[1]) || currentPlayer.CanAffordCardWithGolden(level3VisibleCards[1]))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = level3VisibleCards[1].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, level3VisibleCards[1], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(level3VisibleCards[1]);
+                        currentPlayer.BonusResources.AddResource(level3VisibleCards[1].BonusColor);
+                        currentPlayer.Points += level3VisibleCards[1].Points;
+
+                        board.ReplaceMissingCard(3, level3VisibleCards[1]);
+                        return true;
+                    }
+                    return false;
                 case 12:
-                    return currentPlayer.CanAffordCard(level3VisibleCards[2]);
+                    if (currentPlayer.CanAffordCard(level3VisibleCards[2]) || currentPlayer.CanAffordCardWithGolden(level3VisibleCards[2]))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = level3VisibleCards[2].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, level3VisibleCards[2], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(level3VisibleCards[2]);
+                        currentPlayer.BonusResources.AddResource(level3VisibleCards[2].BonusColor);
+                        currentPlayer.Points += level3VisibleCards[2].Points;
+
+                        board.ReplaceMissingCard(3, level3VisibleCards[2]);
+                        return true;
+                    }
+                    return false;
                 case 13:
-                    return currentPlayer.CanAffordCard(level3VisibleCards[3]);
+                    if (currentPlayer.CanAffordCard(level3VisibleCards[3]) || currentPlayer.CanAffordCardWithGolden(level3VisibleCards[3]))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = level3VisibleCards[3].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, level3VisibleCards[3], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(level3VisibleCards[3]);
+                        currentPlayer.BonusResources.AddResource(level3VisibleCards[3].BonusColor);
+                        currentPlayer.Points += level3VisibleCards[3].Points;
+
+                        board.ReplaceMissingCard(3, level3VisibleCards[3]);
+                        return true;
+                    }
+                    return false;
                 case 14:
                     // Logic for case 14
                     break;
@@ -1387,38 +2113,236 @@ namespace SplendorConsole
                     }
                     return false;
                 case 30:
-                    // Logic for case 30
-                    break;
+                    if (currentPlayer.ReservedCardsCounter < 3)
+                    {
+                        if (bank.resources.gems[GemColor.GOLDEN] > 0)
+                        {
+
+                            if (currentPlayer.Resources.gems.ContainsKey(GemColor.GOLDEN))
+                            {
+                                currentPlayer.Resources.gems[GemColor.GOLDEN] += 1;
+                            }
+                            else
+                            {
+                                currentPlayer.Resources.gems.Add(GemColor.GOLDEN, 1);
+                            }
+                            bank.TakeOutResources(1, GemColor.GOLDEN);
+                        }
+                        currentPlayer.ReserveCard(level1VisibleCards[1]);
+                        board.ReplaceMissingCard(1, level1VisibleCards[1]);
+                        return true;
+                    }
+                    return false;
                 case 31:
-                    // Logic for case 31
-                    break;
+                    if (currentPlayer.ReservedCardsCounter < 3)
+                    {
+                        if (bank.resources.gems[GemColor.GOLDEN] > 0)
+                        {
+
+                            if (currentPlayer.Resources.gems.ContainsKey(GemColor.GOLDEN))
+                            {
+                                currentPlayer.Resources.gems[GemColor.GOLDEN] += 1;
+                            }
+                            else
+                            {
+                                currentPlayer.Resources.gems.Add(GemColor.GOLDEN, 1);
+                            }
+                            bank.TakeOutResources(1, GemColor.GOLDEN);
+                        }
+                        currentPlayer.ReserveCard(level1VisibleCards[2]);
+                        board.ReplaceMissingCard(1, level1VisibleCards[2]);
+                        return true;
+                    }
+                    return false;
                 case 32:
-                    // Logic for case 32
-                    break;
+                    if (currentPlayer.ReservedCardsCounter < 3)
+                    {
+                        if (bank.resources.gems[GemColor.GOLDEN] > 0)
+                        {
+
+                            if (currentPlayer.Resources.gems.ContainsKey(GemColor.GOLDEN))
+                            {
+                                currentPlayer.Resources.gems[GemColor.GOLDEN] += 1;
+                            }
+                            else
+                            {
+                                currentPlayer.Resources.gems.Add(GemColor.GOLDEN, 1);
+                            }
+                            bank.TakeOutResources(1, GemColor.GOLDEN);
+                        }
+                        currentPlayer.ReserveCard(level1VisibleCards[3]);
+                        board.ReplaceMissingCard(1, level1VisibleCards[3]);
+                        return true;
+                    }
+                    return false;
                 case 33:
-                    // Logic for case 33
-                    break;
+                    if (currentPlayer.ReservedCardsCounter < 3)
+                    {
+                        if (bank.resources.gems[GemColor.GOLDEN] > 0)
+                        {
+
+                            if (currentPlayer.Resources.gems.ContainsKey(GemColor.GOLDEN))
+                            {
+                                currentPlayer.Resources.gems[GemColor.GOLDEN] += 1;
+                            }
+                            else
+                            {
+                                currentPlayer.Resources.gems.Add(GemColor.GOLDEN, 1);
+                            }
+                            bank.TakeOutResources(1, GemColor.GOLDEN);
+                        }
+                        currentPlayer.ReserveCard(level2VisibleCards[0]);
+                        board.ReplaceMissingCard(2, level2VisibleCards[0]);
+                        return true;
+                    }
+                    return false;
                 case 34:
-                    // Logic for case 34
-                    break;
+                    if (currentPlayer.ReservedCardsCounter < 3)
+                    {
+                        if (bank.resources.gems[GemColor.GOLDEN] > 0)
+                        {
+
+                            if (currentPlayer.Resources.gems.ContainsKey(GemColor.GOLDEN))
+                            {
+                                currentPlayer.Resources.gems[GemColor.GOLDEN] += 1;
+                            }
+                            else
+                            {
+                                currentPlayer.Resources.gems.Add(GemColor.GOLDEN, 1);
+                            }
+                            bank.TakeOutResources(1, GemColor.GOLDEN);
+                        }
+                        currentPlayer.ReserveCard(level2VisibleCards[1]);
+                        board.ReplaceMissingCard(2, level2VisibleCards[1]);
+                        return true;
+                    }
+                    return false;
                 case 35:
-                    // Logic for case 35
-                    break;
+                    if (currentPlayer.ReservedCardsCounter < 3)
+                    {
+                        if (bank.resources.gems[GemColor.GOLDEN] > 0)
+                        {
+
+                            if (currentPlayer.Resources.gems.ContainsKey(GemColor.GOLDEN))
+                            {
+                                currentPlayer.Resources.gems[GemColor.GOLDEN] += 1;
+                            }
+                            else
+                            {
+                                currentPlayer.Resources.gems.Add(GemColor.GOLDEN, 1);
+                            }
+                            bank.TakeOutResources(1, GemColor.GOLDEN);
+                        }
+                        currentPlayer.ReserveCard(level2VisibleCards[2]);
+                        board.ReplaceMissingCard(2, level2VisibleCards[2]);
+                        return true;
+                    }
+                    return false;
                 case 36:
-                    // Logic for case 36
-                    break;
+                    if (currentPlayer.ReservedCardsCounter < 3)
+                    {
+                        if (bank.resources.gems[GemColor.GOLDEN] > 0)
+                        {
+
+                            if (currentPlayer.Resources.gems.ContainsKey(GemColor.GOLDEN))
+                            {
+                                currentPlayer.Resources.gems[GemColor.GOLDEN] += 1;
+                            }
+                            else
+                            {
+                                currentPlayer.Resources.gems.Add(GemColor.GOLDEN, 1);
+                            }
+                            bank.TakeOutResources(1, GemColor.GOLDEN);
+                        }
+                        currentPlayer.ReserveCard(level2VisibleCards[3]);
+                        board.ReplaceMissingCard(2, level2VisibleCards[3]);
+                        return true;
+                    }
+                    return false;
                 case 37:
-                    // Logic for case 37
-                    break;
+                    if (currentPlayer.ReservedCardsCounter < 3)
+                    {
+                        if (bank.resources.gems[GemColor.GOLDEN] > 0)
+                        {
+
+                            if (currentPlayer.Resources.gems.ContainsKey(GemColor.GOLDEN))
+                            {
+                                currentPlayer.Resources.gems[GemColor.GOLDEN] += 1;
+                            }
+                            else
+                            {
+                                currentPlayer.Resources.gems.Add(GemColor.GOLDEN, 1);
+                            }
+                            bank.TakeOutResources(1, GemColor.GOLDEN);
+                        }
+                        currentPlayer.ReserveCard(level3VisibleCards[0]);
+                        board.ReplaceMissingCard(3, level3VisibleCards[0]);
+                        return true;
+                    }
+                    return false;
                 case 38:
-                    // Logic for case 38
-                    break;
+                    if (currentPlayer.ReservedCardsCounter < 3)
+                    {
+                        if (bank.resources.gems[GemColor.GOLDEN] > 0)
+                        {
+
+                            if (currentPlayer.Resources.gems.ContainsKey(GemColor.GOLDEN))
+                            {
+                                currentPlayer.Resources.gems[GemColor.GOLDEN] += 1;
+                            }
+                            else
+                            {
+                                currentPlayer.Resources.gems.Add(GemColor.GOLDEN, 1);
+                            }
+                            bank.TakeOutResources(1, GemColor.GOLDEN);
+                        }
+                        currentPlayer.ReserveCard(level3VisibleCards[1]);
+                        board.ReplaceMissingCard(3, level3VisibleCards[1]);
+                        return true;
+                    }
+                    return false;
                 case 39:
-                    // Logic for case 39
-                    break;
+                    if (currentPlayer.ReservedCardsCounter < 3)
+                    {
+                        if (bank.resources.gems[GemColor.GOLDEN] > 0)
+                        {
+
+                            if (currentPlayer.Resources.gems.ContainsKey(GemColor.GOLDEN))
+                            {
+                                currentPlayer.Resources.gems[GemColor.GOLDEN] += 1;
+                            }
+                            else
+                            {
+                                currentPlayer.Resources.gems.Add(GemColor.GOLDEN, 1);
+                            }
+                            bank.TakeOutResources(1, GemColor.GOLDEN);
+                        }
+                        currentPlayer.ReserveCard(level3VisibleCards[2]);
+                        board.ReplaceMissingCard(3, level3VisibleCards[2]);
+                        return true;
+                    }
+                    return false;
                 case 40:
-                    // Logic for case 40
-                    break;
+                    if (currentPlayer.ReservedCardsCounter < 3)
+                    {
+                        if (bank.resources.gems[GemColor.GOLDEN] > 0)
+                        {
+
+                            if (currentPlayer.Resources.gems.ContainsKey(GemColor.GOLDEN))
+                            {
+                                currentPlayer.Resources.gems[GemColor.GOLDEN] += 1;
+                            }
+                            else
+                            {
+                                currentPlayer.Resources.gems.Add(GemColor.GOLDEN, 1);
+                            }
+                            bank.TakeOutResources(1, GemColor.GOLDEN);
+                        }
+                        currentPlayer.ReserveCard(level3VisibleCards[3]);
+                        board.ReplaceMissingCard(3, level3VisibleCards[3]);
+                        return true;
+                    }
+                    return false;
                 case 41:
                     // Logic for case 41
                     break;
