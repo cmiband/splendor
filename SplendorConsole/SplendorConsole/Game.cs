@@ -14,6 +14,7 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Newtonsoft.Json.Linq;
+using static ClosedXML.Excel.XLPredefinedFormat;
 using static SplendorConsole.WebserviceClient;
 
 namespace SplendorConsole
@@ -1209,6 +1210,226 @@ namespace SplendorConsole
             var moves = json["MovesList"]?.ToObject<int[]>();
 
             return moves;
+        }
+
+        public int ResponseValidator(int[] arrayOfMoves, Player currentPlayer, Game game, Bank bank, Board board)
+        {
+            for(int i = 0; i <= arrayOfMoves.Length; i++)
+            {
+                if (IsValid(arrayOfMoves[i], currentPlayer, game, bank, board))
+                {
+                    return i;
+                }
+            }
+            return 43;
+        }
+        public bool IsValid(int move,  Player currentPlayer, Game game, Bank bank, Board board) 
+        {
+            switch (move)
+            {
+                case 1:
+                    game.Pass();
+                    return true;
+                case 2:
+                    if (currentPlayer.CanAffordCard(level1VisibleCards[0]) || currentPlayer.CanAffordCardWithGolden(level1VisibleCards[0]))
+                    {
+                        var simulatedResourcesUsed = new Dictionary<GemColor, int>();
+                        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+                        {
+                            simulatedResourcesUsed[color] = 0;
+                        }
+                        var cardPrice = level1VisibleCards[0].DetailedPrice.gems;
+
+                        foreach (var colorOnCard in cardPrice)
+                        {
+                            GemColor color = colorOnCard.Key;
+                            int requiredAmount = colorOnCard.Value;
+
+                            int bonusAmount = currentPlayer.BonusResources.gems.TryGetValue(color, out var bonus) ? bonus : 0;
+                            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+                            if (requiredAmount > 0)
+                            {
+                                int playerAmount = currentPlayer.Resources.gems.TryGetValue(color, out var playerR) ? playerR : 0;
+
+                                if (playerAmount >= requiredAmount)
+                                {
+                                    simulatedResourcesUsed[color] += requiredAmount;
+                                }
+                                else
+                                {
+                                    int deficit = requiredAmount - playerAmount;
+                                    simulatedResourcesUsed[color] += playerAmount;
+                                    simulatedResourcesUsed[GemColor.GOLDEN] += deficit;
+                                }
+                            }
+                        }
+                        foreach (var resource in simulatedResourcesUsed)
+                        {
+                            if (resource.Value > 0 && resource.Key != GemColor.GOLDEN)
+                            {
+                                currentPlayer.Resources.gems[resource.Key] -= resource.Value;
+                                if (currentPlayer.Resources.gems[resource.Key] == 0)
+                                    currentPlayer.Resources.gems.Remove(resource.Key);
+                            }
+                        }
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            currentPlayer.Resources.gems[GemColor.GOLDEN] -= simulatedResourcesUsed[GemColor.GOLDEN];
+                            if (currentPlayer.Resources.gems[GemColor.GOLDEN] == 0)
+                            {
+                                currentPlayer.Resources.gems.Remove(GemColor.GOLDEN);
+                            }
+                        }
+
+                        RefillBankResources(bank, level1VisibleCards[0], simulatedResourcesUsed);
+
+                        if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
+                        {
+                            bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
+                        }
+
+                        currentPlayer.AddCardToPlayer(level1VisibleCards[0]);
+                        currentPlayer.BonusResources.AddResource(level1VisibleCards[0].BonusColor);
+                        currentPlayer.Points += level1VisibleCards[0].Points;
+
+                        board.ReplaceMissingCard(1, level1VisibleCards[0]);
+                        return true;
+                    }
+                    return false;
+                case 3:
+                    return currentPlayer.CanAffordCard(level1VisibleCards[1]);
+                case 4:
+                    return currentPlayer.CanAffordCard(level1VisibleCards[2]);
+                case 5:
+                    return currentPlayer.CanAffordCard(level1VisibleCards[3]);
+                case 6:
+                    return currentPlayer.CanAffordCard(level2VisibleCards[0]);
+                case 7:
+                    return currentPlayer.CanAffordCard(level2VisibleCards[1]);
+                case 8:
+                    return currentPlayer.CanAffordCard(level2VisibleCards[2]);
+                case 9:
+                    return currentPlayer.CanAffordCard(level2VisibleCards[3]);
+                case 10:
+                    return currentPlayer.CanAffordCard(level3VisibleCards[0]);
+                case 11:
+                    return currentPlayer.CanAffordCard(level3VisibleCards[1]);
+                case 12:
+                    return currentPlayer.CanAffordCard(level3VisibleCards[2]);
+                case 13:
+                    return currentPlayer.CanAffordCard(level3VisibleCards[3]);
+                case 14:
+                    // Logic for case 14
+                    break;
+                case 15:
+                    // Logic for case 15
+                    break;
+                case 16:
+                    // Logic for case 16
+                    break;
+                case 17:
+                    // Logic for case 17
+                    break;
+                case 18:
+                    // Logic for case 18
+                    break;
+                case 19:
+                    // Logic for case 19
+                    break;
+                case 20:
+                    // Logic for case 20
+                    break;
+                case 21:
+                    // Logic for case 21
+                    break;
+                case 22:
+                    // Logic for case 22
+                    break;
+                case 23:
+                    // Logic for case 23
+                    break;
+                case 24:
+                    // Logic for case 24
+                    break;
+                case 25:
+                    // Logic for case 25
+                    break;
+                case 26:
+                    // Logic for case 26
+                    break;
+                case 27:
+                    // Logic for case 27
+                    break;
+                case 28:
+                    // Logic for case 28
+                    break;
+                case 29:                  
+                    if(currentPlayer.ReservedCardsCounter < 3)
+                    {
+                        if (bank.resources.gems[GemColor.GOLDEN] > 0)
+                        {
+
+                            if (currentPlayer.Resources.gems.ContainsKey(GemColor.GOLDEN))
+                            {
+                                currentPlayer.Resources.gems[GemColor.GOLDEN] += 1;
+                            }
+                            else
+                            {
+                                currentPlayer.Resources.gems.Add(GemColor.GOLDEN, 1);
+                            }
+                            bank.TakeOutResources(1, GemColor.GOLDEN);
+                        }
+                        currentPlayer.ReserveCard(level1VisibleCards[0]);
+                        board.ReplaceMissingCard(1, level1VisibleCards[0]);
+                        return true;
+                    }
+                    return false;
+                case 30:
+                    // Logic for case 30
+                    break;
+                case 31:
+                    // Logic for case 31
+                    break;
+                case 32:
+                    // Logic for case 32
+                    break;
+                case 33:
+                    // Logic for case 33
+                    break;
+                case 34:
+                    // Logic for case 34
+                    break;
+                case 35:
+                    // Logic for case 35
+                    break;
+                case 36:
+                    // Logic for case 36
+                    break;
+                case 37:
+                    // Logic for case 37
+                    break;
+                case 38:
+                    // Logic for case 38
+                    break;
+                case 39:
+                    // Logic for case 39
+                    break;
+                case 40:
+                    // Logic for case 40
+                    break;
+                case 41:
+                    // Logic for case 41
+                    break;
+                case 42:
+                    // Logic for case 42
+                    break;
+                case 43:
+                    // Logic for case 43
+                    break;
+            }
+            return false;
         }
     }
 }
