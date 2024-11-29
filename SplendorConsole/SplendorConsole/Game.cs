@@ -2047,9 +2047,21 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 14:
-                    // Logic for case 14
-                    break;
+                case 14://do sprawdzenia i do zrobienia pozostale +2 zetony
+                    if(NumberOfPlayerTokens()<=8 && bank.resources.gems[GemColor.WHITE]>=4)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
+                        {
+                            currentPlayer.Resources.gems[GemColor.WHITE] += 2;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.WHITE, 2);
+                        }
+                        bank.TakeOutResources(2, GemColor.WHITE);
+                        return true;
+                    }
+                    return false;
                 case 15:
                     // Logic for case 15
                     break;
@@ -2062,9 +2074,42 @@ namespace SplendorConsole
                 case 18:
                     // Logic for case 18
                     break;
-                case 19:
-                    // Logic for case 19
-                    break;
+                case 19://do sprawdzenia i do zrobienia pozostale +2 zetony
+                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.RED] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.GREEN))
+                        {
+                            currentPlayer.Resources.gems[GemColor.GREEN] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.GREEN, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.RED))
+                        {
+                            currentPlayer.Resources.gems[GemColor.RED] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.RED, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLACK))
+                        {
+                            currentPlayer.Resources.gems[GemColor.BLACK] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.BLACK, 1);
+                        }
+
+                        bank.TakeOutResources(1, GemColor.GREEN);
+                        bank.TakeOutResources(1, GemColor.RED);
+                        bank.TakeOutResources(1, GemColor.BLACK);
+                        return true;
+                    }
+                    return false;
                 case 20:
                     // Logic for case 20
                     break;
