@@ -9,6 +9,7 @@ public class GameController : MonoBehaviour
     public GameObject board;
     public BoardController boardController;
     public AvailableCardsController availableCardsController;
+    public AvailableNoblesController availableNoblesController;
     public Dictionary<int, List<CardController>> playerIdToHand = new Dictionary<int, List<CardController>>();
     public Dictionary<int, List<CardController>> playerIdToReserveHand = new Dictionary<int, List<CardController>>();
     public Dictionary<int, ResourcesController> playerIdToResources = new Dictionary<int, ResourcesController>();
@@ -41,13 +42,22 @@ public class GameController : MonoBehaviour
         boardController.SetDecks(availableCardsController.level1Cards, availableCardsController.level2Cards, availableCardsController.level3Cards);
         boardController.SetCardsInStacks();
         boardController.CreateCardObjectsOnStart();
+        
+
+        availableNoblesController = board.GetComponent<AvailableNoblesController>();    
+        availableNoblesController.LoadNoblesFromExcel("Assets/ExternalResources/NoblesWykaz.xlsx");
+        boardController.SetNobles(availableNoblesController.noblesList);
+        boardController.CreateNobleObjectOnStart();
+
+
+
 
 
         reservedCardController = this.reservedCards.GetComponent<ReservedCardController>();
 
         this.players = new List<GameObject> { currentPlayer, nextPlayerOne, nextPlayerTwo, nextPlayerThree };
         this.CreateFourPlayersDataOnInit();
-        this.FillPlayersWithData();
+        this.FillPlayersWithData(); 
         this.currentPlayerId = 0;
         this.reserveCard.SetActive(false);
         this.buyCard.SetActive(false);

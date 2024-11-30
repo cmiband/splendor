@@ -887,6 +887,7 @@ GameObject:
   - component: {fileID: 526158503}
   - component: {fileID: 526158504}
   - component: {fileID: 526158505}
+  - component: {fileID: 526158506}
   m_Layer: 5
   m_Name: Board
   m_TagString: Untagged
@@ -909,6 +910,7 @@ RectTransform:
   - {fileID: 1005553212}
   - {fileID: 1042109394}
   - {fileID: 1019770506}
+  - {fileID: 985015189}
   m_Father: {fileID: 1697959603}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -930,9 +932,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardPrefab: {fileID: 6831864373905316961, guid: b6b81c65b104bcf4297af98c2401b8b5, type: 3}
   gemPrefab: {fileID: 0}
+  noblePrefab: {fileID: 6831864373905316961, guid: 2373e862ba9134144865de6a516f23a0, type: 3}
   level1Stack: {fileID: 534985939}
   level2Stack: {fileID: 870171445}
   level3Stack: {fileID: 1222200209}
+  nobles: {fileID: 985015188}
   level1VisibleCards: {fileID: 1591002895}
   level2VisibleCards: {fileID: 282297553}
   level3VisibleCards: {fileID: 1667990354}
@@ -948,6 +952,8 @@ MonoBehaviour:
   level1VisibleCardControllers: []
   level2VisibleCardControllers: []
   level3VisibleCardControllers: []
+  loadedNoblesListControllers: []
+  visibleNoblesListControllers: []
 --- !u!114 &526158505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -963,6 +969,19 @@ MonoBehaviour:
   level1Cards: []
   level2Cards: []
   level3Cards: []
+--- !u!114 &526158506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526158502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4729b9c231215c54e961dbe6320c41fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noblesList: []
 --- !u!1 &534985939 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6791204780865393749, guid: 92855d8934a60f64d87d3c1c65f053d0, type: 3}
@@ -1569,6 +1588,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &868860411
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 868860412}
+  m_Layer: 0
+  m_Name: TestowyKwadrat
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &868860412
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 868860411}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.25976792, y: 0.012472691, z: 0.043523774}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &870171443
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2023,6 +2073,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &985015188
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 985015189}
+  m_Layer: 5
+  m_Name: NobleStack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &985015189
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 985015188}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 526158503}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1005553211
 GameObject:
   m_ObjectHideFlags: 0
@@ -2504,41 +2589,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1292400961
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1292400962}
-  m_Layer: 5
-  m_Name: Nobles
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1292400962
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1292400961}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1697959603}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.0000052055, y: -49.550003}
-  m_SizeDelta: {x: 97.1733, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1330407028
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3357,7 +3407,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1292400962}
   - {fileID: 526158503}
   - {fileID: 568371478}
   - {fileID: 1058837122}
@@ -3795,6 +3844,7 @@ MonoBehaviour:
   board: {fileID: 526158502}
   boardController: {fileID: 0}
   availableCardsController: {fileID: 0}
+  availableNoblesController: {fileID: 0}
   currentPlayerId: 0
   players: []
   currentPlayer: {fileID: 568371477}
@@ -4372,3 +4422,4 @@ SceneRoots:
   - {fileID: 1252564487}
   - {fileID: 2008468894}
   - {fileID: 679956649}
+  - {fileID: 868860412}
