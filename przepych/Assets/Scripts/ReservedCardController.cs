@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ReservedCardController : MonoBehaviour
 {
@@ -30,9 +31,9 @@ public class ReservedCardController : MonoBehaviour
 
     private void CreateCards(List<CardController> cards)
     {
-        float startXOffset = this.gameObject.transform.position.x - rectTransform.rect.width/2; // Lewa krawêdŸ uk³adu (od œrodka kontenera)
+        float startXOffset = this.gameObject.transform.position.x - rectTransform.rect.width/2; 
 
-        float currentXOffset = 0; // Rozpoczynamy od lewej krawêdzi
+        float currentXOffset = 0; 
         foreach (CardController card in cards)
         {
             Vector3 cardPosition = new Vector3(
@@ -45,9 +46,22 @@ public class ReservedCardController : MonoBehaviour
             cardController.InitCardData(card);
 
             this.reservedCards.Add(cardObject);
-            currentXOffset += CARD_X_OFFSET; // Przesuwamy siê o wartoœæ odstêpu
+            currentXOffset += CARD_X_OFFSET;
+            AddCardClickListener(cardObject, cardController);
         }
     }
+
+    private void AddCardClickListener(GameObject cardGameObject, CardController cardController)
+    {
+        Button button = cardGameObject.GetComponent<Button>();
+        if (button == null)
+        {
+            button = cardGameObject.AddComponent<Button>();
+            button.targetGraphic = cardGameObject.GetComponent<Image>();
+        }
+        button.onClick.AddListener(() => gameController.SelectCard(cardController));
+    }
+
 
 
 
