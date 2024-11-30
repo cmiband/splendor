@@ -43,6 +43,7 @@ public class ReservedCardController : MonoBehaviour
 
             GameObject cardObject = Instantiate(this.cardPrefab, cardPosition, Quaternion.identity, cardContainer.transform);
             CardController cardController = cardObject.GetComponent<CardController>();
+            cardController.isReserved = true;
             cardController.InitCardData(card);
 
             this.reservedCards.Add(cardObject);

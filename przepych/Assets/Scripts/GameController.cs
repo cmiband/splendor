@@ -48,6 +48,8 @@ public class GameController : MonoBehaviour
         this.CreateFourPlayersDataOnInit();
         this.FillPlayersWithData();
         this.currentPlayerId = 0;
+        this.reserveCard.SetActive(false);
+        this.buyCard.SetActive(false);
 
         this.AddEventListeners();
         this.AssignClickListenersToAllCards();
@@ -115,6 +117,7 @@ public class GameController : MonoBehaviour
         this.openBoughtCards.SetActive(visibility);
         this.pass.SetActive(visibility);
         this.buyCard.SetActive(visibility);
+        this.reserveCard.SetActive(visibility);
     }
 
     public void HandlePass()
@@ -142,6 +145,7 @@ public class GameController : MonoBehaviour
 
 
         buyCard.SetActive(false);
+        reserveCard.SetActive(false);
     }
 
     public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources)
@@ -160,12 +164,14 @@ public class GameController : MonoBehaviour
         {
             selectedCard = null;
             buyCard.SetActive(false);
+            reserveCard.SetActive(false);
         }
         else
         {
             selectedCard = card;
             selectedCard.SetSelected(true);
             buyCard.SetActive(true);
+            if(selectedCard.isReserved != true) reserveCard.SetActive(true);
         }
     }
 

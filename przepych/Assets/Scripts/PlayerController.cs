@@ -152,6 +152,8 @@ public class PlayerController : MonoBehaviour
             PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
             Vector3 vector = mainGameController.selectedCard.transform.position;
 
+            mainGameController.selectedCard.isReserved = true;
+
 
             var copiedCard = CloneCard();
             player.handReserved.Add(copiedCard);
