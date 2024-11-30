@@ -13,6 +13,7 @@ public class CardController : MonoBehaviour
     public string illustration;
     public bool isSelected;
     private Image selectedCardImage;
+    public bool isReserved;
 
     public int Points => points;
 

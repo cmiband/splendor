@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
 
     private ResourcesController resources = new ResourcesController();
     private ResourcesController bonusResources = new ResourcesController();
+    private GoldenGemStashController goldenGemStashController = new GoldenGemStashController();
 
     public ResourcesController BonusResources
     {
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
     }
     public ResourcesController Resources { get => resources; set => resources = value; }
     public List<CardController> hand;
+    public List<CardController> handReserved;
     public int points;
     public int Points { get => points; set => points = value; }
 
@@ -40,22 +42,23 @@ public class PlayerController : MonoBehaviour
 
         this.InitGemDictionary();
         this.bankController = FindObjectOfType<BankController>();
+        this.goldenGemStashController = FindObjectOfType<GoldenGemStashController>();
     }
     
 
     public void HandleBuyCard()
     {
-        int cardLevel = mainGameController.selectedToBuyCard.level;
+        int cardLevel = mainGameController.selectedCard.level;
         PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
-        Vector3 vector = mainGameController.selectedToBuyCard.transform.position;
+        Vector3 vector = mainGameController.selectedCard.transform.position;
 
-        if (!CanAffordCardWithGolden(mainGameController.selectedToBuyCard) && !CanAffordCard(mainGameController.selectedToBuyCard))
+        if (!CanAffordCardWithGolden(mainGameController.selectedCard) && !CanAffordCard(mainGameController.selectedCard))
         {
             Debug.Log("Nie sta� ci� na t� kart�!");
             return;
         }
 
-        Dictionary<GemColor, int> price = mainGameController.selectedToBuyCard.detailedPrice.gems;
+        Dictionary<GemColor, int> price = mainGameController.selectedCard.detailedPrice.gems;
         
         foreach(KeyValuePair<GemColor,int> keyValue in price)
         {
@@ -91,6 +94,8 @@ public class PlayerController : MonoBehaviour
         }
         bankController.AddGems();
 
+        mainGameController.selectedCard.isReserved = false;
+
 
         var copiedCard = CloneCard();
         player.hand.Add(copiedCard);
@@ -98,9 +103,9 @@ public class PlayerController : MonoBehaviour
         switch (cardLevel)
         {
             case 1:
-                mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
                 Debug.Log("Kupiono kart� 1 poziomu");
-                Destroy(mainGameController.selectedToBuyCard.gameObject);
+                Destroy(mainGameController.selectedCard.gameObject);
                 GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
                 gameObject1.name = "Card_Level_" + cardLevel;
                 CardController cardController1 = gameObject1.GetComponent<CardController>();
@@ -109,9 +114,9 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case 2:
-                mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
                 Debug.Log("Kupiono kart� 2 poziomu");
-                Destroy(mainGameController.selectedToBuyCard.gameObject);
+                Destroy(mainGameController.selectedCard.gameObject);
                 GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
                 gameObject2.name = "Card_Level_" + cardLevel;
                 CardController cardController2 = gameObject2.GetComponent<CardController>();
@@ -120,9 +125,9 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case 3:
-                mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedToBuyCard);
+                mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
                 Debug.Log("Kupiono kart� 3 poziomu");
-                Destroy(mainGameController.selectedToBuyCard.gameObject);
+                Destroy(mainGameController.selectedCard.gameObject);
                 GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
                 gameObject3.name = "Card_Level_" + cardLevel;
                 CardController cardController3 = gameObject3.GetComponent<CardController>();
@@ -132,6 +137,98 @@ public class PlayerController : MonoBehaviour
         }
 
         mainGameController.ChangeTurn();
+    }
+
+    public void HandleReserveCard()
+    {
+        if(handReserved.Count < 3)
+        {
+            if (goldenGemStashController.TakeOne())
+            {
+                TakeGoldenGem();
+                Debug.Log("Pobrano złoty żeton");
+            }
+            else Debug.Log("Nie ma już złotych żetonów");
+
+            if(mainGameController.selectedCard != null)
+            {
+                int cardLevel = mainGameController.selectedCard.level;
+                PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
+                Vector3 vector = mainGameController.selectedCard.transform.position;
+
+                mainGameController.selectedCard.isReserved = true;
+
+
+                var copiedCard = CloneCard();
+                player.handReserved.Add(copiedCard);
+
+                switch (cardLevel)
+                {
+                    case 1:
+                        mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
+                        Debug.Log("Zarezerwowano kart� 1 poziomu");
+                        Destroy(mainGameController.selectedCard.gameObject);
+                        GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
+                        gameObject1.name = "Card_Level_" + cardLevel;
+                        CardController cardController1 = gameObject1.GetComponent<CardController>();
+                        cardController1.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                        AddCardClickListener(gameObject1, cardController1);
+                        break;
+
+                    case 2:
+                        mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
+                        Debug.Log("Zarezerwowano kart� 2 poziomu");
+                        Destroy(mainGameController.selectedCard.gameObject);
+                        GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
+                        gameObject2.name = "Card_Level_" + cardLevel;
+                        CardController cardController2 = gameObject2.GetComponent<CardController>();
+                        cardController2.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                        AddCardClickListener(gameObject2, cardController2);
+                        break;
+
+                    case 3:
+                        mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
+                        Debug.Log("Zarezerwowano kart� 3 poziomu");
+                        Destroy(mainGameController.selectedCard.gameObject);
+                        GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
+                        gameObject3.name = "Card_Level_" + cardLevel;
+                        CardController cardController3 = gameObject3.GetComponent<CardController>();
+                        cardController3.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                        AddCardClickListener(gameObject3, cardController3);
+                        break;
+                }
+            }
+            else if(mainGameController.selectedStack != null)
+            {
+
+                PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
+
+                CardController reservedCard = mainGameController.selectedStack.PopCardFromStack();
+                reservedCard.isReserved = true;
+
+                Vector3 vector = mainGameController.selectedStack.transform.position;
+
+                Debug.Log($"Zarezerwowano kartę ze stosu poziomu {reservedCard.level}");
+
+                player.handReserved.Add(reservedCard);
+
+                GameObject gameObject = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, player.transform);
+                CardController cardController = gameObject.GetComponent<CardController>();
+                cardController.InitCardData(reservedCard);
+
+                AddCardClickListener(gameObject, cardController);
+            }
+            else
+            {
+                Debug.Log("Nie wybrano żadnej karty do zarezerwowania");
+            }
+
+            mainGameController.ChangeTurn();
+        }
+        else
+        {
+            Debug.Log("Za dużo zarezerwowałeś kart");
+        }
     }
 
     private void AddCardClickListener(GameObject cardGameObject, CardController cardController)
@@ -176,6 +273,18 @@ public class PlayerController : MonoBehaviour
         this.ConfirmPlayerMove();
     }
 
+    public void TakeGoldenGem()
+    {
+        if (this.resources.gems.ContainsKey(GemColor.GOLDEN))
+        {
+            this.resources.gems[GemColor.GOLDEN] += 1;
+        }
+        else
+        {
+            this.resources.gems.Add(GemColor.GOLDEN, 1);
+        }
+    }
+
     private void UpdatePlayersResources()
     {
         this.mainGameController.UpdateTargetedPlayerResources(this.playerId, this.resources);
@@ -191,6 +300,11 @@ public class PlayerController : MonoBehaviour
     public void SetPlayerHand(List<CardController> cards)
     {
         this.hand = cards;
+    }
+
+    public void SetPlayerReserveHand(List<CardController> cards)
+    {
+        this.handReserved = cards;
     }
 
     public void SetPlayerResources(ResourcesController resources)
@@ -300,11 +414,11 @@ public class PlayerController : MonoBehaviour
     }
     private CardController CloneCard()
     {
-        GameObject cardObject = Instantiate(mainGameController.selectedToBuyCard.gameObject);
+        GameObject cardObject = Instantiate(mainGameController.selectedCard.gameObject);
 
         CardController clonedCard = cardObject.GetComponent<CardController>();
 
-        clonedCard.InitCardData(mainGameController.selectedToBuyCard);
+        clonedCard.InitCardData(mainGameController.selectedCard);
 
         return clonedCard;
     }
