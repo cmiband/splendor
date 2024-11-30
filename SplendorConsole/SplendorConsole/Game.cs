@@ -2047,8 +2047,8 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 14://do sprawdzenia i do zrobienia pozostale +2 zetony
-                    if(NumberOfPlayerTokens()<=8 && bank.resources.gems[GemColor.WHITE]>=4)
+                case 14:
+                    if (NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.WHITE]>=4)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
                         {
@@ -2063,18 +2063,66 @@ namespace SplendorConsole
                     }
                     return false;
                 case 15:
-                    // Logic for case 15
-                    break;
+                    if (NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.BLUE] >= 4)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
+                        {
+                            currentPlayer.Resources.gems[GemColor.BLUE] += 2;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.BLUE, 2);
+                        }
+                        bank.TakeOutResources(2, GemColor.BLUE);
+                        return true;
+                    }
+                    return false;
                 case 16:
-                    // Logic for case 16
-                    break;
+                    if (NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.GREEN] >= 4)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.GREEN))
+                        {
+                            currentPlayer.Resources.gems[GemColor.GREEN] += 2;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.GREEN, 2);
+                        }
+                        bank.TakeOutResources(2, GemColor.GREEN);
+                        return true;
+                    }
+                    return false;
                 case 17:
-                    // Logic for case 17
-                    break;
+                    if (NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.RED] >= 4)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.RED))
+                        {
+                            currentPlayer.Resources.gems[GemColor.RED] += 2;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.RED, 2);
+                        }
+                        bank.TakeOutResources(2, GemColor.RED);
+                        return true;
+                    }
+                    return false;
                 case 18:
-                    // Logic for case 18
-                    break;
-                case 19://do sprawdzenia i do zrobienia pozostale +2 zetony
+                    if (NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.BLACK] >= 4)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLACK))
+                        {
+                            currentPlayer.Resources.gems[GemColor.BLACK] += 2;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.BLACK, 2);
+                        }
+                        bank.TakeOutResources(2, GemColor.BLACK);
+                        return true;
+                    }
+                    return false;
+                case 19:
                     if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.RED] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.GREEN))
@@ -2111,32 +2159,329 @@ namespace SplendorConsole
                     }
                     return false;
                 case 20:
-                    // Logic for case 20
-                    break;
+                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.RED] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
+                        {
+                            currentPlayer.Resources.gems[GemColor.BLUE] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.BLUE, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.RED))
+                        {
+                            currentPlayer.Resources.gems[GemColor.RED] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.RED, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLACK))
+                        {
+                            currentPlayer.Resources.gems[GemColor.BLACK] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.BLACK, 1);
+                        }
+
+                        bank.TakeOutResources(1, GemColor.BLUE);
+                        bank.TakeOutResources(1, GemColor.RED);
+                        bank.TakeOutResources(1, GemColor.BLACK);
+                        return true;
+                    }
+                    return false;
                 case 21:
-                    // Logic for case 21
-                    break;
+                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
+                        {
+                            currentPlayer.Resources.gems[GemColor.BLUE] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.BLUE, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.GREEN))
+                        {
+                            currentPlayer.Resources.gems[GemColor.GREEN] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.GREEN, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLACK))
+                        {
+                            currentPlayer.Resources.gems[GemColor.BLACK] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.BLACK, 1);
+                        }
+
+                        bank.TakeOutResources(1, GemColor.BLUE);
+                        bank.TakeOutResources(1, GemColor.GREEN);
+                        bank.TakeOutResources(1, GemColor.BLACK);
+                        return true;
+                    }
+                    return false;
                 case 22:
-                    // Logic for case 22
-                    break;
+                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.RED] >= 1)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
+                        {
+                            currentPlayer.Resources.gems[GemColor.BLUE] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.BLUE, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.GREEN))
+                        {
+                            currentPlayer.Resources.gems[GemColor.GREEN] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.GREEN, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.RED))
+                        {
+                            currentPlayer.Resources.gems[GemColor.RED] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.RED, 1);
+                        }
+
+                        bank.TakeOutResources(1, GemColor.BLUE);
+                        bank.TakeOutResources(1, GemColor.GREEN);
+                        bank.TakeOutResources(1, GemColor.RED);
+                        return true;
+                    }
+                    return false;
                 case 23:
-                    // Logic for case 23
-                    break;
+                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.RED] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
+                        {
+                            currentPlayer.Resources.gems[GemColor.WHITE] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.WHITE, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.RED))
+                        {
+                            currentPlayer.Resources.gems[GemColor.RED] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.RED, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLACK))
+                        {
+                            currentPlayer.Resources.gems[GemColor.BLACK] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.BLACK, 1);
+                        }
+
+                        bank.TakeOutResources(1, GemColor.WHITE);
+                        bank.TakeOutResources(1, GemColor.RED);
+                        bank.TakeOutResources(1, GemColor.BLACK);
+                        return true;
+                    }
+                    return false;
                 case 24:
-                    // Logic for case 24
-                    break;
+                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
+                        {
+                            currentPlayer.Resources.gems[GemColor.WHITE] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.WHITE, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.GREEN))
+                        {
+                            currentPlayer.Resources.gems[GemColor.GREEN] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.GREEN, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLACK))
+                        {
+                            currentPlayer.Resources.gems[GemColor.BLACK] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.BLACK, 1);
+                        }
+
+                        bank.TakeOutResources(1, GemColor.WHITE);
+                        bank.TakeOutResources(1, GemColor.GREEN);
+                        bank.TakeOutResources(1, GemColor.BLACK);
+                        return true;
+                    }
+                    return false;
                 case 25:
-                    // Logic for case 25
-                    break;
+                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.RED] >= 1)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
+                        {
+                            currentPlayer.Resources.gems[GemColor.WHITE] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.WHITE, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.GREEN))
+                        {
+                            currentPlayer.Resources.gems[GemColor.GREEN] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.GREEN, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.RED))
+                        {
+                            currentPlayer.Resources.gems[GemColor.RED] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.RED, 1);
+                        }
+
+                        bank.TakeOutResources(1, GemColor.WHITE);
+                        bank.TakeOutResources(1, GemColor.GREEN);
+                        bank.TakeOutResources(1, GemColor.RED);
+                        return true;
+                    }
+                    return false;
                 case 26:
-                    // Logic for case 26
-                    break;
+                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
+                        {
+                            currentPlayer.Resources.gems[GemColor.WHITE] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.WHITE, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
+                        {
+                            currentPlayer.Resources.gems[GemColor.BLUE] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.BLUE, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLACK))
+                        {
+                            currentPlayer.Resources.gems[GemColor.BLACK] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.BLACK, 1);
+                        }
+
+                        bank.TakeOutResources(1, GemColor.WHITE);
+                        bank.TakeOutResources(1, GemColor.BLUE);
+                        bank.TakeOutResources(1, GemColor.BLACK);
+                        return true;
+                    }
+                    return false;
                 case 27:
-                    // Logic for case 27
-                    break;
+                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.RED] >= 1)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
+                        {
+                            currentPlayer.Resources.gems[GemColor.WHITE] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.WHITE, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
+                        {
+                            currentPlayer.Resources.gems[GemColor.BLUE] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.BLUE, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.RED))
+                        {
+                            currentPlayer.Resources.gems[GemColor.RED] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.RED, 1);
+                        }
+
+                        bank.TakeOutResources(1, GemColor.WHITE);
+                        bank.TakeOutResources(1, GemColor.BLUE);
+                        bank.TakeOutResources(1, GemColor.RED);
+                        return true;
+                    }
+                    return false;
                 case 28:
-                    // Logic for case 28
-                    break;
+                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1)
+                    {
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
+                        {
+                            currentPlayer.Resources.gems[GemColor.WHITE] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.WHITE, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
+                        {
+                            currentPlayer.Resources.gems[GemColor.BLUE] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.BLUE, 1);
+                        }
+
+                        if (currentPlayer.Resources.gems.ContainsKey(GemColor.GREEN))
+                        {
+                            currentPlayer.Resources.gems[GemColor.GREEN] += 1;
+                        }
+                        else
+                        {
+                            currentPlayer.Resources.gems.Add(GemColor.GREEN, 1);
+                        }
+
+                        bank.TakeOutResources(1, GemColor.WHITE);
+                        bank.TakeOutResources(1, GemColor.BLUE);
+                        bank.TakeOutResources(1, GemColor.GREEN);
+                        return true;
+                    }
+                    return false;
                 case 29:                  
                     if(currentPlayer.ReservedCardsCounter < 3)
                     {
