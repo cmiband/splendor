@@ -114,6 +114,7 @@ public class GameController : MonoBehaviour
         PlayerController targetedPlayerController = targetedPlayer.GetComponent<PlayerController>();
         targetedPlayerController.SetPlayerHand(this.playerIdToHand[targetedPlayerIndex]);
         targetedPlayerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerIndex]);
+        targetedPlayerController.SetPlayerResources(this.playerIdToResources[targetedPlayerIndex]);
     }
 
     private void HandleOpenBoughtCards()
