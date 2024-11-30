@@ -124,10 +124,17 @@ public class GameController : MonoBehaviour
 
     public void HandlePass()
     {
-        selectedStack.SetSelected(false);
-        selectedCard.SetSelected(false);
-        selectedCard = null;
-        selectedStack = null;
+        if (selectedStack != null)
+        {
+            selectedStack.SetSelected(false);
+            selectedStack = null;
+        }
+        if (selectedCard != null)
+        {
+            selectedCard.SetSelected(false);
+            selectedCard = null;
+        }
+
         this.ChangeTurn();
     }
 
@@ -234,6 +241,11 @@ public class GameController : MonoBehaviour
         CardController cardController = card.GetComponent<CardController>();
         if (cardController != null)
         {
+            if(selectedStack != null)
+            {
+                selectedStack.SetSelected(false);
+                selectedStack = null;
+            }
             Debug.Log("card price:  " + cardController.detailedPrice.ToString());
             SelectCard(cardController);
         }
@@ -269,6 +281,13 @@ public class GameController : MonoBehaviour
         CardStackController cardStackController = cardStack.GetComponent<CardStackController>();
         if (cardStackController != null)
         {
+            if (selectedCard != null)
+            {
+                selectedCard.SetSelected(false);
+                selectedCard = null;
+            }
+            buyCard.SetActive(false);
+            if (selectedCard != null)selectedCard.isSelected = false;
             SelectStack(cardStackController);
         }
     }
