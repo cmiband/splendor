@@ -29,6 +29,7 @@ public class GameController : MonoBehaviour
     public ReservedCardController reservedCardController;
 
     public CardController selectedCard;
+    public CardStackController selectedStack;
 
     private void Start()
     {
@@ -53,6 +54,7 @@ public class GameController : MonoBehaviour
 
         this.AddEventListeners();
         this.AssignClickListenersToAllCards();
+        this.AssignClickListenersToAllCardStacks();
     }
 
     private void AddEventListeners()
@@ -122,6 +124,10 @@ public class GameController : MonoBehaviour
 
     public void HandlePass()
     {
+        selectedStack.SetSelected(false);
+        selectedCard.SetSelected(false);
+        selectedCard = null;
+        selectedStack = null;
         this.ChangeTurn();
     }
 
@@ -175,6 +181,26 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public void SelectStack(CardStackController cardStack)
+    {
+        if (selectedStack != null && selectedStack != cardStack)
+        {
+            selectedStack.SetSelected(false);
+        }
+
+        if (selectedStack == cardStack)
+        {
+            selectedStack = null;
+            reserveCard.SetActive(false);
+        }
+        else
+        {
+            selectedStack = cardStack;
+            selectedStack.SetSelected(true);
+            reserveCard.SetActive(true);
+        }
+    }
+
     private void AssignClickListenersToAllCards()
     {
         Transform visibleCardsRoot = board.transform.Find("VisibleCards");
@@ -210,6 +236,40 @@ public class GameController : MonoBehaviour
         {
             Debug.Log("card price:  " + cardController.detailedPrice.ToString());
             SelectCard(cardController);
+        }
+    }
+
+    private void AssignClickListenersToAllCardStacks()
+    {
+        Transform visibleCardStacksRoot = board.transform.Find("CardStacks");
+        if (visibleCardStacksRoot == null)
+        {
+            Debug.LogError("visibleCardStacks root not found!");
+            return;
+        }
+
+        foreach (Transform stackTransform in visibleCardStacksRoot)
+        {
+            Debug.Log($"Assigning listeners for stacks: {stackTransform.name}");
+
+            Button button = stackTransform.GetComponent<Button>();
+            if (button == null)
+            {
+                button = stackTransform.gameObject.GetComponent<Button>();
+                button.targetGraphic = stackTransform.GetComponent<Image>();
+            }
+
+            button.onClick.AddListener(() => HandleCardStackClick(stackTransform.gameObject));
+        }
+    }
+
+    private void HandleCardStackClick (GameObject cardStack)
+    {
+        Debug.Log($"Clicked on card: {cardStack.name}");
+        CardStackController cardStackController = cardStack.GetComponent<CardStackController>();
+        if (cardStackController != null)
+        {
+            SelectStack(cardStackController);
         }
     }
 }

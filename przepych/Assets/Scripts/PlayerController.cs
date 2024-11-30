@@ -94,6 +94,8 @@ public class PlayerController : MonoBehaviour
         }
         bankController.AddGems();
 
+        mainGameController.selectedCard.isReserved = false;
+
 
         var copiedCard = CloneCard();
         player.hand.Add(copiedCard);
