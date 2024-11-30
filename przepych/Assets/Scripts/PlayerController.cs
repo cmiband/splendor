@@ -150,57 +150,85 @@ public class PlayerController : MonoBehaviour
             }
             else Debug.Log("Nie ma już złotych żetonów");
 
-            int cardLevel = mainGameController.selectedCard.level;
-            PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
-            Vector3 vector = mainGameController.selectedCard.transform.position;
-
-            mainGameController.selectedCard.isReserved = true;
-
-
-            var copiedCard = CloneCard();
-            player.handReserved.Add(copiedCard);
-
-            switch (cardLevel)
+            if(mainGameController.selectedCard != null)
             {
-                case 1:
-                    mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
-                    Debug.Log("Zarezerwowano kart� 1 poziomu");
-                    Destroy(mainGameController.selectedCard.gameObject);
-                    GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
-                    gameObject1.name = "Card_Level_" + cardLevel;
-                    CardController cardController1 = gameObject1.GetComponent<CardController>();
-                    cardController1.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                    AddCardClickListener(gameObject1, cardController1);
-                    break;
+                int cardLevel = mainGameController.selectedCard.level;
+                PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
+                Vector3 vector = mainGameController.selectedCard.transform.position;
 
-                case 2:
-                    mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
-                    Debug.Log("Zarezerwowano kart� 2 poziomu");
-                    Destroy(mainGameController.selectedCard.gameObject);
-                    GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
-                    gameObject2.name = "Card_Level_" + cardLevel;
-                    CardController cardController2 = gameObject2.GetComponent<CardController>();
-                    cardController2.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                    AddCardClickListener(gameObject2, cardController2);
-                    break;
+                mainGameController.selectedCard.isReserved = true;
 
-                case 3:
-                    mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
-                    Debug.Log("Zarezerwowano kart� 3 poziomu");
-                    Destroy(mainGameController.selectedCard.gameObject);
-                    GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
-                    gameObject3.name = "Card_Level_" + cardLevel;
-                    CardController cardController3 = gameObject3.GetComponent<CardController>();
-                    cardController3.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                    AddCardClickListener(gameObject3, cardController3);
-                    break;
+
+                var copiedCard = CloneCard();
+                player.handReserved.Add(copiedCard);
+
+                switch (cardLevel)
+                {
+                    case 1:
+                        mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
+                        Debug.Log("Zarezerwowano kart� 1 poziomu");
+                        Destroy(mainGameController.selectedCard.gameObject);
+                        GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
+                        gameObject1.name = "Card_Level_" + cardLevel;
+                        CardController cardController1 = gameObject1.GetComponent<CardController>();
+                        cardController1.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                        AddCardClickListener(gameObject1, cardController1);
+                        break;
+
+                    case 2:
+                        mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
+                        Debug.Log("Zarezerwowano kart� 2 poziomu");
+                        Destroy(mainGameController.selectedCard.gameObject);
+                        GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
+                        gameObject2.name = "Card_Level_" + cardLevel;
+                        CardController cardController2 = gameObject2.GetComponent<CardController>();
+                        cardController2.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                        AddCardClickListener(gameObject2, cardController2);
+                        break;
+
+                    case 3:
+                        mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
+                        Debug.Log("Zarezerwowano kart� 3 poziomu");
+                        Destroy(mainGameController.selectedCard.gameObject);
+                        GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
+                        gameObject3.name = "Card_Level_" + cardLevel;
+                        CardController cardController3 = gameObject3.GetComponent<CardController>();
+                        cardController3.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                        AddCardClickListener(gameObject3, cardController3);
+                        break;
+                }
             }
+            else if(mainGameController.selectedStack != null)
+            {
+
+                PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
+
+                CardController reservedCard = mainGameController.selectedStack.PopCardFromStack();
+                reservedCard.isReserved = true;
+
+                Vector3 vector = mainGameController.selectedStack.transform.position;
+
+                Debug.Log($"Zarezerwowano kartę ze stosu poziomu {reservedCard.level}");
+
+                player.handReserved.Add(reservedCard);
+
+                GameObject gameObject = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, player.transform);
+                CardController cardController = gameObject.GetComponent<CardController>();
+                cardController.InitCardData(reservedCard);
+
+                AddCardClickListener(gameObject, cardController);
+            }
+            else
+            {
+                Debug.Log("Nie wybrano żadnej karty do zarezerwowania");
+            }
+
+            mainGameController.ChangeTurn();
         }
         else
         {
             Debug.Log("Za dużo zarezerwowałeś kart");
         }
-        mainGameController.ChangeTurn();
     }
 
     private void AddCardClickListener(GameObject cardGameObject, CardController cardController)

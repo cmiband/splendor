@@ -92,7 +92,7 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    private void CreateCardObject(CardController targetedCard, GameObject targetedVisibleCardsContainer, float xOffset)
+    public void CreateCardObject(CardController targetedCard, GameObject targetedVisibleCardsContainer, float xOffset)
     {
         Vector3 cardPosition = new Vector3(targetedVisibleCardsContainer.transform.position.x + xOffset, targetedVisibleCardsContainer.transform.position.y, targetedVisibleCardsContainer.transform.position.z);
 
