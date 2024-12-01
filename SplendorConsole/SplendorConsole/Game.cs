@@ -576,7 +576,7 @@ namespace SplendorConsole
             return playerTokens;
         }
 
-        private int NumberOfPlayerTokens()
+        public int NumberOfPlayerTokens()
         {
             int counter = 0;
             foreach (KeyValuePair<GemColor, int> token in listOfPlayers[currentTurn].Resources.gems)
