@@ -12,7 +12,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace SplendorConsole
 {
-    internal class Game
+    public class Game
     {
         private int currentTurn = 0;
         private AvailableCards availableCards = new AvailableCards();
@@ -114,7 +114,7 @@ namespace SplendorConsole
         }
 
 
-        private void AddResourcesToBank(Bank bank, int numberOfPlayers)
+        public void AddResourcesToBank(Bank bank, int numberOfPlayers)
         {
 
             foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
@@ -400,7 +400,7 @@ namespace SplendorConsole
             return true;
         }
 
-        private bool TakeTwoSameGems(Player player)
+        public bool TakeTwoSameGems(Player player)
         {
             bool hasSufficientGems = false;
             foreach (var gem in bank.resources.gems)
@@ -468,7 +468,7 @@ namespace SplendorConsole
 
         }
 
-        private GemColor ChoiceOfColor()
+        public GemColor ChoiceOfColor()
         {
             List<GemColor> availableTokens = ShowAvaiableTokens();
             GemColor color;
@@ -551,7 +551,7 @@ namespace SplendorConsole
         }
 
 
-        private List<GemColor> ShowAvaiableTokens()
+        public List<GemColor> ShowAvaiableTokens()
         {
             List<GemColor> avaiableTokens = new List<GemColor>();
 
