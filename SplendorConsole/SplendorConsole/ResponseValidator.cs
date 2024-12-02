@@ -27,14 +27,14 @@ namespace SplendorConsole
                     game.Pass();
                     return true;
                 case 2:
-                    if (currentPlayer.CanAffordCard(level1VisibleCards[0]) || currentPlayer.CanAffordCardWithGolden(level1VisibleCards[0]))
+                    if (currentPlayer.CanAffordCard(board.level1VisibleCards[0]) || currentPlayer.CanAffordCardWithGolden(board.level1VisibleCards[0]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
-                        var cardPrice = level1VisibleCards[0].DetailedPrice.gems;
+                        var cardPrice = board.level1VisibleCards[0].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
                         {
@@ -79,30 +79,30 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, level1VisibleCards[0], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, board.level1VisibleCards[0], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
                             bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
                         }
 
-                        currentPlayer.AddCardToPlayer(level1VisibleCards[0]);
-                        currentPlayer.BonusResources.AddResource(level1VisibleCards[0].BonusColor);
-                        currentPlayer.Points += level1VisibleCards[0].Points;
+                        currentPlayer.AddCardToPlayer(board.level1VisibleCards[0]);
+                        currentPlayer.BonusResources.AddResource(board.level1VisibleCards[0].BonusColor);
+                        currentPlayer.Points += board.level1VisibleCards[0].Points;
 
-                        board.ReplaceMissingCard(1, level1VisibleCards[0]);
+                        board.ReplaceMissingCard(1, board.level1VisibleCards[0]);
                         return true;
                     }
                     return false;
                 case 3:
-                    if (currentPlayer.CanAffordCard(level1VisibleCards[1]) || currentPlayer.CanAffordCardWithGolden(level1VisibleCards[1]))
+                    if (currentPlayer.CanAffordCard(board.level1VisibleCards[1]) || currentPlayer.CanAffordCardWithGolden(board.level1VisibleCards[1]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
-                        var cardPrice = level1VisibleCards[1].DetailedPrice.gems;
+                        var cardPrice = board.level1VisibleCards[1].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
                         {
@@ -147,30 +147,30 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, level1VisibleCards[1], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, board.level1VisibleCards[1], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
                             bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
                         }
 
-                        currentPlayer.AddCardToPlayer(level1VisibleCards[1]);
-                        currentPlayer.BonusResources.AddResource(level1VisibleCards[1].BonusColor);
-                        currentPlayer.Points += level1VisibleCards[1].Points;
+                        currentPlayer.AddCardToPlayer(board.level1VisibleCards[1]);
+                        currentPlayer.BonusResources.AddResource(board.level1VisibleCards[1].BonusColor);
+                        currentPlayer.Points += board.level1VisibleCards[1].Points;
 
-                        board.ReplaceMissingCard(1, level1VisibleCards[1]);
+                        board.ReplaceMissingCard(1, board.level1VisibleCards[1]);
                         return true;
                     }
                     return false;
                 case 4:
-                    if (currentPlayer.CanAffordCard(level1VisibleCards[2]) || currentPlayer.CanAffordCardWithGolden(level1VisibleCards[2]))
+                    if (currentPlayer.CanAffordCard(board.level1VisibleCards[2]) || currentPlayer.CanAffordCardWithGolden(board.level1VisibleCards[2]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
-                        var cardPrice = level1VisibleCards[2].DetailedPrice.gems;
+                        var cardPrice = board.level1VisibleCards[2].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
                         {
@@ -215,30 +215,30 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, level1VisibleCards[2], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, board.level1VisibleCards[2], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
                             bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
                         }
 
-                        currentPlayer.AddCardToPlayer(level1VisibleCards[2]);
-                        currentPlayer.BonusResources.AddResource(level1VisibleCards[2].BonusColor);
-                        currentPlayer.Points += level1VisibleCards[2].Points;
+                        currentPlayer.AddCardToPlayer(board.level1VisibleCards[2]);
+                        currentPlayer.BonusResources.AddResource(board.level1VisibleCards[2].BonusColor);
+                        currentPlayer.Points += board.level1VisibleCards[2].Points;
 
-                        board.ReplaceMissingCard(1, level1VisibleCards[2]);
+                        board.ReplaceMissingCard(1, board.level1VisibleCards[2]);
                         return true;
                     }
                     return false;
                 case 5:
-                    if (currentPlayer.CanAffordCard(level1VisibleCards[3]) || currentPlayer.CanAffordCardWithGolden(level1VisibleCards[3]))
+                    if (currentPlayer.CanAffordCard(board.level1VisibleCards[3]) || currentPlayer.CanAffordCardWithGolden(board.level1VisibleCards[3]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
-                        var cardPrice = level1VisibleCards[3].DetailedPrice.gems;
+                        var cardPrice = board.level1VisibleCards[3].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
                         {
@@ -283,30 +283,30 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, level1VisibleCards[3], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, board.level1VisibleCards[3], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
                             bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
                         }
 
-                        currentPlayer.AddCardToPlayer(level1VisibleCards[3]);
-                        currentPlayer.BonusResources.AddResource(level1VisibleCards[3].BonusColor);
-                        currentPlayer.Points += level1VisibleCards[3].Points;
+                        currentPlayer.AddCardToPlayer(board.level1VisibleCards[3]);
+                        currentPlayer.BonusResources.AddResource(board.level1VisibleCards[3].BonusColor);
+                        currentPlayer.Points += board.level1VisibleCards[3].Points;
 
-                        board.ReplaceMissingCard(1, level1VisibleCards[3]);
+                        board.ReplaceMissingCard(1, board.level1VisibleCards[3]);
                         return true;
                     }
                     return false;
                 case 6:
-                    if (currentPlayer.CanAffordCard(level2VisibleCards[0]) || currentPlayer.CanAffordCardWithGolden(level2VisibleCards[0]))
+                    if (currentPlayer.CanAffordCard(board.level2VisibleCards[0]) || currentPlayer.CanAffordCardWithGolden(board.level2VisibleCards[0]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
-                        var cardPrice = level2VisibleCards[0].DetailedPrice.gems;
+                        var cardPrice = board.level2VisibleCards[0].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
                         {
@@ -351,30 +351,30 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, level2VisibleCards[0], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, board.level2VisibleCards[0], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
                             bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
                         }
 
-                        currentPlayer.AddCardToPlayer(level2VisibleCards[0]);
-                        currentPlayer.BonusResources.AddResource(level2VisibleCards[0].BonusColor);
-                        currentPlayer.Points += level2VisibleCards[0].Points;
+                        currentPlayer.AddCardToPlayer(board.level2VisibleCards[0]);
+                        currentPlayer.BonusResources.AddResource(board.level2VisibleCards[0].BonusColor);
+                        currentPlayer.Points += board.level2VisibleCards[0].Points;
 
-                        board.ReplaceMissingCard(2, level2VisibleCards[0]);
+                        board.ReplaceMissingCard(2, board.level2VisibleCards[0]);
                         return true;
                     }
                     return false;
                 case 7:
-                    if (currentPlayer.CanAffordCard(level2VisibleCards[1]) || currentPlayer.CanAffordCardWithGolden(level2VisibleCards[1]))
+                    if (currentPlayer.CanAffordCard(board.level2VisibleCards[1]) || currentPlayer.CanAffordCardWithGolden(board.level2VisibleCards[1]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
-                        var cardPrice = level2VisibleCards[1].DetailedPrice.gems;
+                        var cardPrice = board.level2VisibleCards[1].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
                         {
@@ -419,30 +419,30 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, level2VisibleCards[1], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, board.level2VisibleCards[1], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
                             bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
                         }
 
-                        currentPlayer.AddCardToPlayer(level2VisibleCards[1]);
-                        currentPlayer.BonusResources.AddResource(level2VisibleCards[1].BonusColor);
-                        currentPlayer.Points += level2VisibleCards[1].Points;
+                        currentPlayer.AddCardToPlayer(board.level2VisibleCards[1]);
+                        currentPlayer.BonusResources.AddResource(board.level2VisibleCards[1].BonusColor);
+                        currentPlayer.Points += board.level2VisibleCards[1].Points;
 
-                        board.ReplaceMissingCard(2, level2VisibleCards[1]);
+                        board.ReplaceMissingCard(2, board.level2VisibleCards[1]);
                         return true;
                     }
                     return false;
                 case 8:
-                    if (currentPlayer.CanAffordCard(level2VisibleCards[2]) || currentPlayer.CanAffordCardWithGolden(level2VisibleCards[2]))
+                    if (currentPlayer.CanAffordCard(board.level2VisibleCards[2]) || currentPlayer.CanAffordCardWithGolden(board.level2VisibleCards[2]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
-                        var cardPrice = level2VisibleCards[2].DetailedPrice.gems;
+                        var cardPrice = board.level2VisibleCards[2].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
                         {
@@ -487,30 +487,30 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, level2VisibleCards[2], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, board.level2VisibleCards[2], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
                             bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
                         }
 
-                        currentPlayer.AddCardToPlayer(level2VisibleCards[2]);
-                        currentPlayer.BonusResources.AddResource(level2VisibleCards[2].BonusColor);
-                        currentPlayer.Points += level2VisibleCards[2].Points;
+                        currentPlayer.AddCardToPlayer(board.level2VisibleCards[2]);
+                        currentPlayer.BonusResources.AddResource(board.level2VisibleCards[2].BonusColor);
+                        currentPlayer.Points += board.level2VisibleCards[2].Points;
 
-                        board.ReplaceMissingCard(2, level2VisibleCards[2]);
+                        board.ReplaceMissingCard(2, board.level2VisibleCards[2]);
                         return true;
                     }
                     return false;
                 case 9:
-                    if (currentPlayer.CanAffordCard(level2VisibleCards[3]) || currentPlayer.CanAffordCardWithGolden(level2VisibleCards[3]))
+                    if (currentPlayer.CanAffordCard(board.level2VisibleCards[3]) || currentPlayer.CanAffordCardWithGolden(board.level2VisibleCards[3]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
-                        var cardPrice = level2VisibleCards[3].DetailedPrice.gems;
+                        var cardPrice = board.level2VisibleCards[3].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
                         {
@@ -555,30 +555,30 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, level2VisibleCards[3], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, board.level2VisibleCards[3], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
                             bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
                         }
 
-                        currentPlayer.AddCardToPlayer(level2VisibleCards[3]);
-                        currentPlayer.BonusResources.AddResource(level2VisibleCards[3].BonusColor);
-                        currentPlayer.Points += level2VisibleCards[3].Points;
+                        currentPlayer.AddCardToPlayer(board.level2VisibleCards[3]);
+                        currentPlayer.BonusResources.AddResource(board.level2VisibleCards[3].BonusColor);
+                        currentPlayer.Points += board.level2VisibleCards[3].Points;
 
-                        board.ReplaceMissingCard(2, level2VisibleCards[3]);
+                        board.ReplaceMissingCard(2, board.level2VisibleCards[3]);
                         return true;
                     }
                     return false;
                 case 10:
-                    if (currentPlayer.CanAffordCard(level3VisibleCards[0]) || currentPlayer.CanAffordCardWithGolden(level3VisibleCards[0]))
+                    if (currentPlayer.CanAffordCard(board.level3VisibleCards[0]) || currentPlayer.CanAffordCardWithGolden(board.level3VisibleCards[0]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
-                        var cardPrice = level3VisibleCards[0].DetailedPrice.gems;
+                        var cardPrice = board.level3VisibleCards[0].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
                         {
@@ -623,30 +623,30 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, level3VisibleCards[0], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, board.level3VisibleCards[0], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
                             bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
                         }
 
-                        currentPlayer.AddCardToPlayer(level3VisibleCards[0]);
-                        currentPlayer.BonusResources.AddResource(level3VisibleCards[0].BonusColor);
-                        currentPlayer.Points += level3VisibleCards[0].Points;
+                        currentPlayer.AddCardToPlayer(board.level3VisibleCards[0]);
+                        currentPlayer.BonusResources.AddResource(board.level3VisibleCards[0].BonusColor);
+                        currentPlayer.Points += board.level3VisibleCards[0].Points;
 
-                        board.ReplaceMissingCard(3, level3VisibleCards[0]);
+                        board.ReplaceMissingCard(3, board.level3VisibleCards[0]);
                         return true;
                     }
                     return false;
                 case 11:
-                    if (currentPlayer.CanAffordCard(level3VisibleCards[1]) || currentPlayer.CanAffordCardWithGolden(level3VisibleCards[1]))
+                    if (currentPlayer.CanAffordCard(board.level3VisibleCards[1]) || currentPlayer.CanAffordCardWithGolden(board.level3VisibleCards[1]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
-                        var cardPrice = level3VisibleCards[1].DetailedPrice.gems;
+                        var cardPrice = board.level3VisibleCards[1].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
                         {
@@ -691,30 +691,30 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, level3VisibleCards[1], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, board.level3VisibleCards[1], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
                             bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
                         }
 
-                        currentPlayer.AddCardToPlayer(level3VisibleCards[1]);
-                        currentPlayer.BonusResources.AddResource(level3VisibleCards[1].BonusColor);
-                        currentPlayer.Points += level3VisibleCards[1].Points;
+                        currentPlayer.AddCardToPlayer(board.level3VisibleCards[1]);
+                        currentPlayer.BonusResources.AddResource(board.level3VisibleCards[1].BonusColor);
+                        currentPlayer.Points += board.level3VisibleCards[1].Points;
 
-                        board.ReplaceMissingCard(3, level3VisibleCards[1]);
+                        board.ReplaceMissingCard(3, board.level3VisibleCards[1]);
                         return true;
                     }
                     return false;
                 case 12:
-                    if (currentPlayer.CanAffordCard(level3VisibleCards[2]) || currentPlayer.CanAffordCardWithGolden(level3VisibleCards[2]))
+                    if (currentPlayer.CanAffordCard(board.level3VisibleCards[2]) || currentPlayer.CanAffordCardWithGolden(board.level3VisibleCards[2]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
-                        var cardPrice = level3VisibleCards[2].DetailedPrice.gems;
+                        var cardPrice = board.level3VisibleCards[2].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
                         {
@@ -759,30 +759,30 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, level3VisibleCards[2], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, board.level3VisibleCards[2], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
                             bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
                         }
 
-                        currentPlayer.AddCardToPlayer(level3VisibleCards[2]);
-                        currentPlayer.BonusResources.AddResource(level3VisibleCards[2].BonusColor);
-                        currentPlayer.Points += level3VisibleCards[2].Points;
+                        currentPlayer.AddCardToPlayer(board.level3VisibleCards[2]);
+                        currentPlayer.BonusResources.AddResource(board.level3VisibleCards[2].BonusColor);
+                        currentPlayer.Points += board.level3VisibleCards[2].Points;
 
-                        board.ReplaceMissingCard(3, level3VisibleCards[2]);
+                        board.ReplaceMissingCard(3, board.level3VisibleCards[2]);
                         return true;
                     }
                     return false;
                 case 13:
-                    if (currentPlayer.CanAffordCard(level3VisibleCards[3]) || currentPlayer.CanAffordCardWithGolden(level3VisibleCards[3]))
+                    if (currentPlayer.CanAffordCard(board.level3VisibleCards[3]) || currentPlayer.CanAffordCardWithGolden(board.level3VisibleCards[3]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
-                        var cardPrice = level3VisibleCards[3].DetailedPrice.gems;
+                        var cardPrice = board.level3VisibleCards[3].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
                         {
@@ -827,23 +827,23 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, level3VisibleCards[3], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, board.level3VisibleCards[3], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
                             bank.AddGoldenGem(simulatedResourcesUsed[GemColor.GOLDEN]);
                         }
 
-                        currentPlayer.AddCardToPlayer(level3VisibleCards[3]);
-                        currentPlayer.BonusResources.AddResource(level3VisibleCards[3].BonusColor);
-                        currentPlayer.Points += level3VisibleCards[3].Points;
+                        currentPlayer.AddCardToPlayer(board.level3VisibleCards[3]);
+                        currentPlayer.BonusResources.AddResource(board.level3VisibleCards[3].BonusColor);
+                        currentPlayer.Points += board.level3VisibleCards[3].Points;
 
-                        board.ReplaceMissingCard(3, level3VisibleCards[3]);
+                        board.ReplaceMissingCard(3, board.level3VisibleCards[3]);
                         return true;
                     }
                     return false;
                 case 14:
-                    if (NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.WHITE]>=4)
+                    if (game.NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.WHITE]>=4)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
                         {
@@ -858,7 +858,7 @@ namespace SplendorConsole
                     }
                     return false;
                 case 15:
-                    if (NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.BLUE] >= 4)
+                    if (game.NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.BLUE] >= 4)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
                         {
@@ -873,7 +873,7 @@ namespace SplendorConsole
                     }
                     return false;
                 case 16:
-                    if (NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.GREEN] >= 4)
+                    if (game.NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.GREEN] >= 4)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.GREEN))
                         {
@@ -888,7 +888,7 @@ namespace SplendorConsole
                     }
                     return false;
                 case 17:
-                    if (NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.RED] >= 4)
+                    if (game.NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.RED] >= 4)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.RED))
                         {
@@ -903,7 +903,7 @@ namespace SplendorConsole
                     }
                     return false;
                 case 18:
-                    if (NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.BLACK] >= 4)
+                    if (game.NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.BLACK] >= 4)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLACK))
                         {
@@ -918,7 +918,7 @@ namespace SplendorConsole
                     }
                     return false;
                 case 19:
-                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.RED] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
+                    if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.RED] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.GREEN))
                         {
@@ -954,7 +954,7 @@ namespace SplendorConsole
                     }
                     return false;
                 case 20:
-                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.RED] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
+                    if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.RED] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
                         {
@@ -990,7 +990,7 @@ namespace SplendorConsole
                     }
                     return false;
                 case 21:
-                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
+                    if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
                         {
@@ -1026,7 +1026,7 @@ namespace SplendorConsole
                     }
                     return false;
                 case 22:
-                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.RED] >= 1)
+                    if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.RED] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
                         {
@@ -1062,7 +1062,7 @@ namespace SplendorConsole
                     }
                     return false;
                 case 23:
-                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.RED] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
+                    if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.RED] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
                         {
@@ -1098,7 +1098,7 @@ namespace SplendorConsole
                     }
                     return false;
                 case 24:
-                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
+                    if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
                         {
@@ -1134,7 +1134,7 @@ namespace SplendorConsole
                     }
                     return false;
                 case 25:
-                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.RED] >= 1)
+                    if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.RED] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
                         {
@@ -1170,7 +1170,7 @@ namespace SplendorConsole
                     }
                     return false;
                 case 26:
-                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
+                    if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
                         {
@@ -1206,7 +1206,7 @@ namespace SplendorConsole
                     }
                     return false;
                 case 27:
-                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.RED] >= 1)
+                    if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.RED] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
                         {
@@ -1242,7 +1242,7 @@ namespace SplendorConsole
                     }
                     return false;
                 case 28:
-                    if (NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1)
+                    if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
                         {
@@ -1293,8 +1293,8 @@ namespace SplendorConsole
                             }
                             bank.TakeOutResources(1, GemColor.GOLDEN);
                         }
-                        currentPlayer.ReserveCard(level1VisibleCards[0]);
-                        board.ReplaceMissingCard(1, level1VisibleCards[0]);
+                        currentPlayer.ReserveCard(board.level1VisibleCards[0]);
+                        board.ReplaceMissingCard(1, board.level1VisibleCards[0]);
                         return true;
                     }
                     return false;
@@ -1314,8 +1314,8 @@ namespace SplendorConsole
                             }
                             bank.TakeOutResources(1, GemColor.GOLDEN);
                         }
-                        currentPlayer.ReserveCard(level1VisibleCards[1]);
-                        board.ReplaceMissingCard(1, level1VisibleCards[1]);
+                        currentPlayer.ReserveCard(board.level1VisibleCards[1]);
+                        board.ReplaceMissingCard(1, board.level1VisibleCards[1]);
                         return true;
                     }
                     return false;
@@ -1335,8 +1335,8 @@ namespace SplendorConsole
                             }
                             bank.TakeOutResources(1, GemColor.GOLDEN);
                         }
-                        currentPlayer.ReserveCard(level1VisibleCards[2]);
-                        board.ReplaceMissingCard(1, level1VisibleCards[2]);
+                        currentPlayer.ReserveCard(board.level1VisibleCards[2]);
+                        board.ReplaceMissingCard(1, board.level1VisibleCards[2]);
                         return true;
                     }
                     return false;
@@ -1356,8 +1356,8 @@ namespace SplendorConsole
                             }
                             bank.TakeOutResources(1, GemColor.GOLDEN);
                         }
-                        currentPlayer.ReserveCard(level1VisibleCards[3]);
-                        board.ReplaceMissingCard(1, level1VisibleCards[3]);
+                        currentPlayer.ReserveCard(board.level1VisibleCards[3]);
+                        board.ReplaceMissingCard(1, board.level1VisibleCards[3]);
                         return true;
                     }
                     return false;
@@ -1377,8 +1377,8 @@ namespace SplendorConsole
                             }
                             bank.TakeOutResources(1, GemColor.GOLDEN);
                         }
-                        currentPlayer.ReserveCard(level2VisibleCards[0]);
-                        board.ReplaceMissingCard(2, level2VisibleCards[0]);
+                        currentPlayer.ReserveCard(board.level2VisibleCards[0]);
+                        board.ReplaceMissingCard(2, board.level2VisibleCards[0]);
                         return true;
                     }
                     return false;
@@ -1398,8 +1398,8 @@ namespace SplendorConsole
                             }
                             bank.TakeOutResources(1, GemColor.GOLDEN);
                         }
-                        currentPlayer.ReserveCard(level2VisibleCards[1]);
-                        board.ReplaceMissingCard(2, level2VisibleCards[1]);
+                        currentPlayer.ReserveCard(board.level2VisibleCards[1]);
+                        board.ReplaceMissingCard(2, board.level2VisibleCards[1]);
                         return true;
                     }
                     return false;
@@ -1419,8 +1419,8 @@ namespace SplendorConsole
                             }
                             bank.TakeOutResources(1, GemColor.GOLDEN);
                         }
-                        currentPlayer.ReserveCard(level2VisibleCards[2]);
-                        board.ReplaceMissingCard(2, level2VisibleCards[2]);
+                        currentPlayer.ReserveCard(board.level2VisibleCards[2]);
+                        board.ReplaceMissingCard(2, board.level2VisibleCards[2]);
                         return true;
                     }
                     return false;
@@ -1440,8 +1440,8 @@ namespace SplendorConsole
                             }
                             bank.TakeOutResources(1, GemColor.GOLDEN);
                         }
-                        currentPlayer.ReserveCard(level2VisibleCards[3]);
-                        board.ReplaceMissingCard(2, level2VisibleCards[3]);
+                        currentPlayer.ReserveCard(board.level2VisibleCards[3]);
+                        board.ReplaceMissingCard(2, board.level2VisibleCards[3]);
                         return true;
                     }
                     return false;
@@ -1461,8 +1461,8 @@ namespace SplendorConsole
                             }
                             bank.TakeOutResources(1, GemColor.GOLDEN);
                         }
-                        currentPlayer.ReserveCard(level3VisibleCards[0]);
-                        board.ReplaceMissingCard(3, level3VisibleCards[0]);
+                        currentPlayer.ReserveCard(board.level3VisibleCards[0]);
+                        board.ReplaceMissingCard(3, board.level3VisibleCards[0]);
                         return true;
                     }
                     return false;
@@ -1482,8 +1482,8 @@ namespace SplendorConsole
                             }
                             bank.TakeOutResources(1, GemColor.GOLDEN);
                         }
-                        currentPlayer.ReserveCard(level3VisibleCards[1]);
-                        board.ReplaceMissingCard(3, level3VisibleCards[1]);
+                        currentPlayer.ReserveCard(board.level3VisibleCards[1]);
+                        board.ReplaceMissingCard(3, board.level3VisibleCards[1]);
                         return true;
                     }
                     return false;
@@ -1503,8 +1503,8 @@ namespace SplendorConsole
                             }
                             bank.TakeOutResources(1, GemColor.GOLDEN);
                         }
-                        currentPlayer.ReserveCard(level3VisibleCards[2]);
-                        board.ReplaceMissingCard(3, level3VisibleCards[2]);
+                        currentPlayer.ReserveCard(board.level3VisibleCards[2]);
+                        board.ReplaceMissingCard(3, board.level3VisibleCards[2]);
                         return true;
                     }
                     return false;
@@ -1524,8 +1524,8 @@ namespace SplendorConsole
                             }
                             bank.TakeOutResources(1, GemColor.GOLDEN);
                         }
-                        currentPlayer.ReserveCard(level3VisibleCards[3]);
-                        board.ReplaceMissingCard(3, level3VisibleCards[3]);
+                        currentPlayer.ReserveCard(board.level3VisibleCards[3]);
+                        board.ReplaceMissingCard(3, board.level3VisibleCards[3]);
                         return true;
                     }
                     return false;
@@ -1582,7 +1582,7 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, currentPlayer.ReservedCards[0], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, currentPlayer.ReservedCards[0], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
@@ -1593,7 +1593,7 @@ namespace SplendorConsole
                         currentPlayer.BonusResources.AddResource(currentPlayer.ReservedCards[0].BonusColor);
                         currentPlayer.Points += currentPlayer.ReservedCards[0].Points;
 
-                        //dodane w stosunku do respo 2-13
+                        
                         Card selectedCard = currentPlayer.ReservedCards[0];
 
                         currentPlayer.ReservedCards.Remove(selectedCard);
@@ -1655,7 +1655,7 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, currentPlayer.ReservedCards[1], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, currentPlayer.ReservedCards[1], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
@@ -1666,7 +1666,7 @@ namespace SplendorConsole
                         currentPlayer.BonusResources.AddResource(currentPlayer.ReservedCards[1].BonusColor);
                         currentPlayer.Points += currentPlayer.ReservedCards[1].Points;
 
-                        //dodane w stosunku do respo 2-13
+                        
                         Card selectedCard = currentPlayer.ReservedCards[1];
 
                         currentPlayer.ReservedCards.Remove(selectedCard);
@@ -1728,7 +1728,7 @@ namespace SplendorConsole
                             }
                         }
 
-                        RefillBankResources(bank, currentPlayer.ReservedCards[2], simulatedResourcesUsed);
+                        game.RefillBankResources(bank, currentPlayer.ReservedCards[2], simulatedResourcesUsed);
 
                         if (simulatedResourcesUsed[GemColor.GOLDEN] > 0)
                         {
@@ -1739,7 +1739,7 @@ namespace SplendorConsole
                         currentPlayer.BonusResources.AddResource(currentPlayer.ReservedCards[2].BonusColor);
                         currentPlayer.Points += currentPlayer.ReservedCards[2].Points;
 
-                        //dodane w stosunku do respo 2-13
+                       
                         Card selectedCard = currentPlayer.ReservedCards[2];
 
                         currentPlayer.ReservedCards.Remove(selectedCard);
