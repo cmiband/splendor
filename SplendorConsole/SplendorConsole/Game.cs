@@ -586,7 +586,7 @@ namespace SplendorConsole
             return counter;
         }
 
-        private void SetVisibleCards()
+        public void SetVisibleCards()
         {
             for (int i = 0; i < 4; i++)
             {
@@ -702,7 +702,7 @@ namespace SplendorConsole
             }
             return true;
         }
-        private Card[] VisibleCardsOnTable(int cardlevel)
+        public Card[] VisibleCardsOnTable(int cardlevel)
         {
             Card[] cardsOnTable = new Card[4];
             for (int i = 0; i < cardsOnTable.Length; i++)
