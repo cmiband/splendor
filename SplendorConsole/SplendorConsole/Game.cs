@@ -905,18 +905,21 @@ namespace SplendorConsole
             return choice;
         }
         public bool WantToSpendGoldCoin()
-        {
-            int wantTo;
+        {     
             while (true)
             {
-                wantTo = Convert.ToInt32(Console.ReadLine());
-                if (wantTo == 2)
-                    return false;
-                else if (wantTo == 1)
-                    return true;
-                else
-                    Console.WriteLine("Podano zły klawisz. Podaj 1 lub 2");
-            }
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out int wantTo))
+                {
+                    if (wantTo == 2)
+                        return false;
+                    else if (wantTo == 1)
+                        return true;
+                }
+                else Console.WriteLine("Podano zły klawisz. Podaj poprawną liczbę (1 lub 2).");
+            }                   
+            
         }
         public bool BuyCardAction(Board board, Bank bank, Player player)
         {
