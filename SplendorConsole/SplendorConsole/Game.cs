@@ -11,14 +11,16 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Newtonsoft.Json.Linq;
+using static ClosedXML.Excel.XLPredefinedFormat;
 using static SplendorConsole.WebserviceClient;
 
 namespace SplendorConsole
 {
-    internal class Game
+    public class Game
     {
         private int currentTurn = 0;
         private AvailableCards availableCards = new AvailableCards();
@@ -340,7 +342,7 @@ namespace SplendorConsole
         }
 
 
-        private void Pass()
+        internal void Pass()
         {
             return;
         }
@@ -592,7 +594,7 @@ namespace SplendorConsole
             return playerTokens;
         }
 
-        private int NumberOfPlayerTokens()
+        internal int NumberOfPlayerTokens()
         {
             int counter = 0;
             foreach (KeyValuePair<GemColor, int> token in listOfPlayers[currentTurn].Resources.gems)
@@ -1088,7 +1090,7 @@ namespace SplendorConsole
             return true;
         }
 
-        private void RefillBankResources(Bank bank, Card card, Dictionary<GemColor, int> resourcesUsed)
+        internal void RefillBankResources(Bank bank, Card card, Dictionary<GemColor, int> resourcesUsed)
         {
             foreach (var gemCost in card.DetailedPrice.gems)
             {
