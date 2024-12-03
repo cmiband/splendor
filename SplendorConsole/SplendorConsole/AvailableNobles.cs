@@ -27,10 +27,9 @@ namespace SplendorConsole
                     detailedPrice.gems[GemColor.GREEN] = int.Parse(row.Cell(4).GetString());
                     detailedPrice.gems[GemColor.RED] = int.Parse(row.Cell(5).GetString());
                     detailedPrice.gems[GemColor.BLACK] = int.Parse(row.Cell(6).GetString());
+               
 
-                    string illustration = row.Cell(7).GetString();
-
-                    var noble = new Noble(points, detailedPrice, illustration);
+                    var noble = new Noble(points, detailedPrice);
 
                     noblesList.Add(noble);
                 }
