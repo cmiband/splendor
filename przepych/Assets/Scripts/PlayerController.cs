@@ -338,11 +338,7 @@ public class PlayerController : MonoBehaviour
 
     private void SetGemInfo(ResourcesController resources)
     {
-        int currentPlayerId = this.mainGameController.currentPlayerId;
-        if(currentPlayerId != this.playerId)
-        {
-            return;
-        }
+
 
         foreach(KeyValuePair<GemColor, int> val in resources.gems)
         {
@@ -350,7 +346,10 @@ public class PlayerController : MonoBehaviour
             {
                 continue;
             }
-
+            if(!this.gemColorToResourceGameObject.ContainsKey(val.Key))
+            {
+                continue;
+            }
             GameObject targetedContainer = this.gemColorToResourceGameObject[val.Key];
             targetedContainer.GetComponent<PlayerGemInfoController>().SetAmountOfGems(val.Value);
         }
