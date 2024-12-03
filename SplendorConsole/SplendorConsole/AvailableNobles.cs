@@ -7,7 +7,7 @@ using ClosedXML.Excel;
 
 namespace SplendorConsole
 {
-    public class AvailableCards
+    public class AvailableNobles
     {
         public List<Noble> noblesList = new List<Noble>();
 
