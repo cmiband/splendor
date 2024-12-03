@@ -346,7 +346,10 @@ public class PlayerController : MonoBehaviour
             {
                 continue;
             }
-
+            if(!this.gemColorToResourceGameObject.ContainsKey(val.Key))
+            {
+                continue;
+            }
             GameObject targetedContainer = this.gemColorToResourceGameObject[val.Key];
             targetedContainer.GetComponent<PlayerGemInfoController>().SetAmountOfGems(val.Value);
         }
