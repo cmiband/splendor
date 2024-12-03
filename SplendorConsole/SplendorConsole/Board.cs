@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SplendorConsole
 {
-    internal class Board
+    public class Board
     {
         private List<Noble> VisibleNobles = new List<Noble>();
         public List<Noble> VisibleNobles2
@@ -19,9 +19,9 @@ namespace SplendorConsole
         private List<Card> level1Deck = new List<Card>();
         private List<Card> level2Deck = new List<Card>();
         private List<Card> level3Deck = new List<Card>();
-        private List<Card> level1VisibleCards;
-        private List<Card> level2VisibleCards;
-        private List<Card> level3VisibleCards;
+        internal List<Card> level1VisibleCards;
+        internal List<Card> level2VisibleCards;
+        internal List<Card> level3VisibleCards;
 
         public Board(List<Card> level1VisibleCards, List<Card> level2VisibleCards, List<Card> level3VisibleCards, List<Card> level1Deck, List<Card> level2Deck, List<Card> level3Deck, List<Noble> VisibleNobles)
         {

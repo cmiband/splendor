@@ -54,6 +54,12 @@ public class BankController : MonoBehaviour
 
         gemsBeingChosen.Clear(); 
     }
+
+    public void GoldenGemTaken()
+    {
+        resourcesController.gems[GemColor.GOLDEN] -= 1;
+        playerController.TakeGoldenGem();
+    }
     public void AddGems()
     {
         foreach (GemColor gemColor in gemsBeingReturned)

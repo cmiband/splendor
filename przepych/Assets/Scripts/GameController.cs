@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
     public AvailableCardsController availableCardsController;
     public AvailableNoblesController availableNoblesController;
     public Dictionary<int, List<CardController>> playerIdToHand = new Dictionary<int, List<CardController>>();
+    public Dictionary<int, List<CardController>> playerIdToReserveHand = new Dictionary<int, List<CardController>>();
     public Dictionary<int, ResourcesController> playerIdToResources = new Dictionary<int, ResourcesController>();
     public int currentPlayerId;
 
@@ -24,8 +25,12 @@ public class GameController : MonoBehaviour
     public GameObject openBoughtCards;
     public GameObject pass;
     public GameObject buyCard;
+    public GameObject reservedCards;
+    public GameObject reserveCard;
+    public ReservedCardController reservedCardController;
 
-    public CardController selectedToBuyCard;
+    public CardController selectedCard;
+    public CardStackController selectedStack;
 
     private void Start()
     {
@@ -47,13 +52,19 @@ public class GameController : MonoBehaviour
 
 
 
+
+        reservedCardController = this.reservedCards.GetComponent<ReservedCardController>();
+
         this.players = new List<GameObject> { currentPlayer, nextPlayerOne, nextPlayerTwo, nextPlayerThree };
         this.CreateFourPlayersDataOnInit();
         this.FillPlayersWithData(); 
         this.currentPlayerId = 0;
+        this.reserveCard.SetActive(false);
+        this.buyCard.SetActive(false);
 
         this.AddEventListeners();
         this.AssignClickListenersToAllCards();
+        this.AssignClickListenersToAllCardStacks();
     }
 
     private void AddEventListeners()
@@ -66,6 +77,9 @@ public class GameController : MonoBehaviour
 
         Button buyCardButton = this.buyCard.GetComponent<Button>();
         buyCardButton.onClick.AddListener(currentPlayer.GetComponent<PlayerController>().HandleBuyCard);
+
+        Button reserveCardButton = this.reserveCard.GetComponent<Button>();
+        reserveCardButton.onClick.AddListener(currentPlayer.GetComponent<PlayerController>().HandleReserveCard);
     }
 
 
@@ -75,12 +89,14 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             List<CardController> initHand = new List<CardController>();
+            List<CardController> initReservedHand = new List<CardController>();
             ResourcesController initResources = new ResourcesController();
             initResources.FillDictionaryWithZeros();
 
             PlayerController targetedPlayerController = this.players[i].GetComponent<PlayerController>();
             targetedPlayerController.SetPlayerId(i);
             this.playerIdToHand.Add(i, initHand);
+            this.playerIdToReserveHand.Add(i, initReservedHand);
             this.playerIdToResources.Add(i, initResources);
         }
     }
@@ -97,6 +113,8 @@ public class GameController : MonoBehaviour
     {
         PlayerController targetedPlayerController = targetedPlayer.GetComponent<PlayerController>();
         targetedPlayerController.SetPlayerHand(this.playerIdToHand[targetedPlayerIndex]);
+        targetedPlayerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerIndex]);
+        targetedPlayerController.SetPlayerResources(this.playerIdToResources[targetedPlayerIndex]);
     }
 
     private void HandleOpenBoughtCards()
@@ -112,10 +130,22 @@ public class GameController : MonoBehaviour
         this.openBoughtCards.SetActive(visibility);
         this.pass.SetActive(visibility);
         this.buyCard.SetActive(visibility);
+        this.reserveCard.SetActive(visibility);
     }
 
     public void HandlePass()
     {
+        if (selectedStack != null)
+        {
+            selectedStack.SetSelected(false);
+            selectedStack = null;
+        }
+        if (selectedCard != null)
+        {
+            selectedCard.SetSelected(false);
+            selectedCard = null;
+        }
+
         this.ChangeTurn();
     }
 
@@ -132,12 +162,15 @@ public class GameController : MonoBehaviour
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerId(targetedPlayerId);
             playerController.SetPlayerHand(this.playerIdToHand[targetedPlayerId]);
+            playerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerId]);
             playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId]);
-
             targetedPlayerId = (targetedPlayerId + 1) % 4;
         }
+        reservedCardController.UpdateReservedCards(this.currentPlayerId);
+
 
         buyCard.SetActive(false);
+        reserveCard.SetActive(false);
     }
 
     public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources)
@@ -147,21 +180,43 @@ public class GameController : MonoBehaviour
 
     public void SelectCard(CardController card)
     {
-        if (selectedToBuyCard != null && selectedToBuyCard != card)
+        if (selectedCard != null && selectedCard != card)
         {
-            selectedToBuyCard.SetSelected(false);
+            selectedCard.SetSelected(false);
         }
 
-        if (selectedToBuyCard == card)
+        if (selectedCard == card)
         {
-            selectedToBuyCard = null;
+            selectedCard = null;
             buyCard.SetActive(false);
+            reserveCard.SetActive(false);
         }
         else
         {
-            selectedToBuyCard = card;
-            selectedToBuyCard.SetSelected(true);
+            selectedCard = card;
+            selectedCard.SetSelected(true);
             buyCard.SetActive(true);
+            if(selectedCard.isReserved != true) reserveCard.SetActive(true);
+        }
+    }
+
+    public void SelectStack(CardStackController cardStack)
+    {
+        if (selectedStack != null && selectedStack != cardStack)
+        {
+            selectedStack.SetSelected(false);
+        }
+
+        if (selectedStack == cardStack)
+        {
+            selectedStack = null;
+            reserveCard.SetActive(false);
+        }
+        else
+        {
+            selectedStack = cardStack;
+            selectedStack.SetSelected(true);
+            reserveCard.SetActive(true);
         }
     }
 
@@ -198,8 +253,54 @@ public class GameController : MonoBehaviour
         CardController cardController = card.GetComponent<CardController>();
         if (cardController != null)
         {
+            if(selectedStack != null)
+            {
+                selectedStack.SetSelected(false);
+                selectedStack = null;
+            }
             Debug.Log("card price:  " + cardController.detailedPrice.ToString());
             SelectCard(cardController);
+        }
+    }
+
+    private void AssignClickListenersToAllCardStacks()
+    {
+        Transform visibleCardStacksRoot = board.transform.Find("CardStacks");
+        if (visibleCardStacksRoot == null)
+        {
+            Debug.LogError("visibleCardStacks root not found!");
+            return;
+        }
+
+        foreach (Transform stackTransform in visibleCardStacksRoot)
+        {
+            Debug.Log($"Assigning listeners for stacks: {stackTransform.name}");
+
+            Button button = stackTransform.GetComponent<Button>();
+            if (button == null)
+            {
+                button = stackTransform.gameObject.GetComponent<Button>();
+                button.targetGraphic = stackTransform.GetComponent<Image>();
+            }
+
+            button.onClick.AddListener(() => HandleCardStackClick(stackTransform.gameObject));
+        }
+    }
+
+    private void HandleCardStackClick (GameObject cardStack)
+    {
+        Debug.Log($"Clicked on card: {cardStack.name}");
+        CardStackController cardStackController = cardStack.GetComponent<CardStackController>();
+        if (cardStackController != null)
+        {
+            if (selectedCard != null)
+            {
+                selectedCard.SetSelected(false);
+                selectedCard = null;
+            }
+            buyCard.SetActive(false);
+            if (selectedCard != null)selectedCard.isSelected = false;
+            SelectStack(cardStackController);
         }
     }
 }

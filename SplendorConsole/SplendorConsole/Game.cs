@@ -11,17 +11,20 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Newtonsoft.Json.Linq;
+using static ClosedXML.Excel.XLPredefinedFormat;
 using static SplendorConsole.WebserviceClient;
 
 namespace SplendorConsole
 {
-    internal class Game
+    public class Game
     {
         private int currentTurn = 0;
         private AvailableCards availableCards = new AvailableCards();
+        private AvailableNobles availableNobles = new AvailableNobles();
 
         private static List<Card> level1Shuffled = new List<Card>();
         private static List<Card> level2Shuffled = new List<Card>();
@@ -55,9 +58,10 @@ namespace SplendorConsole
         {
 
             availableCards.LoadCardsFromExcel();
+            availableNobles.LoadNoblesFromExcel();
             Random random = new Random();
             listOfPlayers = SetNumberOfPlayers();
-            listOfNobles = SetNumberOfNobles(listOfPlayers.Count);
+            listOfNobles = SetNumberOfNobles(listOfPlayers.Count);    
 
             level1Shuffled = Shuffling(availableCards.level1Cards, random);
             level2Shuffled = Shuffling(availableCards.level2Cards, random);
@@ -85,35 +89,13 @@ namespace SplendorConsole
         {
             int numberOfNobles = numberOfPlayers + 1;
             List<Noble> nobles = new List<Noble>();
+            List<Noble> allNobles = ShuffledNobles(availableNobles.noblesList);
 
-            Resources firstResources = new Resources();
-            firstResources.AddResource(GemColor.WHITE);
-            firstResources.AddResource(GemColor.RED);
-            firstResources.AddResource(GemColor.BLUE);
-            nobles.Add(new Noble(3, firstResources));
-
-            Resources secondResources = new Resources();
-            secondResources.AddResource(GemColor.WHITE);
-            secondResources.AddResource(GemColor.BLUE);
-            nobles.Add(new Noble(3, secondResources));
-
-            Resources thirdResources = new Resources();
-            thirdResources.AddResource(GemColor.BLACK);
-            thirdResources.AddResource(GemColor.GREEN);
-            nobles.Add(new Noble(3, thirdResources));
-
-            Resources fourthResources = new Resources();
-            fourthResources.AddResource(GemColor.BLACK);
-            fourthResources.AddResource(GemColor.BLUE);
-            fourthResources.AddResource(GemColor.GREEN);
-            nobles.Add(new Noble(3, fourthResources));
-
-            Resources fifthResources = new Resources();
-            fifthResources.AddResource(GemColor.WHITE);
-            fifthResources.AddResource(GemColor.WHITE);
-            fifthResources.AddResource(GemColor.WHITE);
-            nobles.Add(new Noble(3, fifthResources));
-            return nobles;
+            for(int i = 0; i < numberOfNobles; i++)
+            {
+                nobles.Add(allNobles[i]);
+            }           
+            return nobles;   
         }
 
 
@@ -340,7 +322,7 @@ namespace SplendorConsole
         }
 
 
-        private void Pass()
+        internal void Pass()
         {
             return;
         }
@@ -592,7 +574,7 @@ namespace SplendorConsole
             return playerTokens;
         }
 
-        private int NumberOfPlayerTokens()
+        internal int NumberOfPlayerTokens()
         {
             int counter = 0;
             foreach (KeyValuePair<GemColor, int> token in listOfPlayers[currentTurn].Resources.gems)
@@ -623,6 +605,21 @@ namespace SplendorConsole
                 int j = random.Next(i + 1);
 
                 Card temporary = deck[i];
+                deck[i] = deck[j];
+                deck[j] = temporary;
+            }
+            return deck;
+        }
+
+        private List<Noble> ShuffledNobles(List<Noble> deck)
+        {
+            System.Random random = new System.Random();
+
+            for (int i = deck.Count - 1; i > 0; i--)
+            {
+                int j = random.Next(i + 1);
+
+                Noble temporary = deck[i];
                 deck[i] = deck[j];
                 deck[j] = temporary;
             }
@@ -905,18 +902,21 @@ namespace SplendorConsole
             return choice;
         }
         public bool WantToSpendGoldCoin()
-        {
-            int wantTo;
+        {     
             while (true)
             {
-                wantTo = Convert.ToInt32(Console.ReadLine());
-                if (wantTo == 2)
-                    return false;
-                else if (wantTo == 1)
-                    return true;
-                else
-                    Console.WriteLine("Podano zły klawisz. Podaj 1 lub 2");
-            }
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out int wantTo))
+                {
+                    if (wantTo == 2)
+                        return false;
+                    else if (wantTo == 1)
+                        return true;
+                }
+                else Console.WriteLine("Podano zły klawisz. Podaj poprawną liczbę (1 lub 2).");
+            }                   
+            
         }
         public bool BuyCardAction(Board board, Bank bank, Player player)
         {
@@ -1085,7 +1085,7 @@ namespace SplendorConsole
             return true;
         }
 
-        private void RefillBankResources(Bank bank, Card card, Dictionary<GemColor, int> resourcesUsed)
+        internal void RefillBankResources(Bank bank, Card card, Dictionary<GemColor, int> resourcesUsed)
         {
             foreach (var gemCost in card.DetailedPrice.gems)
             {
