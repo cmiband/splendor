@@ -126,6 +126,7 @@ public class GameController : MonoBehaviour
 
         int targetedPlayerId = this.currentPlayerId;
         Debug.Log("new player id   " + targetedPlayerId);
+
         foreach (GameObject player in this.players)
         {
             PlayerController playerController = player.GetComponent<PlayerController>();
