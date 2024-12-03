@@ -24,6 +24,7 @@ namespace SplendorConsole
     {
         private int currentTurn = 0;
         private AvailableCards availableCards = new AvailableCards();
+        private AvailableNobles availableNobles = new AvailableNobles();
 
         private static List<Card> level1Shuffled = new List<Card>();
         private static List<Card> level2Shuffled = new List<Card>();
