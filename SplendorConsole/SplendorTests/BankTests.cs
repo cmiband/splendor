@@ -32,15 +32,15 @@ namespace SplendorTests
         public void AddResources_ShouldAdd()
         {
             
-            var Bank = new Bank();
-            Bank.resources.gems[GemColor.BLUE] = 3;
+            var bank = new Bank();
+            bank.resources.gems[GemColor.BLUE] = 3;
 
             
             int add = 4;
-            Bank.AddResources(add, GemColor.BLUE);
+            bank.AddResources(add, GemColor.BLUE);
 
             
-            Assert.That(Bank.resources.gems[GemColor.BLUE], Is.EqualTo(3+add));     
+            Assert.That(bank.resources.gems[GemColor.BLUE], Is.EqualTo(3+add));     
         }
 
         [Test]
