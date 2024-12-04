@@ -72,8 +72,6 @@ przepych/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
 przepych/[Aa]ssets/[Ss]treamingAssets/aa.meta
 przepych/[Aa]ssets/[Ss]treamingAssets/aa/*
 
-# End of https://www.toptal.com/developers/gitignore/api/unity
-
 przepych/Temp/
 przepych/obj/
 przepych/Logs/
