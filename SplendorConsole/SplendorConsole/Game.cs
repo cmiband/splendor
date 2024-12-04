@@ -18,7 +18,7 @@ using static SplendorConsole.WebserviceClient;
 
 namespace SplendorConsole
 {
-    internal class Game
+    public class Game
     {
         private int currentTurn = 0;
         private AvailableCards availableCards = new AvailableCards();
@@ -26,15 +26,15 @@ namespace SplendorConsole
         private static List<Card> level1Shuffled = new List<Card>();
         private static List<Card> level2Shuffled = new List<Card>();
         private static List<Card> level3Shuffled = new List<Card>();
-        private Bank bank = new Bank();
-        private Board board;
+        public Bank bank = new Bank();
+        public Board? board;
 
 
         private static List<Card> level1VisibleCards = new List<Card>();
         private static List<Card> level2VisibleCards = new List<Card>();
         private static List<Card> level3VisibleCards = new List<Card>();
 
-        private List<Player> listOfPlayers = new List<Player>();
+        public List<Player> listOfPlayers = new List<Player>();
         private static List<Noble> listOfNobles = new List<Noble>();
         public static List<Noble> ListOfNobles
         {
@@ -81,7 +81,7 @@ namespace SplendorConsole
         }
 
 
-        private List<Noble> SetNumberOfNobles(int numberOfPlayers)
+        public List<Noble> SetNumberOfNobles(int numberOfPlayers)
         {
             int numberOfNobles = numberOfPlayers + 1;
             List<Noble> nobles = new List<Noble>();
@@ -117,7 +117,7 @@ namespace SplendorConsole
         }
 
 
-        private List<Player> SetNumberOfPlayers()
+        public List<Player> SetNumberOfPlayers()
         {
             List<Player> players = new List<Player>();
 
@@ -130,7 +130,7 @@ namespace SplendorConsole
         }
 
 
-        private void AddResourcesToBank(Bank bank, int numberOfPlayers)
+        public void AddResourcesToBank(Bank bank, int numberOfPlayers)
         {
 
             foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
@@ -141,7 +141,7 @@ namespace SplendorConsole
             bank.resources.gems.Add(GemColor.GOLDEN, 5);
         }
 
-        private void GameLoop(int numberOfPlayers)
+        public void GameLoop(int numberOfPlayers)
         {
             bool gameInProgress = true;
             while (gameInProgress)
@@ -211,7 +211,7 @@ namespace SplendorConsole
             }
             Console.WriteLine("Koniec gry :)");
         }
-        private Player? MoreThan1Winner(List<Player> winners)
+        public Player? MoreThan1Winner(List<Player> winners)
         {
             int minimum = 100;
             int playerIndex = 0;
@@ -234,19 +234,19 @@ namespace SplendorConsole
 
             return null;
         }
-        bool CheckIfWinner(Player player)
+        public bool CheckIfWinner(Player player)
         {
             player.PointsCounter();
             if (player.Points >= 15) return true;
             else return false;
         }
 
-        private void Turn(Player player)
+        public void Turn(Player player)
         {
             ChoiceOfAction(player);
         }
 
-        private void ChoiceOfAction(Player player)
+        public void ChoiceOfAction(Player player)
         {
             int input;
             bool actionSuccess;
@@ -340,12 +340,12 @@ namespace SplendorConsole
         }
 
 
-        private void Pass()
+        public void Pass()
         {
             return;
         }
 
-        private bool TakeThreeDifferentGems(Player player)
+        public bool TakeThreeDifferentGems(Player player)
         {
             bool hasSufficientGems = false;
             int counter = 0;
@@ -416,7 +416,7 @@ namespace SplendorConsole
             return true;
         }
 
-        private bool TakeTwoSameGems(Player player)
+        public bool TakeTwoSameGems(Player player)
         {
             bool hasSufficientGems = false;
             foreach (var gem in bank.resources.gems)
@@ -453,7 +453,7 @@ namespace SplendorConsole
             return true;
         }
 
-        private void ChoiceOfColorWithdraw(int tokenNumber)
+        public void ChoiceOfColorWithdraw(int tokenNumber)
         {
             int i = 1;
             List<GemColor> recources = new List<GemColor>();
@@ -484,7 +484,7 @@ namespace SplendorConsole
 
         }
 
-        private GemColor ChoiceOfColor()
+        public GemColor ChoiceOfColor()
         {
             List<GemColor> availableTokens = ShowAvaiableTokens();
             GemColor color;
@@ -516,7 +516,7 @@ namespace SplendorConsole
         }
 
 
-        private GemColor[] ChoiceOfColors(int numberOfColors)
+        public GemColor[] ChoiceOfColors(int numberOfColors)
         {
             List<GemColor> availableTokens = ShowAvaiableTokens();
             GemColor[] colors = new GemColor[3];
@@ -567,7 +567,7 @@ namespace SplendorConsole
         }
 
 
-        private List<GemColor> ShowAvaiableTokens()
+        public List<GemColor> ShowAvaiableTokens()
         {
             List<GemColor> avaiableTokens = new List<GemColor>();
 
@@ -581,7 +581,7 @@ namespace SplendorConsole
             return avaiableTokens;
         }
 
-        private List<GemColor> ShowPlayerTokens()
+        public List<GemColor> ShowPlayerTokens()
         {
             List<GemColor> playerTokens = new List<GemColor>();
 
@@ -592,7 +592,7 @@ namespace SplendorConsole
             return playerTokens;
         }
 
-        private int NumberOfPlayerTokens()
+        public int NumberOfPlayerTokens()
         {
             int counter = 0;
             foreach (KeyValuePair<GemColor, int> token in listOfPlayers[currentTurn].Resources.gems)
@@ -602,7 +602,7 @@ namespace SplendorConsole
             return counter;
         }
 
-        private void SetVisibleCards()
+        public void SetVisibleCards()
         {
             for (int i = 0; i < 4; i++)
             {
@@ -616,7 +616,7 @@ namespace SplendorConsole
             }
         }
 
-        private List<Card> Shuffling(List<Card> deck, Random random)
+        public List<Card> Shuffling(List<Card> deck, Random random)
         {
             for (int i = deck.Count - 1; i > 0; i--)
             {
@@ -629,7 +629,7 @@ namespace SplendorConsole
             return deck;
         }
 
-        private bool ReserveCard(Player player)
+        public bool ReserveCard(Player player)
         {
             if (player.ReservedCardsCounter >= 3)
             {
@@ -718,7 +718,7 @@ namespace SplendorConsole
             }
             return true;
         }
-        private Card[] VisibleCardsOnTable(int cardlevel)
+        public Card[] VisibleCardsOnTable(int cardlevel)
         {
             Card[] cardsOnTable = new Card[4];
             for (int i = 0; i < cardsOnTable.Length; i++)
@@ -745,7 +745,7 @@ namespace SplendorConsole
             return cardsOnTable;
         }
 
-        private string Price(Card card)
+        public string Price(Card card)
         {
             string price = "";
             foreach (KeyValuePair<GemColor, int> tokens in card.DetailedPrice)
@@ -1085,7 +1085,7 @@ namespace SplendorConsole
             return true;
         }
 
-        private void RefillBankResources(Bank bank, Card card, Dictionary<GemColor, int> resourcesUsed)
+        public void RefillBankResources(Bank bank, Card card, Dictionary<GemColor, int> resourcesUsed)
         {
             foreach (var gemCost in card.DetailedPrice.gems)
             {

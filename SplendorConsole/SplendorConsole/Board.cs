@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SplendorConsole
 {
-    internal class Board
+    public class Board
     {
         private List<Noble> VisibleNobles = new List<Noble>();
         public List<Noble> VisibleNobles2
