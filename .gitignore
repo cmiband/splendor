@@ -78,4 +78,10 @@ przepych/Logs/
 przepych/Library/Bee/
 przepych/UserSettings/
 
-SplendorConsole/SplendorConsole/obj
+SplendorConsole/SplendorConsole/obj/
+SplendorConsole/SplendorConsole/obj/Debug/net6.0/
+
+SplendorTests/bin/
+SplendorTests/obj/
+
+*.nuget.cache
