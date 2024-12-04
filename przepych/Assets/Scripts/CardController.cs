@@ -13,6 +13,9 @@ public class CardController : MonoBehaviour
     public string illustration;
     public bool isSelected;
     private Image selectedCardImage;
+    public bool isReserved;
+
+    public string priceInfo = "";
 
     public int Points => points;
 
@@ -29,6 +32,8 @@ public class CardController : MonoBehaviour
         this.bonusColor = bonusColor;
         this.points = points;
         this.illustration = illustration;
+
+        this.priceInfo = "Price: " + detailedPrice.ToString();
     }
 
     private void Start()
@@ -38,6 +43,8 @@ public class CardController : MonoBehaviour
         {
             Debug.LogWarning("Nie znaleziono komponentu Image na karcie! Upewnij się, że karta ma komponent Image.");
         }
+
+        this.priceInfo = "Price: " +this.detailedPrice.ToString();
     }
 
     public override bool Equals(object obj)

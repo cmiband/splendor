@@ -107,7 +107,7 @@ namespace SplendorConsole
         }
         public void PassTurn()
         {
-            throw new NotImplementedException();
+            return;
         }
         public void GetNoble(Noble noble)
         {

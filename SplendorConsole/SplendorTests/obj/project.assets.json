@@ -1013,19 +1013,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\HARDPC\\.nuget\\packages\\": {}
+    "C:\\Users\\User\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\HARDPC\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorTests\\SplendorTests.csproj",
+      "projectUniqueName": "C:\\Users\\User\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorTests\\SplendorTests.csproj",
       "projectName": "SplendorTests",
-      "projectPath": "C:\\Users\\HARDPC\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorTests\\SplendorTests.csproj",
-      "packagesPath": "C:\\Users\\HARDPC\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\HARDPC\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorTests\\obj\\",
+      "projectPath": "C:\\Users\\User\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorTests\\SplendorTests.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\User\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorTests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\HARDPC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1039,8 +1039,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\HARDPC\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorConsole\\SplendorConsole.csproj": {
-              "projectPath": "C:\\Users\\HARDPC\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorConsole\\SplendorConsole.csproj"
+            "C:\\Users\\User\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorConsole\\SplendorConsole.csproj": {
+              "projectPath": "C:\\Users\\User\\Documents\\GitHub\\splendor\\SplendorConsole\\SplendorConsole\\SplendorConsole.csproj"
             }
           }
         }
@@ -1049,6 +1049,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -1084,7 +1089,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

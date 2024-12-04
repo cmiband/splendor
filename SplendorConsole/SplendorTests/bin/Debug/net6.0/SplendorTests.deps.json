@@ -380,13 +380,13 @@
       "SplendorConsole/1.0.0": {
         "dependencies": {
           "ClosedXML": "0.104.1",
-          "Microsoft.NET.Test.Sdk": "17.11.1",
-          "NUnit": "4.2.2",
-          "NUnit3TestAdapter": "4.6.0",
           "Newtonsoft.Json": "13.0.3"
         },
         "runtime": {
-          "SplendorConsole.dll": {}
+          "SplendorConsole.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }
