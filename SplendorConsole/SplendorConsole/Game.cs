@@ -23,20 +23,17 @@ namespace SplendorConsole
         private Bank bank = new Bank();
         private Board board;
 
+        public static List<Card> level1VisibleCards = new List<Card>();
+        public static List<Card> level2VisibleCards = new List<Card>();
+        public static List<Card> level3VisibleCards = new List<Card>();
 
-        private static List<Card> level1VisibleCards = new List<Card>();
-        private static List<Card> level2VisibleCards = new List<Card>();
-        private static List<Card> level3VisibleCards = new List<Card>();
-
-        private List<Player> listOfPlayers = new List<Player>();
+        public List<Player> listOfPlayers = new List<Player>();
         private static List<Noble> listOfNobles = new List<Noble>();
         public static List<Noble> ListOfNobles
         {
             get => listOfNobles;
             set => listOfNobles = value;
         }
-
-
 
         public Bank Bank
         {

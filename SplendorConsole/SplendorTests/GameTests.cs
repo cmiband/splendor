@@ -31,12 +31,14 @@ namespace SplendorTests
         [Test]
         public void NumberOfPlayerTokens_ShouldReturnTrue()
         {
-            var player = new Player();
             var game = new Game();
+            var player = new Player();
 
             player.Resources.gems.Add(GemColor.WHITE, 3);
             player.Resources.gems.Add(GemColor.BLUE, 2);
             player.Resources.gems.Add(GemColor.RED, 1);
+
+            game.listOfPlayers.Add(player);
 
             var result = game.NumberOfPlayerTokens();
             var sum = player.Resources.gems.Values.Sum();
@@ -55,17 +57,19 @@ namespace SplendorTests
             res2.gems[GemColor.WHITE] = 3;
 
 
-            var level1Cards = new[]
+            List<Card> level1Cards = new List<Card>
             {
               new Card(1, GemColor.RED, 2, "Zaba", res1),
               new Card(1, GemColor.WHITE, 2, "Dzik", res2),
+              new Card(1, GemColor.WHITE, 3, "Wito", res2),
+              new Card(1, GemColor.WHITE, 1, "Bobo", res1),
             };
 
-            game.SetVisibleCards();
+            Game.level1VisibleCards = level1Cards;
 
             var result = game.VisibleCardsOnTable(1);
 
-            Assert.That(2.Equals(result.Length), Is.True); 
+            Assert.That(4.Equals(result.Length), Is.True); 
             Assert.That(level1Cards[0].Equals(result[0]),Is.True); 
             Assert.That(level1Cards[1].Equals(result[1]), Is.True);
 
