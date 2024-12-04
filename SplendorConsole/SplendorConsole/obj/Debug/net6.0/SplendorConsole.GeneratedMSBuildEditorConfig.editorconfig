@@ -8,6 +8,10 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = SplendorConsole
+<<<<<<< HEAD
+build_property.ProjectDir = C:\Users\User\Documents\GitHub\splendor\SplendorConsole\SplendorConsole\
+=======
 build_property.ProjectDir = C:\splendor\SplendorConsole\SplendorConsole\
+>>>>>>> release2.0
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

@@ -32,12 +32,11 @@ namespace SplendorConsole
         private Bank bank = new Bank();
         private Board board;
 
+        public static List<Card> level1VisibleCards = new List<Card>();
+        public static List<Card> level2VisibleCards = new List<Card>();
+        public static List<Card> level3VisibleCards = new List<Card>();
 
-        private static List<Card> level1VisibleCards = new List<Card>();
-        private static List<Card> level2VisibleCards = new List<Card>();
-        private static List<Card> level3VisibleCards = new List<Card>();
-
-        private List<Player> listOfPlayers = new List<Player>();
+        public List<Player> listOfPlayers = new List<Player>();
         private static List<Noble> listOfNobles = new List<Noble>();
         public static List<Noble> ListOfNobles
         {
@@ -112,7 +111,7 @@ namespace SplendorConsole
         }
 
 
-        private void AddResourcesToBank(Bank bank, int numberOfPlayers)
+        public void AddResourcesToBank(Bank bank, int numberOfPlayers)
         {
 
             foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
@@ -398,7 +397,7 @@ namespace SplendorConsole
             return true;
         }
 
-        private bool TakeTwoSameGems(Player player)
+        public bool TakeTwoSameGems(Player player)
         {
             bool hasSufficientGems = false;
             foreach (var gem in bank.resources.gems)
@@ -466,7 +465,7 @@ namespace SplendorConsole
 
         }
 
-        private GemColor ChoiceOfColor()
+        public GemColor ChoiceOfColor()
         {
             List<GemColor> availableTokens = ShowAvaiableTokens();
             GemColor color;
@@ -549,7 +548,7 @@ namespace SplendorConsole
         }
 
 
-        private List<GemColor> ShowAvaiableTokens()
+        public List<GemColor> ShowAvaiableTokens()
         {
             List<GemColor> avaiableTokens = new List<GemColor>();
 
@@ -574,7 +573,7 @@ namespace SplendorConsole
             return playerTokens;
         }
 
-        internal int NumberOfPlayerTokens()
+        public int NumberOfPlayerTokens()
         {
             int counter = 0;
             foreach (KeyValuePair<GemColor, int> token in listOfPlayers[currentTurn].Resources.gems)
@@ -584,7 +583,7 @@ namespace SplendorConsole
             return counter;
         }
 
-        private void SetVisibleCards()
+        public void SetVisibleCards()
         {
             for (int i = 0; i < 4; i++)
             {
@@ -715,7 +714,7 @@ namespace SplendorConsole
             }
             return true;
         }
-        private Card[] VisibleCardsOnTable(int cardlevel)
+        public Card[] VisibleCardsOnTable(int cardlevel)
         {
             Card[] cardsOnTable = new Card[4];
             for (int i = 0; i < cardsOnTable.Length; i++)
