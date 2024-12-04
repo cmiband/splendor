@@ -127,8 +127,7 @@ public class BoardController : MonoBehaviour
 
     private void CreateNobleObject(NobleController targetedNoble, GameObject targetedVisibleNoblesContainer, float xOffset)
     {
-        Vector3 noblePosition = new Vector3 (400 + xOffset, 480, 0);
-        targetedVisibleNoblesContainer.transform.position = new Vector3(0,0,0);
+        Vector3 noblePosition = new Vector3 (targetedVisibleNoblesContainer.transform.position.x + xOffset, targetedVisibleNoblesContainer.transform.position.y, targetedVisibleNoblesContainer.transform.position.z);
         GameObject nobleObject = Instantiate(this.noblePrefab, noblePosition, Quaternion.identity, targetedVisibleNoblesContainer.transform);
         NobleController nobleController = nobleObject.GetComponent<NobleController>();
         nobleController.InitNobleData(targetedNoble);
