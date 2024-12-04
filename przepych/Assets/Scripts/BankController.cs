@@ -8,23 +8,24 @@ using UnityEngine;
 public class BankController : MonoBehaviour
 {
     public List<GemColor> gemsBeingChosen = new List<GemColor>();
+    public List<GemColor> gemsBeingReturned = new List<GemColor>();
     public bool isPlayerTakingThreeGems;
     public GameObject currentPlayer;
     public PlayerController playerController;
     public ResourcesController resourcesController = new ResourcesController();
     public List<GemStashController> gemStashes = new List<GemStashController>();
 
-    public bool areGemsTaken;
     void Start()
     {
         playerController = currentPlayer.GetComponent<PlayerController>();
         isPlayerTakingThreeGems = false;
-        areGemsTaken = false;
         Debug.Log(resourcesController.gems.Count);
-        foreach (var item in resourcesController.gems)
+        foreach (var item in resourcesController.gems.ToList())
         {
-            if (item.Key != GemColor.GOLDEN) resourcesController.gems[item.Key] = 7;
-            else resourcesController.gems[item.Key] = 5;
+            if (item.Key != GemColor.GOLDEN)
+                resourcesController.gems[item.Key] = 7;
+            else
+                resourcesController.gems[item.Key] = 5;
         }
     }
 
@@ -41,7 +42,6 @@ public class BankController : MonoBehaviour
             }
         }
         playerController.TakeThreeTokens(gemsBeingChosen);
-        areGemsTaken = true;
         gemsBeingChosen.Clear();
         isPlayerTakingThreeGems = false;
 
@@ -50,12 +50,26 @@ public class BankController : MonoBehaviour
     public void TwoGemsTaken()
     {
         resourcesController.gems[gemsBeingChosen[0]] -= 2;
-        areGemsTaken = true;
         playerController.TakeTwoTokens(gemsBeingChosen[0]);
 
         gemsBeingChosen.Clear(); 
     }
 
+    public void GoldenGemTaken()
+    {
+        resourcesController.gems[GemColor.GOLDEN] -= 1;
+        playerController.TakeGoldenGem();
+    }
+    public void AddGems()
+    {
+        foreach (GemColor gemColor in gemsBeingReturned)
+        {
+            this.resourcesController.gems[gemColor] += 1;
+            GemStashController MatchingStash = gemStashes.Find(byColor => byColor.color == gemColor);
+            MatchingStash.amountOfGems += 1;
+        }
+        gemsBeingReturned.Clear();
+    }
     public void AddGoldengem()
     {
         this.resourcesController.gems[GemColor.GOLDEN] += 1;
