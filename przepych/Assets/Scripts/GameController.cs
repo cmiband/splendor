@@ -114,7 +114,7 @@ public class GameController : MonoBehaviour
         PlayerController targetedPlayerController = targetedPlayer.GetComponent<PlayerController>();
         targetedPlayerController.SetPlayerHand(this.playerIdToHand[targetedPlayerIndex]);
         targetedPlayerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerIndex]);
-        targetedPlayerController.SetPlayerResources(this.playerIdToResources[targetedPlayerIndex]);
+        targetedPlayerController.SetPlayerResources(this.playerIdToResources[targetedPlayerIndex], SumGems(playerIdToResources[targetedPlayerIndex].gems));
     }
 
     private void HandleOpenBoughtCards()
@@ -163,7 +163,7 @@ public class GameController : MonoBehaviour
             playerController.SetPlayerId(targetedPlayerId);
             playerController.SetPlayerHand(this.playerIdToHand[targetedPlayerId]);
             playerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerId]);
-            playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId]);
+            playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId], SumGems(playerIdToResources[targetedPlayerId].gems));
             targetedPlayerId = (targetedPlayerId + 1) % 4;
         }
         reservedCardController.UpdateReservedCards(this.currentPlayerId);
@@ -173,10 +173,21 @@ public class GameController : MonoBehaviour
         reserveCard.SetActive(false);
     }
 
+    private int SumGems(Dictionary<GemColor, int> gems)
+    {
+        int sum = 0;
+        foreach (var gem in gems.Values)
+        {
+            sum += gem;
+        }
+        return sum;
+    }
+
     public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources)
     {
         this.playerIdToResources[playerId] = resources;
     }
+
 
     public void SelectCard(CardController card)
     {

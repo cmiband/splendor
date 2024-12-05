@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public GameController mainGameController;
     public BankController bankController;
     public string resourcesInfo = "";
+    public int amountOfGemsCombined;
 
     public Dictionary<GemColor, GameObject> gemColorToResourceGameObject = new Dictionary<GemColor, GameObject>();
     public GameObject whiteGems;
@@ -268,6 +269,7 @@ public class PlayerController : MonoBehaviour
             {
                 this.resources.gems.Add(colors[i], 1);
             }
+            
         }
 
         this.ConfirmPlayerMove();
@@ -285,6 +287,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
     private void UpdatePlayersResources()
     {
         this.mainGameController.UpdateTargetedPlayerResources(this.playerId, this.resources);
@@ -294,8 +297,10 @@ public class PlayerController : MonoBehaviour
     {
         this.UpdatePlayersResources();
 
+
         this.mainGameController.ChangeTurn();
     }
+
 
     public void SetPlayerHand(List<CardController> cards)
     {
@@ -307,9 +312,11 @@ public class PlayerController : MonoBehaviour
         this.handReserved = cards;
     }
 
-    public void SetPlayerResources(ResourcesController resources)
+    public void SetPlayerResources(ResourcesController resources, int amountOfGemsCombined)
     {
         this.resources = resources;
+
+        this.amountOfGemsCombined = amountOfGemsCombined;
 
         this.resourcesInfo = this.resources.ToString();
 
