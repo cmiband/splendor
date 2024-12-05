@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public GameObject blackGems;
     public GameObject blueGems;
     public GameObject goldGems;
+    public GameObject dropText;
 
     private ResourcesController resources = new ResourcesController();
     private ResourcesController bonusResources = new ResourcesController();
@@ -254,7 +255,6 @@ public class PlayerController : MonoBehaviour
         {
             this.resources.gems.Add(color, 2);
         }
-
         this.ConfirmPlayerMove();
     }
     public void TakeThreeTokens(List<GemColor> colors)
@@ -287,19 +287,89 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
+    private void SumGems()
+    {
+        this.amountOfGemsCombined = 0;
+        foreach (var gemCount in this.resources.gems.Values)
+        {
+            this.amountOfGemsCombined += gemCount;
+        }
+    }
     private void UpdatePlayersResources()
     {
-        this.mainGameController.UpdateTargetedPlayerResources(this.playerId, this.resources);
+        this.mainGameController.UpdateTargetedPlayerResources(this.playerId, this.resources, this.amountOfGemsCombined);
     }
 
     private void ConfirmPlayerMove()
     {
+        Debug.Log(amountOfGemsCombined);
+        if (amountOfGemsCombined > 10) Debug.Log("kurwa");
         this.UpdatePlayersResources();
-
-
         this.mainGameController.ChangeTurn();
     }
+
+
+    /*private void DropGems()
+    {
+        foreach (var gemPair in gemColorToResourceGameObject)
+        {
+            GameObject gemInfoObject = gemPair.Value;
+            PlayerGemInfoController gemInfoController = gemInfoObject.GetComponent<PlayerGemInfoController>();
+
+            if (gemInfoController != null)
+            {
+                Button button = gemInfoObject.GetComponent<Button>();
+                if (button != null)
+                {
+                    button.interactable = true; 
+                    button.onClick.RemoveAllListeners();
+                    button.onClick.AddListener(() =>
+                    {
+                        gemInfoController.amountOfGems -= 1; 
+                        ReturnGemToBank(gemPair.Key); 
+                        gemInfoController.SetAmountOfGems(gemInfoController.amountOfGems);
+                        amountOfGemsCombined--;
+
+                        
+                        if (amountOfGemsCombined <= 10)
+                        {
+                            FinishGemDrop();
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    private void FinishGemDrop()
+    {
+        
+        foreach (var gemPair in gemColorToResourceGameObject)
+        {
+            GameObject gemInfoObject = gemPair.Value;
+            UnityEngine.UI.Button button = gemInfoObject.GetComponent<UnityEngine.UI.Button>();
+            if (button != null)
+            {
+                button.interactable = false; // Dezaktywuj przyciski
+            }
+        }
+
+        this.dropText.SetActive(false); // Ukryj tekst o nadmiarze gemów
+        this.UpdatePlayersResources();
+        this.mainGameController.ChangeTurn(); // Pozwól na zmianę tury
+    }*/
+
+    public void ReturnGemToBank(GemColor color)
+    {
+        this.bankController.resourcesController.gems[color] += 1;
+
+        GemStashController stash = bankController.gemStashes.Find(s => s.color == color);
+        if (stash != null)
+        {
+            stash.amountOfGems += 1;
+        }
+    }
+
 
 
     public void SetPlayerHand(List<CardController> cards)
@@ -312,15 +382,16 @@ public class PlayerController : MonoBehaviour
         this.handReserved = cards;
     }
 
-    public void SetPlayerResources(ResourcesController resources, int amountOfGemsCombined)
+    public void SetPlayerResources(ResourcesController resources)
     {
-        this.resources = resources;
+        SumGems();
 
-        this.amountOfGemsCombined = amountOfGemsCombined;
+        this.resources = resources;
 
         this.resourcesInfo = this.resources.ToString();
 
         this.SetGemInfo(this.resources);
+
     }
 
     public List<CardController> GetPlayerHand()

@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     public Dictionary<int, List<CardController>> playerIdToHand = new Dictionary<int, List<CardController>>();
     public Dictionary<int, List<CardController>> playerIdToReserveHand = new Dictionary<int, List<CardController>>();
     public Dictionary<int, ResourcesController> playerIdToResources = new Dictionary<int, ResourcesController>();
+    public Dictionary<int, int> playerIdToAmountOfGems = new Dictionary<int, int>();
     public int currentPlayerId;
 
     public List<GameObject> players;
@@ -98,6 +99,7 @@ public class GameController : MonoBehaviour
             this.playerIdToHand.Add(i, initHand);
             this.playerIdToReserveHand.Add(i, initReservedHand);
             this.playerIdToResources.Add(i, initResources);
+            this.playerIdToAmountOfGems.Add(i, 0);
         }
     }
 
@@ -114,7 +116,7 @@ public class GameController : MonoBehaviour
         PlayerController targetedPlayerController = targetedPlayer.GetComponent<PlayerController>();
         targetedPlayerController.SetPlayerHand(this.playerIdToHand[targetedPlayerIndex]);
         targetedPlayerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerIndex]);
-        targetedPlayerController.SetPlayerResources(this.playerIdToResources[targetedPlayerIndex], SumGems(playerIdToResources[targetedPlayerIndex].gems));
+        targetedPlayerController.SetPlayerResources(this.playerIdToResources[targetedPlayerIndex]);
     }
 
     private void HandleOpenBoughtCards()
@@ -163,7 +165,7 @@ public class GameController : MonoBehaviour
             playerController.SetPlayerId(targetedPlayerId);
             playerController.SetPlayerHand(this.playerIdToHand[targetedPlayerId]);
             playerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerId]);
-            playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId], SumGems(playerIdToResources[targetedPlayerId].gems));
+            playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId]);
             targetedPlayerId = (targetedPlayerId + 1) % 4;
         }
         reservedCardController.UpdateReservedCards(this.currentPlayerId);
@@ -173,19 +175,10 @@ public class GameController : MonoBehaviour
         reserveCard.SetActive(false);
     }
 
-    private int SumGems(Dictionary<GemColor, int> gems)
-    {
-        int sum = 0;
-        foreach (var gem in gems.Values)
-        {
-            sum += gem;
-        }
-        return sum;
-    }
-
-    public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources)
+    public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources, int amountOfGems)
     {
         this.playerIdToResources[playerId] = resources;
+        this.playerIdToAmountOfGems[playerId] = amountOfGems;
     }
 
 
