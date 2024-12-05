@@ -294,6 +294,7 @@ public class PlayerController : MonoBehaviour
         {
             this.amountOfGemsCombined += gemCount;
         }
+        if (amountOfGemsCombined > 10) Debug.Log("kurwa");
     }
     private void UpdatePlayersResources()
     {
@@ -302,8 +303,6 @@ public class PlayerController : MonoBehaviour
 
     private void ConfirmPlayerMove()
     {
-        Debug.Log(amountOfGemsCombined);
-        if (amountOfGemsCombined > 10) Debug.Log("kurwa");
         this.UpdatePlayersResources();
         this.mainGameController.ChangeTurn();
     }
@@ -384,13 +383,14 @@ public class PlayerController : MonoBehaviour
 
     public void SetPlayerResources(ResourcesController resources)
     {
-        SumGems();
 
         this.resources = resources;
 
         this.resourcesInfo = this.resources.ToString();
 
         this.SetGemInfo(this.resources);
+
+        SumGems();
 
     }
 
