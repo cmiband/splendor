@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerGemInfoController : MonoBehaviour
 {
@@ -12,8 +13,9 @@ public class PlayerGemInfoController : MonoBehaviour
 
     private void Start()
     {
-        UnityEngine.UI.Button openBoughtCardsButton = this.gameObject.GetComponent<UnityEngine.UI.Button>();
-        openBoughtCardsButton.onClick.AddListener(() => OnClick());
+        Button button = this.gameObject.GetComponent<Button>();
+        button.interactable = false;
+        button.onClick.AddListener(() => OnClick());
     }
     public void SetAmountOfGems(int amountOfGems)
     {

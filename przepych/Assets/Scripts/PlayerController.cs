@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public BankController bankController;
     public string resourcesInfo = "";
     public int amountOfGemsCombined;
+    public bool isTooManyGems;
 
     public Dictionary<GemColor, GameObject> gemColorToResourceGameObject = new Dictionary<GemColor, GameObject>();
     public GameObject whiteGems;
@@ -39,6 +40,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        isTooManyGems = false;
         this.hand = new List<CardController>();
         this.mainGameController = this.game.GetComponent<GameController>();
 
@@ -294,22 +296,35 @@ public class PlayerController : MonoBehaviour
         {
             this.amountOfGemsCombined += gemCount;
         }
-        if (amountOfGemsCombined > 10) Debug.Log("kurwa");
+        if (amountOfGemsCombined > 10) isTooManyGems = true;
     }
     private void UpdatePlayersResources()
     {
         this.mainGameController.UpdateTargetedPlayerResources(this.playerId, this.resources, this.amountOfGemsCombined);
     }
 
-    private void ConfirmPlayerMove()
+    public void ConfirmPlayerMove()
     {
+        if (isTooManyGems)
+        {
+            StartCoroutine(DropGemsCoroutine()); // Uruchom korutynę oddawania gemów
+            return;
+        }
+
+        // Jeśli wszystko w porządku, zakończ ruch
         this.UpdatePlayersResources();
         this.mainGameController.ChangeTurn();
     }
 
 
-    /*private void DropGems()
+
+
+    private IEnumerator DropGemsCoroutine()
     {
+        // Pokaż tekst o nadmiarze gemów
+        this.dropText.SetActive(true);
+
+        // Aktywuj przyciski
         foreach (var gemPair in gemColorToResourceGameObject)
         {
             GameObject gemInfoObject = gemPair.Value;
@@ -320,43 +335,47 @@ public class PlayerController : MonoBehaviour
                 Button button = gemInfoObject.GetComponent<Button>();
                 if (button != null)
                 {
-                    button.interactable = true; 
+                    button.interactable = true;
                     button.onClick.RemoveAllListeners();
                     button.onClick.AddListener(() =>
                     {
-                        gemInfoController.amountOfGems -= 1; 
-                        ReturnGemToBank(gemPair.Key); 
+                        gemInfoController.amountOfGems -= 1;
+                        ReturnGemToBank(gemPair.Key);
                         gemInfoController.SetAmountOfGems(gemInfoController.amountOfGems);
                         amountOfGemsCombined--;
 
-                        
-                        if (amountOfGemsCombined <= 10)
-                        {
-                            FinishGemDrop();
-                        }
+                        // Aktualizacja zasobów gracza w trakcie oddawania gemów
+                        this.UpdatePlayersResources();
                     });
                 }
             }
         }
-    }
 
-    private void FinishGemDrop()
-    {
-        
+        // Czekaj, aż gracz odda wszystkie nadmiarowe gemy
+        while (amountOfGemsCombined > 10)
+        {
+            yield return null; // Zaczekaj na następne klatki
+        }
+
+        // Wyłącz przyciski
         foreach (var gemPair in gemColorToResourceGameObject)
         {
             GameObject gemInfoObject = gemPair.Value;
-            UnityEngine.UI.Button button = gemInfoObject.GetComponent<UnityEngine.UI.Button>();
+            Button button = gemInfoObject.GetComponent<Button>();
             if (button != null)
             {
-                button.interactable = false; // Dezaktywuj przyciski
+                button.interactable = false;
             }
         }
 
-        this.dropText.SetActive(false); // Ukryj tekst o nadmiarze gemów
+        // Ukryj tekst o nadmiarze gemów
+        this.dropText.SetActive(false);
+
+        // Aktualizuj zasoby i zakończ turę
         this.UpdatePlayersResources();
-        this.mainGameController.ChangeTurn(); // Pozwól na zmianę tury
-    }*/
+        isTooManyGems = false;
+        this.mainGameController.ChangeTurn();
+    }
 
     public void ReturnGemToBank(GemColor color)
     {
