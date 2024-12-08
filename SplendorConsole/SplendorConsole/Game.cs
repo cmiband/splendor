@@ -72,14 +72,10 @@ namespace SplendorConsole
             SetVisibleCards();
             board = new Board(level1VisibleCards, level2VisibleCards, level3VisibleCards, level1Shuffled, level2Shuffled, level3Shuffled, listOfNobles);
 
-            /* 
-            TE DWIE LINIJKI PRAWDOPODOBNIE BĘDĄ W TYM MIEJSCU, ODPALAJĄ POŁĄCZENIE Z SERWEREM
+            
             client = new WebserviceClient("ws://localhost:8765");
             await client.ConnectToWebsocket();
-
-            PRZYKŁAD JAK UŻYWAĆ METODY RequestMovesListFromServer, przyjmuje ona float'a ale domyślnie jest na zero ustawiony
-            int[] moves = await RequestMovesListFromServer();
-            */
+            
 
             GameLoop(listOfPlayers.Count);
         }
