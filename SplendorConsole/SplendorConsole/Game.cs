@@ -1207,11 +1207,11 @@ namespace SplendorConsole
             return moves;
         }
 
-        async public Task<int> RequestMoveFromServerAndExecuteIt(float feedbackForPreviousMove)
+        async public Task<int> RequestMoveFromServerAndExecuteIt(float feedbackForPreviousMove, Player currentPlayer)
         {
             int[] moves = await RequestMovesListFromServer(feedbackForPreviousMove);
             var validator = new ResponseValidator(); 
-            int numberOfInvalidMoves = validator.CheckMoves(moves, listOfPlayers[currentTurn % 4], this, bank, board);
+            int numberOfInvalidMoves = validator.CheckMoves(moves, currentPlayer, this, bank, board);
             return numberOfInvalidMoves;
         }
     }
