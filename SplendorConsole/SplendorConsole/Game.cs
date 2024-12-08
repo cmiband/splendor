@@ -77,7 +77,7 @@ namespace SplendorConsole
             client = new WebserviceClient("ws://localhost:8765");
             await client.ConnectToWebsocket();
 
-            PRZYKŁAD JAK UŻYWAĆ METODY RequestMovesListFromServer, przyjmuje ona inta ale domyślnie jest na zero ustawiony
+            PRZYKŁAD JAK UŻYWAĆ METODY RequestMovesListFromServer, przyjmuje ona float'a ale domyślnie jest na zero ustawiony
             int[] moves = await RequestMovesListFromServer();
             */
 
@@ -1193,13 +1193,13 @@ namespace SplendorConsole
 
         }
 
-        async public Task<int[]?> RequestMovesListFromServer(int illegalMovesServedLastTurn = 0)
+        async public Task<int[]?> RequestMovesListFromServer(float feedback = 0)
         {
             float[] gameState = Standartize(ToArray());
 
             var request = new
             {
-                IllegalMovesServedLastTurn = illegalMovesServedLastTurn, 
+                Feedback = feedback, 
                 GameState = gameState
             };
 
