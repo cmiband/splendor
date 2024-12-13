@@ -44,61 +44,81 @@ public class PlayerController : MonoBehaviour
         this.bankController = FindObjectOfType<BankController>();
         this.goldenGemStashController = FindObjectOfType<GoldenGemStashController>();
     }
-    
+
 
     public void HandleBuyCard()
     {
-        int cardLevel = mainGameController.selectedCard.level;
-        PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
-        Vector3 vector = mainGameController.selectedCard.transform.position;
-
-        if (!CanAffordCardWithGolden(mainGameController.selectedCard) && !CanAffordCard(mainGameController.selectedCard))
+        if (mainGameController.selectedCard == null)
         {
-            Debug.Log("Nie sta� ci� na t� kart�!");
+            Debug.Log("Nie wybrano żadnej karty do zakupu.");
             return;
         }
 
-        Dictionary<GemColor, int> price = mainGameController.selectedCard.detailedPrice.gems;
-        
-        foreach(KeyValuePair<GemColor,int> keyValue in price)
+        PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
+        CardController selectedCard = mainGameController.selectedCard;
+        Vector3 vector = mainGameController.selectedCard.transform.position;
+
+        if (!player.CanAffordCardWithGolden(selectedCard) && !player.CanAffordCard(selectedCard))
         {
-            Debug.Log(keyValue);
-            if (keyValue.Value == 0) continue;
-            else if (!player.resources.gems.ContainsKey(keyValue.Key))
+            Debug.Log("Nie stać cię na tę kartę.");
+            return;
+        }
+
+        Dictionary<GemColor, int> price = selectedCard.detailedPrice.gems;
+
+        var resourcesUsed = new Dictionary<GemColor, int>();
+        foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
+        {
+            resourcesUsed[color] = 0;
+        }
+
+        foreach (var gemCost in price)
+        {
+            int requiredAmount = gemCost.Value;
+
+            int bonusAmount = player.BonusResources.gems.TryGetValue(gemCost.Key, out var bonus) ? bonus : 0;
+            requiredAmount -= Math.Min(bonusAmount, requiredAmount);
+
+            if (requiredAmount > 0)
             {
-                RemoveGemsOneColor(GemColor.GOLDEN, keyValue.Value);
-                Debug.Log($"Zap�acono z�tym �etonem w ilo�ci {keyValue.Value}");
-                continue;
-            }
-            else if(keyValue.Value > player.resources.gems[keyValue.Key])
-            {
-                int requiredGoldenGems = keyValue.Value - player.resources.gems[keyValue.Key];
-                if (player.resources.gems.ContainsKey(GemColor.GOLDEN))
+                int availableAmount = player.Resources.gems.TryGetValue(gemCost.Key, out var playerAmount) ? playerAmount : 0;
+
+                if (availableAmount >= requiredAmount)
                 {
-                    int goldenAmount = player.resources.gems[GemColor.GOLDEN];
-                    if(goldenAmount >= requiredGoldenGems)
+                    resourcesUsed[gemCost.Key] = requiredAmount;
+                }
+                else
+                {
+                    int deficit = requiredAmount - availableAmount;
+
+                    if (player.Resources.gems.TryGetValue(GemColor.GOLDEN, out var goldenAmount) && goldenAmount >= deficit)
                     {
-                        RemoveGemsOneColor(GemColor.GOLDEN, requiredGoldenGems);
-                        Debug.Log($"Zap�acono z�tym �etonem w ilo�ci {requiredGoldenGems}");
+                        resourcesUsed[gemCost.Key] = availableAmount;
+                        resourcesUsed[GemColor.GOLDEN] = deficit;
                     }
-                    Debug.Log($"Zap�acono normalnym  �etonem w ilo�ci {player.resources.gems[keyValue.Key]}");
-                    RemoveGemsOneColor(keyValue.Key, player.resources.gems[keyValue.Key]);
-                    
-                    continue;
+                    else
+                    {
+                        Debug.Log("Nie masz wystarczających zasobów.");
+                        return;
+                    }
                 }
             }
-            if(keyValue.Key != GemColor.NONE)
+        }
+
+        foreach (var resource in resourcesUsed)
+        {
+            if (resource.Value > 0)
             {
-                RemoveGemsOneColor(keyValue.Key, keyValue.Value);
+                player.Resources.RemoveResource(resource.Key, resource.Value);
             }
         }
-        bankController.AddGems();
 
-        mainGameController.selectedCard.isReserved = false;
+        bankController.AddGems(resourcesUsed);
 
-
-        var copiedCard = CloneCard();
-        player.hand.Add(copiedCard);
+        player.hand.Add(CloneCard());
+        player.BonusResources.AddResource(selectedCard.bonusColor);
+        player.Points += selectedCard.points;
+        int cardLevel = selectedCard.Level;
 
         switch (cardLevel)
         {
@@ -138,6 +158,7 @@ public class PlayerController : MonoBehaviour
 
         mainGameController.ChangeTurn();
     }
+
 
     public void HandleReserveCard()
     {
