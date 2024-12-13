@@ -60,16 +60,26 @@ public class BankController : MonoBehaviour
         resourcesController.gems[GemColor.GOLDEN] -= 1;
         playerController.TakeGoldenGem();
     }
-    public void AddGems()
+    public void AddGems(Dictionary<GemColor, int> resourcesUsed)
     {
-        foreach (GemColor gemColor in gemsBeingReturned)
+        foreach (var resource in resourcesUsed)
         {
-            this.resourcesController.gems[gemColor] += 1;
-            GemStashController MatchingStash = gemStashes.Find(byColor => byColor.color == gemColor);
-            MatchingStash.amountOfGems += 1;
+            if (resource.Value > 0)
+            {
+                this.resourcesController.AddResource(resource.Key, resource.Value);
+                GemStashController matchingStash = gemStashes.Find(byColor => byColor.color == resource.Key);
+                if (matchingStash != null)
+                {
+                    matchingStash.amountOfGems += resource.Value;
+                }
+                else
+                {
+                    Debug.LogWarning($"Brak odpowiedniego GemStashController dla koloru {resource.Key}");
+                }
+            }
         }
-        gemsBeingReturned.Clear();
     }
+
     public void AddGoldengem()
     {
         this.resourcesController.gems[GemColor.GOLDEN] += 1;
