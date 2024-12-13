@@ -455,4 +455,21 @@ public class PlayerController : MonoBehaviour
             bankController.gemsBeingReturned.Add(color);
         }
     }
+    public bool CanGetNoble(GameController game, PlayerController player)
+    {
+        foreach (var noble in game.boardController.visibleNoblesListControllers)
+        {
+            foreach (var bonus in player.BonusResources.gems)
+            {
+                var color = bonus.Key;
+                var amount = bonus.Value;
+                var nobleAmountForColor = noble.detailedPrice.gems[color];
+                if (amount < nobleAmountForColor)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

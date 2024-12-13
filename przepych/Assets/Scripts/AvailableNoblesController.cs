@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 using ClosedXML.Excel;
 using UnityEngine;
 
-    public class AvailableNoblesController : MonoBehaviour
+    public class AvailableNoblesController : MonoBehaviour, IEnumerable<NobleController>
     {
         // Start is called before the first frame update
         void Start()
@@ -46,4 +47,12 @@ using UnityEngine;
                 }
             }
         }
-}
+        public IEnumerator<NobleController> GetEnumerator()
+        {
+            return noblesList.GetEnumerator();
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
