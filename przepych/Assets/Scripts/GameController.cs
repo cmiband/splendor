@@ -13,6 +13,8 @@ public class GameController : MonoBehaviour
     public Dictionary<int, List<CardController>> playerIdToHand = new Dictionary<int, List<CardController>>();
     public Dictionary<int, List<CardController>> playerIdToReserveHand = new Dictionary<int, List<CardController>>();
     public Dictionary<int, ResourcesController> playerIdToResources = new Dictionary<int, ResourcesController>();
+    public Dictionary<int, List<NobleController>> playerIdToNoble = new Dictionary<int, List<NobleController>>();
+
     public int currentPlayerId;
 
     public List<GameObject> players;
@@ -91,6 +93,7 @@ public class GameController : MonoBehaviour
             List<CardController> initHand = new List<CardController>();
             List<CardController> initReservedHand = new List<CardController>();
             ResourcesController initResources = new ResourcesController();
+            List<NobleController> initNobles = new List<NobleController>();
             initResources.FillDictionaryWithZeros();
 
             PlayerController targetedPlayerController = this.players[i].GetComponent<PlayerController>();
@@ -98,6 +101,7 @@ public class GameController : MonoBehaviour
             this.playerIdToHand.Add(i, initHand);
             this.playerIdToReserveHand.Add(i, initReservedHand);
             this.playerIdToResources.Add(i, initResources);
+            this.playerIdToNoble.Add(i, initNobles);
         }
     }
 
@@ -112,10 +116,16 @@ public class GameController : MonoBehaviour
     private void FillPlayerWithData(GameObject targetedPlayer, int targetedPlayerIndex)
     {
         PlayerController targetedPlayerController = targetedPlayer.GetComponent<PlayerController>();
+
+        targetedPlayerController.SetPlayerId(targetedPlayerIndex);
         targetedPlayerController.SetPlayerHand(this.playerIdToHand[targetedPlayerIndex]);
         targetedPlayerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerIndex]);
         targetedPlayerController.SetPlayerResources(this.playerIdToResources[targetedPlayerIndex]);
+
+        if (this.playerIdToNoble.ContainsKey(targetedPlayerIndex))
+            targetedPlayerController.SetPlayerNoble(this.playerIdToNoble[targetedPlayerIndex]);
     }
+
 
     private void HandleOpenBoughtCards()
     {
@@ -157,8 +167,14 @@ public class GameController : MonoBehaviour
         int targetedPlayerId = this.currentPlayerId;
         Debug.Log("new player id   " + targetedPlayerId);
 
-        PlayerController crntplayer = currentPlayer.GetComponent<PlayerController>();
-        var canGetNoble = crntplayer.CanGetNoble(this, crntplayer);
+
+        PlayerController crntPlayerController = currentPlayer.GetComponent<PlayerController>();
+        var availableNoble = crntPlayerController.GetNoble(this, crntPlayerController);
+
+        if (availableNoble is not null)
+        {
+            this.playerIdToNoble[currentPlayerId-1].Add(availableNoble);
+        }
 
         foreach (GameObject player in this.players)
         {
@@ -167,14 +183,19 @@ public class GameController : MonoBehaviour
             playerController.SetPlayerHand(this.playerIdToHand[targetedPlayerId]);
             playerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerId]);
             playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId]);
+
+            if (this.playerIdToNoble.ContainsKey(targetedPlayerId))
+                playerController.SetPlayerNoble(this.playerIdToNoble[targetedPlayerId]);
+
             targetedPlayerId = (targetedPlayerId + 1) % 4;
         }
-        reservedCardController.UpdateReservedCards(this.currentPlayerId);
 
+        reservedCardController.UpdateReservedCards(this.currentPlayerId);
 
         buyCard.SetActive(false);
         reserveCard.SetActive(false);
     }
+
 
     public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources)
     {

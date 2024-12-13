@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Wordprocessing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public GameObject game;
     public GameController mainGameController;
     public BankController bankController;
+    
     public string resourcesInfo = "";
 
     public Dictionary<GemColor, GameObject> gemColorToResourceGameObject = new Dictionary<GemColor, GameObject>();
@@ -32,6 +34,7 @@ public class PlayerController : MonoBehaviour
     public ResourcesController Resources { get => resources; set => resources = value; }
     public List<CardController> hand;
     public List<CardController> handReserved;
+    public List<NobleController> nobleController;
     public int points;
     public int Points { get => points; set => points = value; }
 
@@ -360,7 +363,6 @@ public class PlayerController : MonoBehaviour
     private void SetGemInfo(ResourcesController resources)
     {
 
-
         foreach(KeyValuePair<GemColor, int> val in resources.gems)
         {
             if(val.Key == GemColor.NONE)
@@ -455,21 +457,36 @@ public class PlayerController : MonoBehaviour
             bankController.gemsBeingReturned.Add(color);
         }
     }
-    public bool CanGetNoble(GameController game, PlayerController player)
+    public NobleController GetNoble(GameController game, PlayerController player)
     {
         foreach (var noble in game.boardController.visibleNoblesListControllers)
         {
-            foreach (var bonus in player.BonusResources.gems)
+            bool canGetThisNoble = true;
+
+            if (player.BonusResources.gems.Count == 0)
+                canGetThisNoble = false;
+            else
             {
-                var color = bonus.Key;
-                var amount = bonus.Value;
-                var nobleAmountForColor = noble.detailedPrice.gems[color];
-                if (amount < nobleAmountForColor)
+                foreach (var bonus in player.BonusResources.gems)
                 {
-                    return false;
+                    var color = bonus.Key;
+                    var amount = bonus.Value;
+                    var nobleAmountForColor = noble.detailedPrice.gems[color];
+
+                    if (amount < nobleAmountForColor)
+                    {
+                        canGetThisNoble = false;
+                        break;
+                    }
                 }
             }
+            if (canGetThisNoble)
+                return noble;
         }
-        return true;
+        return null;
+    }
+    public void SetPlayerNoble(List<NobleController> nobles)
+    {
+        this.nobleController = nobles;
     }
 }
