@@ -15,6 +15,8 @@ public class BankController : MonoBehaviour
     public ResourcesController resourcesController = new ResourcesController();
     public List<GemStashController> gemStashes = new List<GemStashController>();
 
+    public string amountOfGemsInfo = "";
+
     void Start()
     {
         playerController = currentPlayer.GetComponent<PlayerController>();
@@ -27,6 +29,8 @@ public class BankController : MonoBehaviour
             else
                 resourcesController.gems[item.Key] = 5;
         }
+
+        this.amountOfGemsInfo = this.resourcesController.ToString();
     }
 
     public void ThreeGemsTaken()
@@ -45,6 +49,7 @@ public class BankController : MonoBehaviour
         gemsBeingChosen.Clear();
         isPlayerTakingThreeGems = false;
 
+        this.amountOfGemsInfo = this.resourcesController.ToString();
     }
 
     public void TwoGemsTaken()
@@ -52,13 +57,16 @@ public class BankController : MonoBehaviour
         resourcesController.gems[gemsBeingChosen[0]] -= 2;
         playerController.TakeTwoTokens(gemsBeingChosen[0]);
 
-        gemsBeingChosen.Clear(); 
+        gemsBeingChosen.Clear();
+        this.amountOfGemsInfo = this.resourcesController.ToString();
     }
 
     public void GoldenGemTaken()
     {
         resourcesController.gems[GemColor.GOLDEN] -= 1;
         playerController.TakeGoldenGem();
+
+        this.amountOfGemsInfo = this.resourcesController.ToString();
     }
     public void AddGems(Dictionary<GemColor, int> resourcesUsed)
     {
@@ -78,10 +86,14 @@ public class BankController : MonoBehaviour
                 }
             }
         }
+
+        this.amountOfGemsInfo = this.resourcesController.ToString();
     }
 
     public void AddGoldengem()
     {
         this.resourcesController.gems[GemColor.GOLDEN] += 1;
+
+        this.amountOfGemsInfo = this.resourcesController.ToString();
     }
 }

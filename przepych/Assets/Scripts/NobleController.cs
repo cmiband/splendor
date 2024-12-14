@@ -13,19 +13,25 @@ using UnityEngine.UI;
         public int points;
         public string illustration;
         private Image selectedNobleImage;
+        public string detailedPriceInfo = "";
 
         public NobleController(int points, ResourcesController detailedPrice, string illustration)
         {
             this.points = points;
             this.detailedPrice = detailedPrice;
             this.illustration = illustration;
+
+            this.detailedPriceInfo = this.detailedPrice.ToString();
         }
+        
 
         public void InitNobleData(NobleController noble)
         {
             this.points = noble.points;
             this.detailedPrice = noble.detailedPrice;
             this.illustration = noble.illustration;
+
+            this.detailedPriceInfo = this.detailedPrice.ToString();
         }
 }
 
