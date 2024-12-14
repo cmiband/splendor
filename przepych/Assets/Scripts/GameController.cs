@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -173,7 +174,19 @@ public class GameController : MonoBehaviour
 
         if (availableNoble is not null)
         {
-            this.playerIdToNoble[currentPlayerId-1].Add(availableNoble);
+            var nobleIndex = GetNobleIndex(availableNoble);
+            if (currentPlayerId == 0)
+            {
+                var addedNoble = new NobleController(availableNoble.points, availableNoble.detailedPrice, availableNoble.illustration);
+                this.playerIdToNoble[0].Add(addedNoble);
+                this.boardController.visibleNoblesListControllers.Remove(this.boardController.visibleNoblesListControllers[nobleIndex]);
+            }
+            else
+            {
+                var addedNoble = new NobleController(availableNoble.points, availableNoble.detailedPrice, availableNoble.illustration);
+                this.playerIdToNoble[currentPlayerId - 1].Add(addedNoble);
+                this.boardController.visibleNoblesListControllers.Remove(availableNoble);
+            }
         }
 
         foreach (GameObject player in this.players)
@@ -326,5 +339,15 @@ public class GameController : MonoBehaviour
             if (selectedCard != null)selectedCard.isSelected = false;
             SelectStack(cardStackController);
         }
+    }
+    private int GetNobleIndex(NobleController noble)
+    {
+        var visibleNobles = boardController.visibleNoblesListControllers;
+        for (int i=0; i<visibleNobles.Count; i++)
+        {
+            if (visibleNobles[i].Equals(noble))
+                return i;
+        }
+        throw new Exception("Noble not found in visible nobles");
     }
 }

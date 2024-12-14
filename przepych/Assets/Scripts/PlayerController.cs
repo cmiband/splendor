@@ -461,10 +461,10 @@ public class PlayerController : MonoBehaviour
     {
         foreach (var noble in game.boardController.visibleNoblesListControllers)
         {
-            bool canGetThisNoble = true;
+            int canGetThisNoble = 0;
 
             if (player.BonusResources.gems.Count == 0)
-                canGetThisNoble = false;
+                return null;
             else
             {
                 foreach (var bonus in player.BonusResources.gems)
@@ -473,14 +473,11 @@ public class PlayerController : MonoBehaviour
                     var amount = bonus.Value;
                     var nobleAmountForColor = noble.detailedPrice.gems[color];
 
-                    if (amount < nobleAmountForColor)
-                    {
-                        canGetThisNoble = false;
-                        break;
-                    }
+                    if (nobleAmountForColor!=0 && amount >= nobleAmountForColor)
+                        canGetThisNoble++;
                 }
             }
-            if (canGetThisNoble)
+            if (canGetThisNoble == NumberOfRequiredBonuses(noble))
                 return noble;
         }
         return null;
@@ -488,5 +485,16 @@ public class PlayerController : MonoBehaviour
     public void SetPlayerNoble(List<NobleController> nobles)
     {
         this.nobleController = nobles;
+    }
+    private int NumberOfRequiredBonuses(NobleController noble)
+    {
+        int amount = 0;
+        foreach(var kpv in noble.detailedPrice.gems)
+        {
+            var value = kpv.Value;
+            if (value!=0)
+                amount++;
+        }
+        return amount;
     }
 }
