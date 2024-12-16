@@ -10,10 +10,11 @@ public class Program
         WebserviceClient client = new WebserviceClient("ws://localhost:8765");
         await client.ConnectToWebsocket();
         Game? game;
+        int N = 1000;
 
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < N; i++)
         {
             game = new Game(client);
             (int winner, float[]? state) = await game.GameStart();
@@ -23,6 +24,7 @@ public class Program
 
         stopwatch.Stop();
         Console.WriteLine($"Cała pętla zakończona w czasie: {stopwatch.ElapsedMilliseconds} ms");
-     
+        Console.WriteLine($"Średni czas symulacji jednej rozgrywki: {stopwatch.ElapsedMilliseconds/N} ms");
+
     }
 }
