@@ -10,7 +10,7 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
             # print(f"Otrzymano wiadomość od klienta: {message}")
 
             data = json.loads(message)
-            # print(f"Otrzymano dane: {data}")
+            #print(f"Otrzymano dane jakieś")
 
             output = [i for i in range(1, 44)]
             shuffle(output)
@@ -21,7 +21,7 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
             response_json = json.dumps(response_object)
 
             await websocket.send(response_json)
-            #print(f"Wysłano odpowiedź: {response_json}")
+            #print(f"Serwer wysłał odpowiedź: {response_json}")
 
     except websockets.exceptions.ConnectionClosedError as e:
         print(f"Połączenie zamknięte: {e}")
