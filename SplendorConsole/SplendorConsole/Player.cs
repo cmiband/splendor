@@ -45,8 +45,7 @@ namespace SplendorConsole
         public List<Card> ReservedCards { get => reservedCards; set => reservedCards = value; }
         public void AddCardToPlayer(Card card)
         {
-            hand.Add(card);
-            Console.WriteLine($"Dodano kartę z następującą liczbą punktów: {card.Points}");
+            hand.Add(card);           
         }
         public bool CanAffordCard(Card card)
         {
@@ -165,15 +164,7 @@ namespace SplendorConsole
             {
                 points += noble.Points;
             }
-        }
-        public string handToString()
-        {
-            return string.Join("  ", hand);
-        }
-        public string nobleToString()
-        {
-            return string.Join(" ", nobles);
-        }
+        }        
         public int[] ToArray()
         {
             int[] output = new int[45];

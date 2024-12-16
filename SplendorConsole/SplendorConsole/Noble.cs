@@ -30,13 +30,8 @@ namespace SplendorConsole
             get=> requiredBonuses;
             set => requiredBonuses = value;
         }
-        private string illustration;
-
+        private string illustration;      
         
-        public override string ToString()
-        {
-            return $"Arystokrata dodający {points} punktów. Wymagania: {requiredBonuses.ToString()}";
-        }
 
 
         public int[] ToArray()
