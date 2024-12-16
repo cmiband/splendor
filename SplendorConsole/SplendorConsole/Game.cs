@@ -47,6 +47,18 @@ namespace SplendorConsole
 
         private WebserviceClient client;
 
+        public Game(WebserviceClient client)
+        {
+            this.client = client;
+            level1Shuffled.Clear();
+            level2Shuffled.Clear();
+            level3Shuffled.Clear();
+            level1VisibleCards.Clear();
+            level2VisibleCards.Clear();
+            level3VisibleCards.Clear();
+            listOfNobles.Clear();
+        }
+
         public Bank Bank
         {
             get => bank;
@@ -54,9 +66,8 @@ namespace SplendorConsole
         public Board Board { get => board; }
 
 
-        async public Task GameStart()
+        async public Task<(int, float[]?)> GameStart()
         {
-
             availableCards.LoadCardsFromExcel();
             availableNobles.LoadNoblesFromExcel();
             Random random = new Random();
@@ -71,13 +82,9 @@ namespace SplendorConsole
             AddResourcesToBank(bank, listOfPlayers.Count);
             SetVisibleCards();
             board = new Board(level1VisibleCards, level2VisibleCards, level3VisibleCards, level1Shuffled, level2Shuffled, level3Shuffled, listOfNobles);
-
-            
-            client = new WebserviceClient("ws://localhost:8765");
-            await client.ConnectToWebsocket();
             
 
-            GameLoop(listOfPlayers.Count);
+            return GameLoop(listOfPlayers.Count);
         }
 
 
@@ -119,14 +126,12 @@ namespace SplendorConsole
             bank.resources.gems.Add(GemColor.GOLDEN, 5);
         }
 
-        private void GameLoop(int numberOfPlayers)
+        private (int, float[]?) GameLoop(int numberOfPlayers)
         {
-            bool gameInProgress = true;
-            while (gameInProgress)
+            while (true)
             {              
                 Turn(listOfPlayers[currentTurn]);
 
-                // więcej logiki GameLoopa
                 currentTurn = (currentTurn + 1) % numberOfPlayers;
                 if (currentTurn == 0)
                 {
@@ -143,9 +148,10 @@ namespace SplendorConsole
                     }
                     if (winnersCount == 1)
                     {
-                        //zwyciezca to listOfPlayers.IndexOf(winners[0]);
-                        ToArray();
-                        gameInProgress = false;
+                        //1 zwyciezca to listOfPlayers.IndexOf(winners[0]);
+                        // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
+                        currentTurn = listOfPlayers.IndexOf(winners[0]);
+                        return (currentTurn, Standartize(ToArray()));
                     }
                     else if (winnersCount > 1)
                     {
@@ -164,24 +170,27 @@ namespace SplendorConsole
                         }
                         if (winnersCount == 1)
                         {
-                            //zwyciezca playerIndex
-                            ToArray();
+                            //2 zwyciezca playerIndex
+                            // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
+                            currentTurn = playerIndex;
+                            return (currentTurn, Standartize(ToArray()));
                         }
                         else
                         {
                             Player OfficialWinner = MoreThan1Winner(winners);
                             if (OfficialWinner != null)
                             {
-                                // zwyciezca listOfPlayers.IndexOf(OfficialWinner)
-                                ToArray();
+                                // 3 zwyciezca listOfPlayers.IndexOf(OfficialWinner)
+                                // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
+                                currentTurn = listOfPlayers.IndexOf(OfficialWinner);
+                                return (currentTurn, Standartize(ToArray()));
                             }
                             else
                             {
-                                // remis
-                                ToArray();
+                                // 4 remis (na zwrocie nie ma znaczenia kto jest brany jako main bo nikt nie wygrywa)
+                                return (-1, Standartize(ToArray()));
                             }
                         }
-                        gameInProgress = false;
                     }
                 }
             }
@@ -298,41 +307,24 @@ namespace SplendorConsole
 
         public bool CanGetNoble(Noble noble)
         {
-            int counter = 0;
-            int noblesCounter = 0;
-
             foreach (GemColor requiredBonus in noble.RequiredBonuses.gems.Keys)
             {
-
                 GemColor color = requiredBonus;
                 int requiredAmount = noble.RequiredBonuses.gems[requiredBonus];
-                int playerAmount = 0;
+                listOfPlayers[currentTurn].BonusResources.gems.TryGetValue(color, out int playerAmount);
 
-
-
-                foreach (Card card in listOfPlayers[currentTurn].hand)
+                if (color == GemColor.NONE)
                 {
-                    if (listOfPlayers[currentTurn].BonusResources.gems.TryGetValue(color, out int count))
-                    {
-                        playerAmount = count;
-                        break;
-                    }
+                    continue;
                 }
 
-                if (requiredAmount <= playerAmount)
+                if (requiredAmount > playerAmount)
                 {
-
-
-                    counter += 1;
-                    noblesCounter += 1;
+                    return false;
                 }
-                else
-                    noblesCounter += 1;
-
             }
-            if (counter != noblesCounter) return false;
-            else return true;
-        }     
+            return true;
+        }
 
         public void GettingNobles()
         {          
@@ -451,6 +443,7 @@ namespace SplendorConsole
 
         async public Task<int[]?> RequestMovesListFromServer(float feedback = 0)
         {
+
             float[] gameState = Standartize(ToArray());
 
             var request = new
@@ -470,7 +463,7 @@ namespace SplendorConsole
         async public Task<int> RequestMoveFromServerAndExecuteIt(float feedbackForPreviousMove, Player currentPlayer)
         {
             int[] moves = await RequestMovesListFromServer(feedbackForPreviousMove);
-            var validator = new ResponseValidator(); 
+            var validator = new ResponseValidator();
             int numberOfInvalidMoves = validator.CheckMoves(moves, currentPlayer, this, bank, board);
             return numberOfInvalidMoves;
         }
