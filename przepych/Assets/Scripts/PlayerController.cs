@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
                     if (player.Resources.gems.TryGetValue(GemColor.GOLDEN, out var goldenAmount) && goldenAmount >= deficit)
                     {
                         resourcesUsed[gemCost.Key] = availableAmount;
-                        resourcesUsed[GemColor.GOLDEN] = deficit;
+                        resourcesUsed[GemColor.GOLDEN] += deficit;
                     }
                     else
                     {
