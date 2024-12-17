@@ -23,6 +23,7 @@ public class GoldenGemStashController : MonoBehaviour
         if (amountOfGems >= 1)
         {
             amountOfGems -= 1;
+            bankController.GoldenGemTaken();
             return true;
         }
         else
