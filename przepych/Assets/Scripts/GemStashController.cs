@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GemStashController : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class GemStashController : MonoBehaviour
     public int amountOfGems;
     public GameObject bank;
     public BankController bankController;
+    public TextMeshProUGUI amountInfo;
 
 
     void Start()
@@ -21,6 +23,12 @@ public class GemStashController : MonoBehaviour
 
         UnityEngine.UI.Button openBoughtCardsButton = this.gameObject.GetComponent<UnityEngine.UI.Button>();
         openBoughtCardsButton.onClick.AddListener(() => OnClick());
+
+        amountInfo.SetText(this.amountOfGems.ToString());
+    }
+    private void Update()
+    {
+        amountInfo.SetText(this.amountOfGems.ToString());
     }
 
     public void OnClick()
