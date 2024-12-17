@@ -158,10 +158,18 @@ namespace SplendorConsole
             this.points = 0;
             foreach(Card card in this.hand)
             {
+                if (card == null)
+                {
+                    throw new Exception("Nie dzia³a try, catch :/");
+                }
                 points += card.Points;
             }
             foreach(Noble noble in this.nobles)
             {
+                if (noble == null)
+                {
+                    throw new Exception("Nie dzia³a try, catch :/");
+                }
                 points += noble.Points;
             }
         }        
