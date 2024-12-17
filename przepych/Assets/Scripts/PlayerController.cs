@@ -150,26 +150,11 @@ public class PlayerController : MonoBehaviour
 
         if(selectedCard.isReserved)
         {
-            switch (cardLevel)
-            {
-                case 1:
-                    mainGameController.reservedCardController.reservedCards.Remove(mainGameController.selectedCard.gameObject);
-                    Debug.Log("Kupiono kart� 1 poziomu");
-                    Destroy(mainGameController.selectedCard.gameObject);
-                    break;
+            player.handReserved.Remove(selectedCard);
+            mainGameController.reservedCardController.reservedCards.Remove(mainGameController.selectedCard.gameObject);
+            Debug.Log("Kupiono zarezerwowaną kartę");
+            Destroy(mainGameController.selectedCard.gameObject);
 
-                case 2:
-                    mainGameController.reservedCardController.reservedCards.Remove(mainGameController.selectedCard.gameObject);
-                    Debug.Log("Kupiono kart� 2 poziomu");
-                    Destroy(mainGameController.selectedCard.gameObject);
-                    break;
-
-                case 3:
-                    mainGameController.reservedCardController.reservedCards.Remove(mainGameController.selectedCard.gameObject);
-                    Debug.Log("Kupiono kart� 3 poziomu");
-                    Destroy(mainGameController.selectedCard.gameObject);
-                    break;
-            }
         }
         else
         {
