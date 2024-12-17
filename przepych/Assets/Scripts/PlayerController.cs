@@ -3,14 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System.Linq;
 
 public class PlayerController : MonoBehaviour
 {
+    public TextMeshProUGUI pointsText;
+
     public int playerId;
     public GameObject game;
     public GameController mainGameController;
     public BankController bankController;
     public string resourcesInfo = "";
+    public string bonusResourcesInfo = "";
 
     public Dictionary<GemColor, GameObject> gemColorToResourceGameObject = new Dictionary<GemColor, GameObject>();
     public GameObject whiteGems;
@@ -19,6 +24,12 @@ public class PlayerController : MonoBehaviour
     public GameObject blackGems;
     public GameObject blueGems;
     public GameObject goldGems;
+
+    public TextMeshProUGUI bonusWhiteGems;
+    public TextMeshProUGUI bonusRedGems;
+    public TextMeshProUGUI bonusGreenGems;
+    public TextMeshProUGUI bonusBlackGems;
+    public TextMeshProUGUI bonusBlueGems;
 
     private ResourcesController resources = new ResourcesController();
     private ResourcesController bonusResources = new ResourcesController();
@@ -43,8 +54,24 @@ public class PlayerController : MonoBehaviour
         this.InitGemDictionary();
         this.bankController = FindObjectOfType<BankController>();
         this.goldenGemStashController = FindObjectOfType<GoldenGemStashController>();
-    }
 
+        foreach(GemColor color in Enum.GetValues(typeof(GemColor)))
+        {
+            this.BonusResources.gems[color] = 0;
+        }
+    }
+    public void Update()
+    {
+        pointsText.SetText(this.points.ToString());
+    }
+    public void PointsCounter(PlayerController player)
+    {
+        player.bonusWhiteGems.SetText(Convert.ToString(player.BonusResources.gems[GemColor.WHITE]));
+        player.bonusRedGems.SetText(Convert.ToString(player.BonusResources.gems[GemColor.RED]));
+        player.bonusGreenGems.SetText(Convert.ToString(player.BonusResources.gems[GemColor.GREEN]));
+        player.bonusBlackGems.SetText(Convert.ToString(player.BonusResources.gems[GemColor.BLACK]));
+        player.bonusBlueGems.SetText(Convert.ToString(player.BonusResources.gems[GemColor.BLUE]));
+    }
 
     public void HandleBuyCard()
     {
@@ -333,6 +360,8 @@ public class PlayerController : MonoBehaviour
         this.resources = resources;
 
         this.resourcesInfo = this.resources.ToString();
+
+        this.bonusResourcesInfo = this.bonusResources.ToString();
 
         this.SetGemInfo(this.resources);
     }

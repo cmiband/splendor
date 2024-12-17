@@ -3,9 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameController : MonoBehaviour
 {
+    public TextMeshProUGUI stageInfo;
+    private int stageNumber = 1;
+
+    public TextMeshProUGUI timerText;
+    private float elapsedTime = 0f; 
+    private bool isTimerRunning = false;
+
+    public TextMeshProUGUI countdownText;
+    public float countdownTime = 600f;
+    private float remainingTime;
+
     public GameObject board;
     public BoardController boardController;
     public AvailableCardsController availableCardsController;
@@ -26,14 +38,27 @@ public class GameController : MonoBehaviour
     public GameObject pass;
     public GameObject buyCard;
     public GameObject reservedCards;
+
+    public GameObject NextPlyerOneReservedCards;
+    public GameObject NextPlyerTwoReservedCards;
+    public GameObject NextPlyerThreeReservedCards;
+
     public GameObject reserveCard;
     public ReservedCardController reservedCardController;
+
+    public ReservedCardController NextPlayerOneReservedCardController;
+    public ReservedCardController NextPlayerTwoReservedCardController;
+    public ReservedCardController NextPlayerThreeReservedCardController;
 
     public CardController selectedCard;
     public CardStackController selectedStack;
 
     private void Start()
     {
+        stageInfo.SetText(stageNumber.ToString());
+        isTimerRunning = true;
+        remainingTime = countdownTime;
+
         boardController = board.GetComponent<BoardController>();
         availableCardsController = board.GetComponent<AvailableCardsController>();
 
@@ -55,6 +80,10 @@ public class GameController : MonoBehaviour
 
         reservedCardController = this.reservedCards.GetComponent<ReservedCardController>();
 
+        NextPlayerOneReservedCardController = this.NextPlyerOneReservedCards.GetComponent<ReservedCardController>();
+        NextPlayerTwoReservedCardController = this.NextPlyerTwoReservedCards.GetComponent<ReservedCardController>();
+        NextPlayerThreeReservedCardController = this.NextPlyerThreeReservedCards.GetComponent<ReservedCardController>();
+
         this.players = new List<GameObject> { currentPlayer, nextPlayerOne, nextPlayerTwo, nextPlayerThree };
         this.CreateFourPlayersDataOnInit();
         this.FillPlayersWithData(); 
@@ -65,6 +94,36 @@ public class GameController : MonoBehaviour
         this.AddEventListeners();
         this.AssignClickListenersToAllCards();
         this.AssignClickListenersToAllCardStacks();
+    }
+
+    private void Update()
+    {
+        if (isTimerRunning)
+        {
+            elapsedTime += Time.deltaTime;
+
+            int hours = Mathf.FloorToInt(elapsedTime / 3600F);      
+            int minutes = Mathf.FloorToInt((elapsedTime % 3600F) / 60F);
+            int seconds = Mathf.FloorToInt(elapsedTime % 60F);
+
+            timerText.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+        }
+
+        if (isTimerRunning && remainingTime > 0)
+        {
+            remainingTime -= Time.deltaTime; 
+            if (remainingTime <= 0)
+            {
+                remainingTime = 0; 
+                isTimerRunning = false; 
+            }
+            UpdateTimerText();
+        }
+
+        if(remainingTime == 0)
+        {
+            HandlePass();
+        }
     }
 
     private void AddEventListeners()
@@ -151,8 +210,14 @@ public class GameController : MonoBehaviour
 
     public void ChangeTurn()
     {
+        ResetCountdown();
         Debug.Log("old player id:  " + this.currentPlayerId);
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
+        if(this.currentPlayerId == 0)
+        {
+            stageNumber++;
+            stageInfo.SetText(stageNumber.ToString());
+        }
 
         int targetedPlayerId = this.currentPlayerId;
         Debug.Log("new player id   " + targetedPlayerId);
@@ -165,8 +230,14 @@ public class GameController : MonoBehaviour
             playerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerId]);
             playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId]);
             targetedPlayerId = (targetedPlayerId + 1) % 4;
+
+            playerController.PointsCounter(playerController);
+            Debug.Log($"id: {playerController.playerId}, ");
         }
         reservedCardController.UpdateReservedCards(this.currentPlayerId);
+        NextPlayerOneReservedCardController.UpdateReservedCardsOthers((this.currentPlayerId + 1) % 4);
+        NextPlayerTwoReservedCardController.UpdateReservedCardsOthers((this.currentPlayerId + 2) % 4);
+        NextPlayerThreeReservedCardController.UpdateReservedCardsOthers((this.currentPlayerId + 3) % 4);
 
 
         buyCard.SetActive(false);
@@ -302,5 +373,18 @@ public class GameController : MonoBehaviour
             if (selectedCard != null)selectedCard.isSelected = false;
             SelectStack(cardStackController);
         }
+    }
+
+    private void ResetCountdown()
+    {
+        remainingTime = countdownTime;
+        isTimerRunning = true;
+        UpdateTimerText();
+    }
+    private void UpdateTimerText()
+    {
+        int minutes = Mathf.FloorToInt(remainingTime / 60F);
+        int seconds = Mathf.FloorToInt(remainingTime % 60F);
+        countdownText.text = string.Format("{0:00}:{1:00}", minutes, seconds); 
     }
 }
