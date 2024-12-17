@@ -182,7 +182,11 @@ namespace SplendorConsole
             int pointer = 11;
             foreach (var item in reservedCards)
             {
-                foreach(var parameter in item.ToArray())
+                if (item == null)
+                {
+                    throw new Exception("Nie dzia³a try, catch :/");
+                }
+                foreach (var parameter in item.ToArray())
                 {
                     output[pointer++] = parameter;
                 }
