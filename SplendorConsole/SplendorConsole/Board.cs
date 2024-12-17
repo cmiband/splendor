@@ -95,6 +95,10 @@ namespace SplendorConsole
             int pointer=0;
             foreach (var item in level1VisibleCards)
             {
+                if(item==null)
+                {
+                    throw new Exception("Nie dzia³a try, catch :/");
+                }
                 foreach (var parameter in item.ToArray())
                 {
                     output[pointer++] = parameter;
@@ -116,6 +120,10 @@ namespace SplendorConsole
             }
             foreach (var item in level2VisibleCards)
             {
+                if (item == null)
+                {
+                    throw new Exception("Nie dzia³a try, catch :/");
+                }
                 foreach (var parameter in item.ToArray())
                 {
                     output[pointer++] = parameter;
@@ -137,6 +145,10 @@ namespace SplendorConsole
             }
             foreach (var item in level3VisibleCards)
             {
+                if (item == null)
+                {
+                    throw new Exception("Nie dzia³a try, catch :/");
+                }
                 foreach (var parameter in item.ToArray())
                 {
                     output[pointer++] = parameter;

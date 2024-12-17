@@ -128,8 +128,14 @@ namespace SplendorConsole
 
         private (int, float[]?) GameLoop(int numberOfPlayers)
         {
+            int securityCounter = 0;
             while (true)
-            {              
+            {
+                securityCounter++;
+                if(securityCounter>=1000)
+                {
+                    return (-200, Standartize(ToArray()));
+                }
                 Turn(listOfPlayers[currentTurn]);
 
                 currentTurn = (currentTurn + 1) % numberOfPlayers;
