@@ -11,7 +11,7 @@ public class Program
         WebserviceClient client = new WebserviceClient("ws://localhost:8765");
         await client.ConnectToWebsocket();
         Game? game;
-        int N = 100000;
+        int N = 1000000;
         int errorCounter = 1;
         int errorCounterLoop = 0;
         int errorCounterCollect = 0;
