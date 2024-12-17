@@ -6,7 +6,7 @@ using SplendorConsole;
 
 public class Program
 {
-    public static float nagr_kara_zwyc(float przewaga, float zetony_liczba, int ruchy)
+    public static float Nagrkarazwyc(float przewaga, float zetony_liczba, int ruchy)
     {
         float reward = 0;
 
@@ -17,14 +17,14 @@ public class Program
         
         return reward;
     }
-    public static float nagroda_kara_win(float[] arr, int numer_ruchu)
+    public static float Nagrodakarawin(float[] arr, int numer_ruchu)
     {
         float zetony_suma = arr[174] + arr[175] + arr[176] + arr[177] + arr[178] + arr[179];
         float przewaga = ((arr[168] - arr[213]) + (arr[168] - arr[258]) + (arr[168] - arr[303])) / 3;
 
-        return nagr_kara_zwyc(przewaga, zetony_suma, numer_ruchu);
+        return Nagrkarazwyc(przewaga, zetony_suma, numer_ruchu);
     }
-    public static float nagr_kara_por(float przewaga, float zetony_liczba, int ruchy)
+    public static float Nagrkarapor(float przewaga, float zetony_liczba, int ruchy)
     {
         float reward = 0;
 
@@ -35,57 +35,57 @@ public class Program
 
         return reward;
     }
-    public static float nagroda_kara_loss_2(float[] arr, int numer_ruchu)
+    public static float Nagrodakaraloss_2(float[] arr, int numer_ruchu)
     {
         float zetony_suma = arr[265] + arr[266] + arr[267] + arr[268] + arr[269] + arr[264];
         float przewaga = arr[168] - arr[258];
 
-        return nagr_kara_por(przewaga, zetony_suma, numer_ruchu);
+        return Nagrkarapor(przewaga, zetony_suma, numer_ruchu);
     }
-    public static float nagroda_kara_loss_1(float[] arr, int numer_ruchu)
+    public static float Nagrodakaraloss_1(float[] arr, int numer_ruchu)
     {
         float zetony_suma = arr[219] + arr[220] + arr[221] + arr[222] + arr[223] + arr[224];
         float przewaga = arr[168] - arr[213];
 
-        return nagr_kara_por(przewaga, zetony_suma, numer_ruchu);
+        return Nagrkarapor(przewaga, zetony_suma, numer_ruchu);
     }
-    public static float nagroda_kara_loss_3(float[] arr, int numer_ruchu)
+    public static float Nagrodakaraloss_3(float[] arr, int numer_ruchu)
     {
         float zetony_suma = arr[309] + arr[310] + arr[311] + arr[312] + arr[313] + arr[314];
         float przewaga = arr[168] - arr[303];
 
-        return nagr_kara_por(przewaga, zetony_suma, numer_ruchu);
+        return Nagrkarapor(przewaga, zetony_suma, numer_ruchu);
     }
 
-    static public float[] nagrody_i_kary_cala4(int winner, float[] stateZPerspektywyWinnera,int numer_ruchu)
+    static public float[] Nagrodykarycala4(int winner, float[] stateZPerspektywyWinnera,int numer_ruchu)
     {
         float[] tab = new float[4];
         
-        tab[winner] = nagroda_kara_win(stateZPerspektywyWinnera, numer_ruchu);
+        tab[winner] = Nagrodakarawin(stateZPerspektywyWinnera, numer_ruchu);
 
         if (winner == 0)
         {
-            tab[1] = nagroda_kara_loss_1(stateZPerspektywyWinnera, numer_ruchu);
-            tab[2] = nagroda_kara_loss_2(stateZPerspektywyWinnera, numer_ruchu);
-            tab[3] = nagroda_kara_loss_3(stateZPerspektywyWinnera, numer_ruchu);
+            tab[1] = Nagrodakaraloss_1(stateZPerspektywyWinnera, numer_ruchu);
+            tab[2] = Nagrodakaraloss_2(stateZPerspektywyWinnera, numer_ruchu);
+            tab[3] = Nagrodakaraloss_3(stateZPerspektywyWinnera, numer_ruchu);
         }
         else if (winner == 1)
         {
-            tab[2] = nagroda_kara_loss_1(stateZPerspektywyWinnera, numer_ruchu);
-            tab[3] = nagroda_kara_loss_2(stateZPerspektywyWinnera, numer_ruchu);
-            tab[0] = nagroda_kara_loss_3(stateZPerspektywyWinnera, numer_ruchu);
+            tab[2] = Nagrodakaraloss_1(stateZPerspektywyWinnera, numer_ruchu);
+            tab[3] = Nagrodakaraloss_2(stateZPerspektywyWinnera, numer_ruchu);
+            tab[0] = Nagrodakaraloss_3(stateZPerspektywyWinnera, numer_ruchu);
         }
         else if (winner == 2)
         {
-            tab[3] = nagroda_kara_loss_1(stateZPerspektywyWinnera, numer_ruchu);
-            tab[0] = nagroda_kara_loss_2(stateZPerspektywyWinnera, numer_ruchu);
-            tab[1] = nagroda_kara_loss_3(stateZPerspektywyWinnera, numer_ruchu);
+            tab[3] = Nagrodakaraloss_1(stateZPerspektywyWinnera, numer_ruchu);
+            tab[0] = Nagrodakaraloss_2(stateZPerspektywyWinnera, numer_ruchu);
+            tab[1] = Nagrodakaraloss_3(stateZPerspektywyWinnera, numer_ruchu);
         }
         else if(winner == 3)
         {
-            tab[0] = nagroda_kara_loss_1(stateZPerspektywyWinnera, numer_ruchu);
-            tab[1] = nagroda_kara_loss_2(stateZPerspektywyWinnera, numer_ruchu);
-            tab[2] = nagroda_kara_loss_3(stateZPerspektywyWinnera, numer_ruchu);
+            tab[0] = Nagrodakaraloss_1(stateZPerspektywyWinnera, numer_ruchu);
+            tab[1] = Nagrodakaraloss_2(stateZPerspektywyWinnera, numer_ruchu);
+            tab[2] = Nagrodakaraloss_3(stateZPerspektywyWinnera, numer_ruchu);
         }
 
         return tab;
