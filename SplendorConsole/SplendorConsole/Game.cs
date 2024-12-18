@@ -23,6 +23,7 @@ namespace SplendorConsole
     public class Game
     {
         private int currentTurn = 0;
+        private int feedbackFromPreviousRequest = 0;
         private static AvailableCards availableCards = new AvailableCards();
         private static AvailableNobles availableNobles = new AvailableNobles();
 
@@ -64,7 +65,7 @@ namespace SplendorConsole
         public Board Board { get => board; }
 
 
-        async public Task<(int, float[]?)> GameStart()
+        async public Task<(int, int, float[]?)> GameStart()
         {
 
             Random random = new Random();
@@ -81,7 +82,7 @@ namespace SplendorConsole
             board = new Board(level1VisibleCards, level2VisibleCards, level3VisibleCards, level1Shuffled, level2Shuffled, level3Shuffled, listOfNobles);
             
 
-            return GameLoop(listOfPlayers.Count);
+            return await GameLoop(listOfPlayers.Count);
         }
 
 
@@ -123,7 +124,7 @@ namespace SplendorConsole
             bank.resources.gems.Add(GemColor.GOLDEN, 5);
         }
 
-        private (int, float[]?) GameLoop(int numberOfPlayers)
+        private async Task<(int, int, float[]?)> GameLoop(int numberOfPlayers)
         {
             int securityCounter = 0;
             while (true)
@@ -131,9 +132,9 @@ namespace SplendorConsole
                 securityCounter++;
                 if(securityCounter>=1000)
                 {
-                    return (-200, Standartize(ToArray()));
+                    return (securityCounter/4, -200, Standartize(ToArray()));
                 }
-                Turn(listOfPlayers[currentTurn]);
+                await Turn(listOfPlayers[currentTurn]);
 
                 currentTurn = (currentTurn + 1) % numberOfPlayers;
                 if (currentTurn == 0)
@@ -154,7 +155,7 @@ namespace SplendorConsole
                         //1 zwyciezca to listOfPlayers.IndexOf(winners[0]);
                         // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                         currentTurn = listOfPlayers.IndexOf(winners[0]);
-                        return (currentTurn, Standartize(ToArray()));
+                        return (securityCounter / 4, currentTurn, Standartize(ToArray()));
                     }
                     else if (winnersCount > 1)
                     {
@@ -176,7 +177,7 @@ namespace SplendorConsole
                             //2 zwyciezca playerIndex
                             // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                             currentTurn = playerIndex;
-                            return (currentTurn, Standartize(ToArray()));
+                            return (securityCounter / 4, currentTurn, Standartize(ToArray()));
                         }
                         else
                         {
@@ -186,12 +187,12 @@ namespace SplendorConsole
                                 // 3 zwyciezca listOfPlayers.IndexOf(OfficialWinner)
                                 // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                                 currentTurn = listOfPlayers.IndexOf(OfficialWinner);
-                                return (currentTurn, Standartize(ToArray()));
+                                return (securityCounter / 4, currentTurn, Standartize(ToArray()));
                             }
                             else
                             {
                                 // 4 remis (na zwrocie nie ma znaczenia kto jest brany jako main bo nikt nie wygrywa)
-                                return (-1, Standartize(ToArray()));
+                                return (securityCounter / 4, -1, Standartize(ToArray()));
                             }
                         }
                     }
@@ -228,14 +229,27 @@ namespace SplendorConsole
             else return false;
         }
 
-        private void Turn(Player player)
+        private async Task Turn(Player player)
         {
-            ChoiceOfAction(player);
+            await ChoiceOfAction(player);
         }
 
-        private void ChoiceOfAction(Player player)
+        private async Task ChoiceOfAction(Player player)
         {
-            RequestMoveFromServerAndExecuteIt(0, player);             
+
+            int nextFeedbackSeed = await RequestMoveFromServerAndExecuteIt(feedbackFromPreviousRequest, player);
+            if (nextFeedbackSeed == 0)
+            {
+                feedbackFromPreviousRequest = 0;
+            } 
+            else if (nextFeedbackSeed < 10)
+            {
+                feedbackFromPreviousRequest = -10;
+            }
+            else
+            {
+                feedbackFromPreviousRequest = -25;
+            }
             GettingNobles();
         }
 
