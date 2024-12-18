@@ -291,6 +291,10 @@ namespace SplendorConsole
                         }
 
                         currentPlayer.AddCardToPlayer(board.level1VisibleCards[3]);
+                        if(board.level1VisibleCards[3]==null)
+                        {
+                            throw new Exception("Nie działa try, catch :/");
+                        }
                         currentPlayer.BonusResources.AddResource(board.level1VisibleCards[3].BonusColor);
                         if(board.level1VisibleCards[3]==null)
                         {
