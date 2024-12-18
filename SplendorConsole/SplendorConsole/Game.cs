@@ -23,6 +23,7 @@ namespace SplendorConsole
     public class Game
     {
         private int currentTurn = 0;
+        private int feedbackFromPreviousRequest = 0;
         private static AvailableCards availableCards = new AvailableCards();
         private static AvailableNobles availableNobles = new AvailableNobles();
 
@@ -46,7 +47,7 @@ namespace SplendorConsole
         }
 
         private WebserviceClient client;
-        
+
         static Game()
         {
             availableCards.LoadCardsFromExcel();
@@ -247,7 +248,8 @@ namespace SplendorConsole
 
         private void ChoiceOfAction(Player player)
         {
-            RequestMoveFromServerAndExecuteIt(0, player);             
+
+            RequestMoveFromServerAndExecuteIt(feedbackFromPreviousRequest, player);
             GettingNobles();
         }
 
@@ -457,7 +459,7 @@ namespace SplendorConsole
 
         }
 
-        async public Task<int[]?> RequestMovesListFromServer(float feedback = 0)
+        async public Task<int[]?> RequestMovesListFromServer(float feedback)
         {
 
             float[] gameState = Standartize(ToArray());
@@ -476,12 +478,23 @@ namespace SplendorConsole
             return moves;
         }
 
-        async public Task<int> RequestMoveFromServerAndExecuteIt(float feedbackForPreviousMove, Player currentPlayer)
+        async public Task RequestMoveFromServerAndExecuteIt(float feedbackForPreviousMove, Player currentPlayer)
         {
             int[] moves = await RequestMovesListFromServer(feedbackForPreviousMove);
             var validator = new ResponseValidator();
             int numberOfInvalidMoves = validator.CheckMoves(moves, currentPlayer, this, bank, board);
-            return numberOfInvalidMoves;
+            if (numberOfInvalidMoves == 0)
+            {
+                feedbackFromPreviousRequest = 0;
+            }
+            else if (numberOfInvalidMoves < 10)
+            {
+                feedbackFromPreviousRequest = -10;
+            }
+            else
+            {
+                feedbackFromPreviousRequest = -25;
+            }
         }
     }
 }
