@@ -11,7 +11,7 @@ public class Program
         WebserviceClient client = new WebserviceClient("ws://localhost:8765");
         await client.ConnectToWebsocket();
         Game? game;
-        int N = 500;
+        int N = 100000;
         int errorCounter = 1;
         int errorCounterLoop = 0;
         int errorCounterCollect = 0;
@@ -22,6 +22,7 @@ public class Program
         int maxErrorGap = 0;
         int minErrorGap = N;
         int errorGap = 1;
+        float turnSum = 0;
 
         Stopwatch stopwatch = Stopwatch.StartNew();
 
@@ -52,11 +53,13 @@ public class Program
                 {
                     Console.WriteLine($"W grze nr {i} doszło do remisu w {turnsNumber} tur");
                     tieCounter++;
+                    turnSum += turnsNumber;
                 }
                 else
                 {
                     errorGap++;
                     Console.WriteLine($"Grę nr {i} wygrywa gracz nr {winner} w {turnsNumber} tur, zap - {errorCounterLoop}, col - {errorCounterCollect}, idx - {errorCounterBound}, null - {errorCounterNull}, ??? - {errorCounterOther}");
+                    turnSum += turnsNumber;
                 }
                 game = null;
             }
@@ -102,7 +105,7 @@ public class Program
     }
     Console.WriteLine($"Cała pętla zakończona w czasie: {stopwatch.ElapsedMilliseconds} ms");
     Console.WriteLine($"Średni czas symulacji jednej rozgrywki: {stopwatch.ElapsedMilliseconds / N} ms");
-    Console.WriteLine($"Liczba remisów - {tieCounter}, maxErrorGap - {maxErrorGap}, minErrorGap - {minErrorGap}, AvgGap - {N / errorCounter}");
+    Console.WriteLine($"Liczba remisów - {tieCounter}, maxErrorGap - {maxErrorGap}, minErrorGap - {minErrorGap}, AvgGap - {N / errorCounter}, AvgTurn - {turnSum/(N-errorCounter+1)}");
     }
 
     public static float AwardWinner(float advantage, float tokensCount, int moves)
