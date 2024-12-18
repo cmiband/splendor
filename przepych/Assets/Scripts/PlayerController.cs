@@ -81,6 +81,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+
         PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
         CardController selectedCard = mainGameController.selectedCard;
         Vector3 vector = mainGameController.selectedCard.transform.position;
@@ -147,42 +148,52 @@ public class PlayerController : MonoBehaviour
         player.Points += selectedCard.points;
         int cardLevel = selectedCard.Level;
 
-        switch (cardLevel)
+        if(selectedCard.isReserved)
         {
-            case 1:
-                mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
-                Debug.Log("Kupiono kart� 1 poziomu");
-                Destroy(mainGameController.selectedCard.gameObject);
-                GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
-                gameObject1.name = "Card_Level_" + cardLevel;
-                CardController cardController1 = gameObject1.GetComponent<CardController>();
-                cardController1.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                AddCardClickListener(gameObject1, cardController1);
-                break;
+            player.handReserved.Remove(selectedCard);
+            mainGameController.reservedCardController.reservedCards.Remove(mainGameController.selectedCard.gameObject);
+            Debug.Log("Kupiono zarezerwowaną kartę");
+            Destroy(mainGameController.selectedCard.gameObject);
 
-            case 2:
-                mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
-                Debug.Log("Kupiono kart� 2 poziomu");
-                Destroy(mainGameController.selectedCard.gameObject);
-                GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
-                gameObject2.name = "Card_Level_" + cardLevel;
-                CardController cardController2 = gameObject2.GetComponent<CardController>();
-                cardController2.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                AddCardClickListener(gameObject2, cardController2);
-                break;
-
-            case 3:
-                mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
-                Debug.Log("Kupiono kart� 3 poziomu");
-                Destroy(mainGameController.selectedCard.gameObject);
-                GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
-                gameObject3.name = "Card_Level_" + cardLevel;
-                CardController cardController3 = gameObject3.GetComponent<CardController>();
-                cardController3.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                AddCardClickListener(gameObject3, cardController3);
-                break;
         }
+        else
+        {
+            switch (cardLevel)
+            {
+                case 1:
+                    mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
+                    Debug.Log("Kupiono kart� 1 poziomu");
+                    Destroy(mainGameController.selectedCard.gameObject);
+                    GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
+                    gameObject1.name = "Card_Level_" + cardLevel;
+                    CardController cardController1 = gameObject1.GetComponent<CardController>();
+                    cardController1.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                    AddCardClickListener(gameObject1, cardController1);
+                    break;
 
+                case 2:
+                    mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
+                    Debug.Log("Kupiono kart� 2 poziomu");
+                    Destroy(mainGameController.selectedCard.gameObject);
+                    GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
+                    gameObject2.name = "Card_Level_" + cardLevel;
+                    CardController cardController2 = gameObject2.GetComponent<CardController>();
+                    cardController2.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                    AddCardClickListener(gameObject2, cardController2);
+                    break;
+
+                case 3:
+                    mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
+                    Debug.Log("Kupiono kart� 3 poziomu");
+                    Destroy(mainGameController.selectedCard.gameObject);
+                    GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
+                    gameObject3.name = "Card_Level_" + cardLevel;
+                    CardController cardController3 = gameObject3.GetComponent<CardController>();
+                    cardController3.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                    AddCardClickListener(gameObject3, cardController3);
+                    break;
+            }
+        }
         mainGameController.ChangeTurn();
     }
 
@@ -193,7 +204,6 @@ public class PlayerController : MonoBehaviour
         {
             if (goldenGemStashController.TakeOne())
             {
-                TakeGoldenGem();
                 Debug.Log("Pobrano złoty żeton");
             }
             else Debug.Log("Nie ma już złotych żetonów");
