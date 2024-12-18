@@ -23,23 +23,23 @@ namespace SplendorConsole
     public class Game
     {
         private int currentTurn = 0;
-        private AvailableCards availableCards = new AvailableCards();
-        private AvailableNobles availableNobles = new AvailableNobles();
+        private static AvailableCards availableCards = new AvailableCards();
+        private static AvailableNobles availableNobles = new AvailableNobles();
 
-        private static List<Card> level1Shuffled = new List<Card>();
-        private static List<Card> level2Shuffled = new List<Card>();
-        private static List<Card> level3Shuffled = new List<Card>();
+        private List<Card> level1Shuffled = new List<Card>();
+        private List<Card> level2Shuffled = new List<Card>();
+        private List<Card> level3Shuffled = new List<Card>();
         private Bank bank = new Bank();
         private Board board;
 
 
-        private static List<Card> level1VisibleCards = new List<Card>();
-        private static List<Card> level2VisibleCards = new List<Card>();
-        private static List<Card> level3VisibleCards = new List<Card>();
+        private List<Card> level1VisibleCards = new List<Card>();
+        private List<Card> level2VisibleCards = new List<Card>();
+        private List<Card> level3VisibleCards = new List<Card>();
 
         private List<Player> listOfPlayers = new List<Player>();
-        private static List<Noble> listOfNobles = new List<Noble>();
-        public static List<Noble> ListOfNobles
+        private List<Noble> listOfNobles = new List<Noble>();
+        public List<Noble> ListOfNobles
         {
             get => listOfNobles;
             set => listOfNobles = value;
@@ -47,16 +47,14 @@ namespace SplendorConsole
 
         private WebserviceClient client;
 
+        static Game()
+        {
+            availableCards.LoadCardsFromExcel();
+            availableNobles.LoadNoblesFromExcel();
+        }
         public Game(WebserviceClient client)
         {
             this.client = client;
-            level1Shuffled.Clear();
-            level2Shuffled.Clear();
-            level3Shuffled.Clear();
-            level1VisibleCards.Clear();
-            level2VisibleCards.Clear();
-            level3VisibleCards.Clear();
-            listOfNobles.Clear();
         }
 
         public Bank Bank
@@ -68,8 +66,7 @@ namespace SplendorConsole
 
         async public Task<(int, float[]?)> GameStart()
         {
-            availableCards.LoadCardsFromExcel();
-            availableNobles.LoadNoblesFromExcel();
+
             Random random = new Random();
             listOfPlayers = SetNumberOfPlayers();
             listOfNobles = SetNumberOfNobles(listOfPlayers.Count);    
@@ -274,15 +271,16 @@ namespace SplendorConsole
 
         private List<Card> Shuffling(List<Card> deck, Random random)
         {
-            for (int i = deck.Count - 1; i > 0; i--)
+            List<Card> deck_copy = new List<Card>(deck);
+            for (int i = deck_copy.Count - 1; i > 0; i--)
             {
                 int j = random.Next(i + 1);
 
                 Card temporary = deck[i];
-                deck[i] = deck[j];
-                deck[j] = temporary;
+                deck_copy[i] = deck[j];
+                deck_copy[j] = temporary;
             }
-            return deck;
+            return deck_copy;
         }
 
         private List<Noble> ShuffledNobles(List<Noble> deck)
