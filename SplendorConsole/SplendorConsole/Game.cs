@@ -23,8 +23,8 @@ namespace SplendorConsole
     public class Game
     {
         private int currentTurn = 0;
-        private AvailableCards availableCards = new AvailableCards();
-        private AvailableNobles availableNobles = new AvailableNobles();
+        private static AvailableCards availableCards = new AvailableCards();
+        private static AvailableNobles availableNobles = new AvailableNobles();
 
         private static List<Card> level1Shuffled = new List<Card>();
         private static List<Card> level2Shuffled = new List<Card>();
@@ -46,6 +46,12 @@ namespace SplendorConsole
         }
 
         private WebserviceClient client;
+        
+        static Game()
+        {
+            availableCards.LoadCardsFromExcel();
+            availableNobles.LoadNoblesFromExcel();
+        }
 
         public Game(WebserviceClient client)
         {
@@ -66,17 +72,19 @@ namespace SplendorConsole
         public Board Board { get => board; }
 
 
-        async public Task<(int, float[]?)> GameStart()
+        public (int, int, float[]?) GameStart()
         {
-            availableCards.LoadCardsFromExcel();
-            availableNobles.LoadNoblesFromExcel();
             Random random = new Random();
             listOfPlayers = SetNumberOfPlayers();
-            listOfNobles = SetNumberOfNobles(listOfPlayers.Count);    
+            listOfNobles = SetNumberOfNobles(listOfPlayers.Count);
 
-            level1Shuffled = Shuffling(availableCards.level1Cards, random);
-            level2Shuffled = Shuffling(availableCards.level2Cards, random);
-            level3Shuffled = Shuffling(availableCards.level3Cards, random);
+            List<Card> level1LoadedCards = new List<Card>(availableCards.level1Cards);
+            List<Card> level2LoadedCards = new List<Card>(availableCards.level2Cards);
+            List<Card> level3LoadedCards = new List<Card>(availableCards.level3Cards);
+
+            level1Shuffled = Shuffling(level1LoadedCards, random);
+            level2Shuffled = Shuffling(level2LoadedCards, random);
+            level3Shuffled = Shuffling(level3LoadedCards, random);
 
 
             AddResourcesToBank(bank, listOfPlayers.Count);
@@ -92,7 +100,8 @@ namespace SplendorConsole
         {
             int numberOfNobles = numberOfPlayers + 1;
             List<Noble> nobles = new List<Noble>();
-            List<Noble> allNobles = ShuffledNobles(availableNobles.noblesList);
+            List<Noble> loadedNobles = new List<Noble>(availableNobles.noblesList);
+            List<Noble> allNobles = ShuffledNobles(loadedNobles);
 
             for(int i = 0; i < numberOfNobles; i++)
             {
@@ -126,7 +135,7 @@ namespace SplendorConsole
             bank.resources.gems.Add(GemColor.GOLDEN, 5);
         }
 
-        private (int, float[]?) GameLoop(int numberOfPlayers)
+        private (int, int, float[]?) GameLoop(int numberOfPlayers)
         {
             int securityCounter = 0;
             while (true)
@@ -134,7 +143,7 @@ namespace SplendorConsole
                 securityCounter++;
                 if(securityCounter>=1000)
                 {
-                    return (-200, Standartize(ToArray()));
+                    return (securityCounter/4, -200, Standartize(ToArray()));
                 }
                 Turn(listOfPlayers[currentTurn]);
 
@@ -157,7 +166,7 @@ namespace SplendorConsole
                         //1 zwyciezca to listOfPlayers.IndexOf(winners[0]);
                         // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                         currentTurn = listOfPlayers.IndexOf(winners[0]);
-                        return (currentTurn, Standartize(ToArray()));
+                        return (securityCounter / 4, currentTurn, Standartize(ToArray()));
                     }
                     else if (winnersCount > 1)
                     {
@@ -179,7 +188,7 @@ namespace SplendorConsole
                             //2 zwyciezca playerIndex
                             // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                             currentTurn = playerIndex;
-                            return (currentTurn, Standartize(ToArray()));
+                            return (securityCounter / 4, currentTurn, Standartize(ToArray()));
                         }
                         else
                         {
@@ -189,12 +198,12 @@ namespace SplendorConsole
                                 // 3 zwyciezca listOfPlayers.IndexOf(OfficialWinner)
                                 // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                                 currentTurn = listOfPlayers.IndexOf(OfficialWinner);
-                                return (currentTurn, Standartize(ToArray()));
+                                return (securityCounter / 4, currentTurn, Standartize(ToArray()));
                             }
                             else
                             {
                                 // 4 remis (na zwrocie nie ma znaczenia kto jest brany jako main bo nikt nie wygrywa)
-                                return (-1, Standartize(ToArray()));
+                                return (securityCounter / 4, -1, Standartize(ToArray()));
                             }
                         }
                     }
@@ -274,6 +283,7 @@ namespace SplendorConsole
 
         private List<Card> Shuffling(List<Card> deck, Random random)
         {
+
             for (int i = deck.Count - 1; i > 0; i--)
             {
                 int j = random.Next(i + 1);
