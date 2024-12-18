@@ -291,11 +291,11 @@ namespace SplendorConsole
                         }
 
                         currentPlayer.AddCardToPlayer(board.level1VisibleCards[3]);
-                        currentPlayer.BonusResources.AddResource(board.level1VisibleCards[3].BonusColor);
                         if(board.level1VisibleCards[3]==null)
                         {
                             throw new Exception("Nie działa try, catch :/");
                         }
+                        currentPlayer.BonusResources.AddResource(board.level1VisibleCards[3].BonusColor);
                         currentPlayer.Points += board.level1VisibleCards[3].Points;
 
                         board.ReplaceMissingCard(1, board.level1VisibleCards[3]);

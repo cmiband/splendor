@@ -73,6 +73,10 @@ namespace SplendorConsole
         }
         public bool CanAffordCardWithGolden(Card card)
         {
+            if (card == null)
+            {
+                throw new Exception("Nie dzia³a try, catch :/");
+            }
             var cardPrice = card.DetailedPrice.gems;
             var playerResources = this.resources.gems;
             var playerBonuses = this.bonusResources.gems;
