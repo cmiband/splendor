@@ -23,7 +23,7 @@ namespace SplendorConsole
     public class Game
     {
         private int currentTurn = 0;
-        private int feedbackFromPreviousRequest = 0;
+        private float feedbackFromPreviousRequest = 0;
         private static AvailableCards availableCards = new AvailableCards();
         private static AvailableNobles availableNobles = new AvailableNobles();
 
@@ -487,13 +487,13 @@ namespace SplendorConsole
             {
                 feedbackFromPreviousRequest = 0;
             }
-            else if (numberOfInvalidMoves < 10)
+            else if (numberOfInvalidMoves <= 10)
             {
-                feedbackFromPreviousRequest = -10;
+                feedbackFromPreviousRequest = -0.1f;
             }
             else
             {
-                feedbackFromPreviousRequest = -25;
+                feedbackFromPreviousRequest = -0.25f;
             }
         }
     }

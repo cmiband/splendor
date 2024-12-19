@@ -112,10 +112,26 @@ public class Program
     {
         float reward = 0;
 
-        reward += 100f;
-        reward -= 0.65f * (moves - 30);
-        reward += 0.8f * advantage;
-        reward -= 0.25f * tokensCount;
+        if(moves<20)
+        {
+            reward += 0.75f;
+        }
+        else if(moves<=40)
+        {
+            reward += 0.5f;
+        }
+        else
+        {
+            reward += 0.3f;
+        }
+        if(advantage>=5)
+        {
+            reward += 0.2f;
+        }
+        if(tokensCount>=5)
+        {
+            reward -= 0.1f;
+        }
 
         return reward;
     }
@@ -130,12 +146,15 @@ public class Program
 
     public static float AwardLossLoser(float advantage, float tokensCount, int moves)
     {
-        float reward = 0;
-
-        reward -= 70f;
-        reward -= 0.65f * (moves - 30);
-        reward += 0.8f * advantage;
-        reward += 0.25f * tokensCount;
+        float reward = -0.5f;
+        if(advantage>=5)
+        {
+            reward -= 0.2f;
+        }
+        if(tokensCount>=5)
+        {
+            reward = -0.1f;
+        }
 
         return reward;
     }
