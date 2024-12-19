@@ -73,7 +73,7 @@ namespace SplendorConsole
         public Board Board { get => board; }
 
 
-        public (int, int, float[]?) GameStart()
+        public (int, int, int[]?) GameStart()
         {
             Random random = new Random();
             listOfPlayers = SetNumberOfPlayers();
@@ -136,7 +136,7 @@ namespace SplendorConsole
             bank.resources.gems.Add(GemColor.GOLDEN, 5);
         }
 
-        private (int, int, float[]?) GameLoop(int numberOfPlayers)
+        private (int, int, int[]?) GameLoop(int numberOfPlayers)
         {
             int securityCounter = 0;
             while (true)
@@ -144,7 +144,7 @@ namespace SplendorConsole
                 securityCounter++;
                 if(securityCounter>=1000)
                 {
-                    return (securityCounter/4, -200, Standartize(ToArray()));
+                    return (securityCounter/4, -200, ToArray());
                 }
                 Turn(listOfPlayers[currentTurn]);
 
@@ -167,7 +167,7 @@ namespace SplendorConsole
                         //1 zwyciezca to listOfPlayers.IndexOf(winners[0]);
                         // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                         currentTurn = listOfPlayers.IndexOf(winners[0]);
-                        return (securityCounter / 4, currentTurn, Standartize(ToArray()));
+                        return (securityCounter / 4, currentTurn, ToArray());
                     }
                     else if (winnersCount > 1)
                     {
@@ -189,7 +189,7 @@ namespace SplendorConsole
                             //2 zwyciezca playerIndex
                             // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                             currentTurn = playerIndex;
-                            return (securityCounter / 4, currentTurn, Standartize(ToArray()));
+                            return (securityCounter / 4, currentTurn, ToArray());
                         }
                         else
                         {
@@ -199,12 +199,12 @@ namespace SplendorConsole
                                 // 3 zwyciezca listOfPlayers.IndexOf(OfficialWinner)
                                 // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                                 currentTurn = listOfPlayers.IndexOf(OfficialWinner);
-                                return (securityCounter / 4, currentTurn, Standartize(ToArray()));
+                                return (securityCounter / 4, currentTurn, ToArray());
                             }
                             else
                             {
                                 // 4 remis (na zwrocie nie ma znaczenia kto jest brany jako main bo nikt nie wygrywa)
-                                return (securityCounter / 4, -1, Standartize(ToArray()));
+                                return (securityCounter / 4, -1, ToArray());
                             }
                         }
                     }
@@ -489,11 +489,11 @@ namespace SplendorConsole
             }
             else if (numberOfInvalidMoves <= 10)
             {
-                feedbackFromPreviousRequest = -0.1f;
+                feedbackFromPreviousRequest = (float)-0.1;
             }
             else
             {
-                feedbackFromPreviousRequest = -0.25f;
+                feedbackFromPreviousRequest = (float)-0.25;
             }
         }
     }
