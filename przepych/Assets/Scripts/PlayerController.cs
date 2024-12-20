@@ -314,7 +314,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        Debug.Log("confirm move");
+        if(this.resources.gems)
+
         this.ConfirmPlayerMove();
     }
 
@@ -468,6 +469,8 @@ public class PlayerController : MonoBehaviour
 
         return clonedCard;
     }
+
+    private int GetAmountOfGems()
 
     private void RemoveGemsOneColor(GemColor color, int amount)
     {
