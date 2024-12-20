@@ -4,34 +4,56 @@ import json
 from random import shuffle
 
 async def handle_connection(websocket: websockets.WebSocketServerProtocol, path: str) -> None:
-    """Handles the connection from a client."""
     try:
         async for message in websocket:
-            # print(f"Otrzymano wiadomość od klienta: {message}")
+            #print(f"Otrzymano wiadomość od klienta: {message}")
 
             data = json.loads(message)
-            #print(f"Otrzymano dane jakieś")
+            id = data.get("Id")
 
-            output = [i for i in range(1, 44)]
-            shuffle(output)
+            if id == 1:
+                # REQUEST Z WEWNĄTRZ
+                feedback = data.get("Feedback")
+                game_state = data.get("GameState")
 
-            response_object = {
-                "MovesList": output,
-            }
-            response_json = json.dumps(response_object)
+                output = [i for i in range(1, 44)]
+                shuffle(output)
 
-            await websocket.send(response_json)
-            #print(f"Serwer wysłał odpowiedź: {response_json}")
+                response_object = {
+                    "MovesList": output,
+                }
+
+                response_json = json.dumps(response_object)
+                await websocket.send(response_json)
+
+            elif id == 2:
+                # REQUEST Z ZAKOŃCZONEJ GRY Z WYGRANYM
+                rewards = data.get("Rewards")
+                print(f"[Python] Serwer odebrał wygraną {rewards}")
+                response_object = {
+                    "ResponseCode": 0,
+                }
+                response_json = json.dumps(response_object)
+                await websocket.send(response_json)
+
+            elif id == -1:
+                # REQUEST Z ZAKOŃCZONEJ GRY Z REMISEM
+                rewards = data.get("Rewards")
+                print(f"[Python] Serwer odebrał remis lub błąd {rewards}")
+                response_object = {
+                    "ResponseCode": 0,
+                }
+                response_json = json.dumps(response_object)
+                await websocket.send(response_json)
 
     except websockets.exceptions.ConnectionClosedError as e:
-        print(f"Połączenie zamknięte: {e}")
+        print(f"[Python] Połączenie zamknięte: {e}")
     except Exception as e:
-        print(f"Wystąpił błąd: {e}")
+        print(f"[Python] Wystąpił błąd: {e}")
 
 async def start_server() -> None:
-    """Starts the WebSocket server."""
     async with websockets.serve(handle_connection, "localhost", 8765, ping_timeout=None):
-        print("Serwer WebSocket działa na ws://localhost:8765")
+        print("[Python] Serwer WebSocket działa na ws://localhost:8765")
         await asyncio.Future()
 
 
