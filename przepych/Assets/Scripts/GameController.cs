@@ -211,7 +211,6 @@ public class GameController : MonoBehaviour
     public void ChangeTurn()
     {
         ResetCountdown();
-        Debug.Log("old player id:  " + this.currentPlayerId);
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
         if(this.currentPlayerId == 0)
         {
@@ -220,7 +219,6 @@ public class GameController : MonoBehaviour
         }
 
         int targetedPlayerId = this.currentPlayerId;
-        Debug.Log("new player id   " + targetedPlayerId);
 
         foreach (GameObject player in this.players)
         {
@@ -232,7 +230,6 @@ public class GameController : MonoBehaviour
             targetedPlayerId = (targetedPlayerId + 1) % 4;
 
             playerController.PointsCounter(playerController);
-            Debug.Log($"id: {playerController.playerId}, ");
         }
         reservedCardController.UpdateReservedCards(this.currentPlayerId);
         NextPlayerOneReservedCardController.UpdateReservedCardsOthers((this.currentPlayerId + 1) % 4);

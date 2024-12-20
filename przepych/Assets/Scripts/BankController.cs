@@ -5,6 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum MODE
+{
+    TAKE, GIVE
+}
+
+
 public class BankController : MonoBehaviour
 {
     public List<GemColor> gemsBeingChosen = new List<GemColor>();
@@ -14,6 +20,7 @@ public class BankController : MonoBehaviour
     public PlayerController playerController;
     public ResourcesController resourcesController = new ResourcesController();
     public List<GemStashController> gemStashes = new List<GemStashController>();
+    public MODE currentMode;
 
     public string amountOfGemsInfo = "";
 
@@ -30,10 +37,12 @@ public class BankController : MonoBehaviour
                 resourcesController.gems[item.Key] = 5;
         }
 
+        currentMode = MODE.TAKE;
+
         this.amountOfGemsInfo = this.resourcesController.ToString();
     }
 
-    public void ThreeGemsTaken()
+    public void TakeGems()
     {
         foreach (GemColor color in gemsBeingChosen)
         {
@@ -45,19 +54,9 @@ public class BankController : MonoBehaviour
                 stash.amountOfGems -= 1;
             }
         }
-        playerController.TakeThreeTokens(gemsBeingChosen);
+        playerController.TakeGems(gemsBeingChosen);
         gemsBeingChosen.Clear();
-        isPlayerTakingThreeGems = false;
 
-        this.amountOfGemsInfo = this.resourcesController.ToString();
-    }
-
-    public void TwoGemsTaken()
-    {
-        resourcesController.gems[gemsBeingChosen[0]] -= 2;
-        playerController.TakeTwoTokens(gemsBeingChosen[0]);
-
-        gemsBeingChosen.Clear();
         this.amountOfGemsInfo = this.resourcesController.ToString();
     }
 

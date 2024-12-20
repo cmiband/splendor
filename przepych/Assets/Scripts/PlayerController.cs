@@ -300,23 +300,9 @@ public class PlayerController : MonoBehaviour
         button.onClick.AddListener(() => mainGameController.SelectCard(cardController));
     }
 
-    public void TakeTwoTokens(GemColor color)
+    public void TakeGems(List<GemColor> colors)
     {
-
-        if (this.resources.gems.ContainsKey(color))
-        {
-            this.resources.gems[color] += 2;
-        }
-        else
-        {
-            this.resources.gems.Add(color, 2);
-        }
-
-        this.ConfirmPlayerMove();
-    }
-    public void TakeThreeTokens(List<GemColor> colors)
-    {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < colors.Count; i++)
         {
             if (this.resources.gems.ContainsKey(colors[i]))
             {
@@ -328,6 +314,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        Debug.Log("confirm move");
         this.ConfirmPlayerMove();
     }
 
