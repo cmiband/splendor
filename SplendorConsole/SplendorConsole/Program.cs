@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using SplendorConsole;
 
 public class Program
 {
+    static WebserviceClient client = new WebserviceClient("ws://localhost:8765");
+
     async public static Task Main(string[] args)
     {
-        WebserviceClient client = new WebserviceClient("ws://localhost:8765");
+        
         await client.ConnectToWebsocket();
         Game? game;
-        int N = 100000;
+        int N = 3000;
         int errorCounter = 1;
         int errorCounterLoop = 0;
         int errorCounterCollect = 0;
@@ -23,17 +27,25 @@ public class Program
         int minErrorGap = N;
         int errorGap = 1;
         float turnSum = 0;
-
+        int maxTurn = 0;
+        int minTurn = N;
+        float[] awards = new float[4];
+        float maxAward = 0f;
+        float minAward = 1f;
+        float avgAward = 0f;
+        float maxLoss = 0f;
+        float minLoss = -1f;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
 
 
-        for (int i = 0; i < N; i++)
+        for (int i = 1; i <= N; i++)
         {
             game = new Game(client);
+            Console.WriteLine();
             try
             {
-                (int turnsNumber, int winner, float[]? state) = game.GameStart();
+                (int turnsNumber, int winner, int[]? state) = game.GameStart();
                 if (winner == -200)
                 {
                     errorCounterLoop++;
@@ -46,20 +58,63 @@ public class Program
                         minErrorGap = errorGap;
                     }
                     errorCounter++;
-                    Console.WriteLine($"Wystąpił błąd w grze numer {i}, błąd zapętlenia");
+                    Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd zapętlenia");
                     errorGap = 0;
+                    awards = new float[] { 0, 0, 0, 0 };
+                    await InformServerAboutFinishedGame(awards, winner);
                 }
                 else if (winner == -1)
                 {
-                    Console.WriteLine($"W grze nr {i} doszło do remisu w {turnsNumber} tur");
+                    Console.WriteLine($"[C#] W grze nr {i} doszło do remisu w {turnsNumber} tur");
                     tieCounter++;
                     turnSum += turnsNumber;
+                    awards = new float[] { 0, 0, 0, 0 };
+                    await InformServerAboutFinishedGame(awards, winner);
                 }
                 else
                 {
                     errorGap++;
-                    Console.WriteLine($"Grę nr {i} wygrywa gracz nr {winner} w {turnsNumber} tur, zap - {errorCounterLoop}, col - {errorCounterCollect}, idx - {errorCounterBound}, null - {errorCounterNull}, ??? - {errorCounterOther}");
+                    Console.WriteLine($"[C#] Grę nr {i} wygrywa gracz nr {winner} w {turnsNumber} tur, zap - {errorCounterLoop}, col - {errorCounterCollect}, idx - {errorCounterBound}, null - {errorCounterNull}, ??? - {errorCounterOther}");
                     turnSum += turnsNumber;
+                    if(turnsNumber>maxTurn)
+                    {
+                        maxTurn = turnsNumber;
+                    }
+                    if(turnsNumber<minTurn)
+                    {
+                        minTurn = turnsNumber;
+                    }
+
+                    awards = AwardsAfterGame(winner, state, turnsNumber);
+                    await InformServerAboutFinishedGame(awards, winner);
+
+                    Console.WriteLine($"[C#] Nagrody dla poszczególnych graczy: {awards[0]}, {awards[1]}, {awards[2]}, {awards[3]}");
+                    foreach (var item in awards)
+                    {
+                        avgAward += item;
+                        if(item>0)
+                        {
+                            if (item > maxAward)
+                            {
+                                maxAward = item;
+                            }
+                            if (item < minAward)
+                            {
+                                minAward = item;
+                            }
+                        }
+                        else
+                        {
+                            if (item < maxLoss)
+                            {
+                                maxLoss = item;
+                            }
+                            if (item > minLoss)
+                            {
+                                minLoss = item;
+                            }
+                        }
+                    }
                 }
                 game = null;
             }
@@ -68,17 +123,17 @@ public class Program
                 if(e.Message=="Collection was modified; enumeration operation may not execute.")
                 {
                     errorCounterCollect++;
-                    Console.WriteLine($"Wystąpił błąd w grze numer {i}, błąd kolekcji");
+                    Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd kolekcji");
                 }
                 else if(e.Message=="Index was outside the bounds of the array.")
                 {
                     errorCounterBound++;
-                    Console.WriteLine($"Wystąpił błąd w grze numer {i}, błąd idx");
+                    Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd idx");
                 }
                 else if(e.Message== "Nie działa try, catch :/")
                 {
                     errorCounterNull++;
-                    Console.WriteLine($"Wystąpił błąd w grze numer {i}, błąd null");
+                    Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd null");
                 }
                 else
                 {
@@ -96,106 +151,135 @@ public class Program
                 errorCounter++;
                 errorGap = 0;
                 game = null;
+
+                awards = new float[] { 0, 0, 0, 0 };
+                await InformServerAboutFinishedGame(awards, -1);
             }
         }
+
     stopwatch.Stop();
     if(errorCounter!=1)
     {
             errorCounter--;
     }
-    Console.WriteLine($"Cała pętla zakończona w czasie: {stopwatch.ElapsedMilliseconds} ms");
-    Console.WriteLine($"Średni czas symulacji jednej rozgrywki: {stopwatch.ElapsedMilliseconds / N} ms");
-    Console.WriteLine($"Liczba remisów - {tieCounter}, maxErrorGap - {maxErrorGap}, minErrorGap - {minErrorGap}, AvgGap - {N / errorCounter}, AvgTurn - {turnSum/(N-errorCounter+1)}");
+
+        Console.WriteLine($"\n[C# Summary]\nCała pętla zakończona w czasie: {stopwatch.ElapsedMilliseconds} ms");
+        Console.WriteLine($"Średni czas symulacji jednej rozgrywki: {stopwatch.ElapsedMilliseconds / N} ms");
+        Console.WriteLine($"Liczba remisów = {tieCounter}, maxErrorGap = {maxErrorGap}, minErrorGap = {minErrorGap}, AvgGap = {N / errorCounter}");
+        Console.WriteLine($"Tury: min = {minTurn}, max = {maxTurn} avg = {turnSum/(N-errorCounter+1)}");
+        Console.WriteLine($"Nagrody: min = {minAward}, max = {maxAward}");
+        Console.WriteLine($"Kary: min = {minLoss}, max = {maxLoss}");
     }
 
-    public static float AwardWinner(float advantage, float tokensCount, int moves)
+    public static float AwardWinner(int advantage, int tokensCount, int moves)
     {
-        float reward = 0;
+        int reward = 0;
 
-        reward += 100f;
-        reward -= 0.65f * (moves - 30);
-        reward += 0.8f * advantage;
-        reward -= 0.25f * tokensCount;
+        if(moves < 20)
+        {
+            reward += 75;
+        }
+        else if (moves < 25)
+        {
+            reward += 65;
+        }
+        else if(moves < 30)
+        {
+            reward += 60;
+        }
+        else if (moves < 35)
+        {
+            reward += 55;
+        }
+        else if(moves < 40)
+        {
+            reward += 50;
+        }
+        else
+        {
+            reward += 30;
+        }
+        if(advantage>=5)
+        {
+            reward += 20;
+        }
+        if(tokensCount>=5)
+        {
+            reward -= 10;
+        }
 
-        return reward;
+        return reward / (float)100;
     }
 
-    public static float AwardLossWinner(float[] arr, int moveNumber)
+    public static float AwardLossWinner(int[] arr, int moveNumber)
     {
-        float tokensSum = arr[174] + arr[175] + arr[176] + arr[177] + arr[178] + arr[179];
-        float advantage = ((arr[168] - arr[213]) + (arr[168] - arr[258]) + (arr[168] - arr[303])) / 3;
+        int tokensSum = arr[174] + arr[175] + arr[176] + arr[177] + arr[178] + arr[179];
+        int advantage = ((arr[168] - arr[213]) + (arr[168] - arr[258]) + (arr[168] - arr[303])) / 3;
 
         return AwardWinner(advantage, tokensSum, moveNumber);
     }
 
-    public static float AwardLossLoser(float advantage, float tokensCount, int moves)
+    public static float AwardLossLoser(int advantage, int tokensCount, int moves)
     {
-        float reward = 0;
-
-        reward -= 70f;
-        reward -= 0.65f * (moves - 30);
-        reward += 0.8f * advantage;
-        reward += 0.25f * tokensCount;
-
-        return reward;
+        int reward = -50;
+        if (advantage >= 5)
+        {
+            reward -= 20;
+        }
+        if (tokensCount >= 5)
+        {
+            reward -= 5;
+        }
+        return reward/ (float)100;
     }
 
-    public static float AwardLossP1(float[] arr, int moveNumber)
+    public static float AwardLossP1(int[] arr, int moveNumber)
     {
-        float tokensSum = arr[219] + arr[220] + arr[221] + arr[222] + arr[223] + arr[224];
-        float advantage = arr[168] - arr[213];
+        int tokensSum = arr[219] + arr[220] + arr[221] + arr[222] + arr[223] + arr[224];
+        int advantage = arr[168] - arr[213];
 
-        return AwardLossLoser(-advantage, tokensSum, moveNumber);
+        return AwardLossLoser(advantage, tokensSum, moveNumber);
     }
 
-    public static float AwardLossP2(float[] arr, int moveNumber)
+    public static float AwardLossP2(int[] arr, int moveNumber)
     {
-        float tokensSum = arr[265] + arr[266] + arr[267] + arr[268] + arr[269] + arr[264];
-        float advantage = arr[168] - arr[258];
+        int tokensSum = arr[265] + arr[266] + arr[267] + arr[268] + arr[269] + arr[264];
+        int advantage = arr[168] - arr[258];
 
-        return AwardLossLoser(-advantage, tokensSum, moveNumber);
+        return AwardLossLoser(advantage, tokensSum, moveNumber);
     }
 
-    public static float AwardLossP3(float[] arr, int moveNumber)
+    public static float AwardLossP3(int[] arr, int moveNumber)
     {
-        float tokensSum = arr[309] + arr[310] + arr[311] + arr[312] + arr[313] + arr[314];
-        float advantage = arr[168] - arr[303];
+        int tokensSum = arr[309] + arr[310] + arr[311] + arr[312] + arr[313] + arr[314];
+        int advantage = arr[168] - arr[303];
 
-        return AwardLossLoser(-advantage, tokensSum, moveNumber);
+        return AwardLossLoser(advantage, tokensSum, moveNumber);
     }
 
-    public static float[] AwardsAfterGame(int winner, float[] stateFromWinnerPerspective, int moveNumber)
+    public static float[] AwardsAfterGame(int winner, int[] stateFromWinnerPerspective, int moveNumber)
     {
         float[] rewards = new float[4];
 
         rewards[winner] = AwardLossWinner(stateFromWinnerPerspective, moveNumber);
-
-        if (winner == 0)
-        {
-            rewards[1] = AwardLossP1(stateFromWinnerPerspective, moveNumber);
-            rewards[2] = AwardLossP2(stateFromWinnerPerspective, moveNumber);
-            rewards[3] = AwardLossP3(stateFromWinnerPerspective, moveNumber);
-        }
-        else if (winner == 1)
-        {
-            rewards[2] = AwardLossP1(stateFromWinnerPerspective, moveNumber);
-            rewards[3] = AwardLossP2(stateFromWinnerPerspective, moveNumber);
-            rewards[0] = AwardLossP3(stateFromWinnerPerspective, moveNumber);
-        }
-        else if (winner == 2)
-        {
-            rewards[3] = AwardLossP1(stateFromWinnerPerspective, moveNumber);
-            rewards[0] = AwardLossP2(stateFromWinnerPerspective, moveNumber);
-            rewards[1] = AwardLossP3(stateFromWinnerPerspective, moveNumber);
-        }
-        else if (winner == 3)
-        {
-            rewards[0] = AwardLossP1(stateFromWinnerPerspective, moveNumber);
-            rewards[1] = AwardLossP1(stateFromWinnerPerspective, moveNumber);
-            rewards[2] = AwardLossP1(stateFromWinnerPerspective, moveNumber);
-        }
+        rewards[(winner+1)%4] = AwardLossP1(stateFromWinnerPerspective, moveNumber);
+        rewards[(winner+2)%4] = AwardLossP2(stateFromWinnerPerspective, moveNumber);
+        rewards[(winner+3)%4] = AwardLossP3(stateFromWinnerPerspective, moveNumber);
 
         return rewards;
     }
 
+    async public static Task InformServerAboutFinishedGame(float[] rewards, int winner)
+    {
+        var request = new
+        {
+            Id = (winner >= 0) ? 2 : -1,
+            Rewards = rewards
+        };
+
+        /*string response = */await client.SendAndFetchDataFromSocket(JsonSerializer.Serialize(request));
+
+        //JObject json = JObject.Parse(response);
+        //var ODPOWIEDZ = json["NAZWAPOLA"]?.ToObject<TYPPOLA>();
+    }
 }
