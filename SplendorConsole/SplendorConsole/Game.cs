@@ -466,6 +466,7 @@ namespace SplendorConsole
 
             var request = new
             {
+                Id = 1,
                 Feedback = feedback, 
                 GameState = gameState
             };

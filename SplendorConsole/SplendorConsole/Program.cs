@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using SplendorConsole;
 
 public class Program
 {
+    static WebserviceClient client = new WebserviceClient("ws://localhost:8765");
+
     async public static Task Main(string[] args)
     {
-        WebserviceClient client = new WebserviceClient("ws://localhost:8765");
+        
         await client.ConnectToWebsocket();
         Game? game;
-        int N = 100000;
+        int N = 3000;
         int errorCounter = 1;
         int errorCounterLoop = 0;
         int errorCounterCollect = 0;
@@ -38,6 +42,7 @@ public class Program
         for (int i = 1; i <= N; i++)
         {
             game = new Game(client);
+            Console.WriteLine();
             try
             {
                 (int turnsNumber, int winner, int[]? state) = game.GameStart();
@@ -53,19 +58,23 @@ public class Program
                         minErrorGap = errorGap;
                     }
                     errorCounter++;
-                    Console.WriteLine($"Wystąpił błąd w grze numer {i}, błąd zapętlenia");
+                    Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd zapętlenia");
                     errorGap = 0;
+                    awards = new float[] { 0, 0, 0, 0 };
+                    await InformServerAboutFinishedGame(awards, winner);
                 }
                 else if (winner == -1)
                 {
-                    Console.WriteLine($"W grze nr {i} doszło do remisu w {turnsNumber} tur");
+                    Console.WriteLine($"[C#] W grze nr {i} doszło do remisu w {turnsNumber} tur");
                     tieCounter++;
                     turnSum += turnsNumber;
+                    awards = new float[] { 0, 0, 0, 0 };
+                    await InformServerAboutFinishedGame(awards, winner);
                 }
                 else
                 {
                     errorGap++;
-                    Console.WriteLine($"Grę nr {i} wygrywa gracz nr {winner} w {turnsNumber} tur, zap - {errorCounterLoop}, col - {errorCounterCollect}, idx - {errorCounterBound}, null - {errorCounterNull}, ??? - {errorCounterOther}");
+                    Console.WriteLine($"[C#] Grę nr {i} wygrywa gracz nr {winner} w {turnsNumber} tur, zap - {errorCounterLoop}, col - {errorCounterCollect}, idx - {errorCounterBound}, null - {errorCounterNull}, ??? - {errorCounterOther}");
                     turnSum += turnsNumber;
                     if(turnsNumber>maxTurn)
                     {
@@ -75,8 +84,11 @@ public class Program
                     {
                         minTurn = turnsNumber;
                     }
+
                     awards = AwardsAfterGame(winner, state, turnsNumber);
-                    Console.WriteLine($"Nagrody dla poszczególnych graczy: {awards[0]}, {awards[1]}, {awards[2]}, {awards[3]}");
+                    await InformServerAboutFinishedGame(awards, winner);
+
+                    Console.WriteLine($"[C#] Nagrody dla poszczególnych graczy: {awards[0]}, {awards[1]}, {awards[2]}, {awards[3]}");
                     foreach (var item in awards)
                     {
                         avgAward += item;
@@ -111,17 +123,17 @@ public class Program
                 if(e.Message=="Collection was modified; enumeration operation may not execute.")
                 {
                     errorCounterCollect++;
-                    Console.WriteLine($"Wystąpił błąd w grze numer {i}, błąd kolekcji");
+                    Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd kolekcji");
                 }
                 else if(e.Message=="Index was outside the bounds of the array.")
                 {
                     errorCounterBound++;
-                    Console.WriteLine($"Wystąpił błąd w grze numer {i}, błąd idx");
+                    Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd idx");
                 }
                 else if(e.Message== "Nie działa try, catch :/")
                 {
                     errorCounterNull++;
-                    Console.WriteLine($"Wystąpił błąd w grze numer {i}, błąd null");
+                    Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd null");
                 }
                 else
                 {
@@ -139,14 +151,19 @@ public class Program
                 errorCounter++;
                 errorGap = 0;
                 game = null;
+
+                awards = new float[] { 0, 0, 0, 0 };
+                await InformServerAboutFinishedGame(awards, -1);
             }
         }
+
     stopwatch.Stop();
     if(errorCounter!=1)
     {
             errorCounter--;
     }
-        Console.WriteLine($"Cała pętla zakończona w czasie: {stopwatch.ElapsedMilliseconds} ms");
+
+        Console.WriteLine($"\n[C# Summary]\nCała pętla zakończona w czasie: {stopwatch.ElapsedMilliseconds} ms");
         Console.WriteLine($"Średni czas symulacji jednej rozgrywki: {stopwatch.ElapsedMilliseconds / N} ms");
         Console.WriteLine($"Liczba remisów = {tieCounter}, maxErrorGap = {maxErrorGap}, minErrorGap = {minErrorGap}, AvgGap = {N / errorCounter}");
         Console.WriteLine($"Tury: min = {minTurn}, max = {maxTurn} avg = {turnSum/(N-errorCounter+1)}");
@@ -252,4 +269,17 @@ public class Program
         return rewards;
     }
 
+    async public static Task InformServerAboutFinishedGame(float[] rewards, int winner)
+    {
+        var request = new
+        {
+            Id = (winner >= 0) ? 2 : -1,
+            Rewards = rewards
+        };
+
+        /*string response = */await client.SendAndFetchDataFromSocket(JsonSerializer.Serialize(request));
+
+        //JObject json = JObject.Parse(response);
+        //var ODPOWIEDZ = json["NAZWAPOLA"]?.ToObject<TYPPOLA>();
+    }
 }
