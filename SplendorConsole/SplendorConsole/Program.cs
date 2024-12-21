@@ -276,6 +276,7 @@ public class Program
         var request = new
         {
             Id = (winner >= 0) ? 2 : -1,
+            Winner = winner,
             LastFeedback = lastFeedback,
             Rewards = rewards
         };
