@@ -162,24 +162,34 @@ public class GameController : MonoBehaviour
 
     public void ChangeTurn()
     {
-        if(this.currentPlayerId == 3)
+        if (this.currentPlayerId == 3)
             Debug.Log("new player id   " + 0);
         else
-            Debug.Log("new player id   " + (this.currentPlayerId+1));
+            Debug.Log("new player id   " + (this.currentPlayerId + 1));
 
         PlayerController crntPlayerController = currentPlayer.GetComponent<PlayerController>();
+
         var availableNoble = crntPlayerController.GetNoble(this, crntPlayerController);
 
         if (availableNoble is not null)
         {
             var nobleIndex = GetNobleIndex(availableNoble);
-            var addedNoble = new NobleController(availableNoble.points, availableNoble.detailedPrice, availableNoble.illustration);
-            this.playerIdToNoble[currentPlayerId].Add(addedNoble);
-            this.boardController.visibleNoblesCoppied.Remove(this.boardController.visibleNoblesCoppied[nobleIndex]);
+
+            NobleController addedNoble = currentPlayer.AddComponent<NobleController>();
+
+            addedNoble.Init(availableNoble.points, availableNoble.detailedPrice, availableNoble.illustration);
+
+            this.playerIdToNoble[this.currentPlayerId].Add(addedNoble);
+            Debug.Log($"Noble added to player with id: {currentPlayerId}");
+
+            this.boardController.visibleNoblesCoppied.RemoveAt(nobleIndex);
+            Debug.Log($"Noble removed from visibleNobleCopied");
         }
-        
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
+        Debug.Log($"Current player id: {this.currentPlayerId}");
+
         int targetedPlayerId = this.currentPlayerId;
+
         foreach (GameObject player in this.players)
         {
             PlayerController playerController = player.GetComponent<PlayerController>();
@@ -190,6 +200,7 @@ public class GameController : MonoBehaviour
 
             if (this.playerIdToNoble.ContainsKey(targetedPlayerId))
                 playerController.SetPlayerNoble(this.playerIdToNoble[targetedPlayerId]);
+
             targetedPlayerId = (targetedPlayerId + 1) % 4;
         }
 
@@ -197,7 +208,9 @@ public class GameController : MonoBehaviour
 
         buyCard.SetActive(false);
         reserveCard.SetActive(false);
+
     }
+
     public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources)
     {
         this.playerIdToResources[playerId] = resources;

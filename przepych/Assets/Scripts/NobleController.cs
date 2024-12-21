@@ -40,5 +40,11 @@ public class NobleController :  MonoBehaviour
                this.points == card.points &&
                this.detailedPrice.Equals(card.detailedPrice);
     }
+    public void Init(int points, ResourcesController detailedPrice, string illustration)
+    {
+        this.points = points;
+        this.detailedPrice = detailedPrice;
+        this.illustration = illustration;
+    }
 }
 
