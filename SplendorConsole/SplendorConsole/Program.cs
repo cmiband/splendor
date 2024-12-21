@@ -8,6 +8,7 @@ using SplendorConsole;
 
 public class Program
 {
+    public const bool EXTENDED_LOGGER_MODE = true;
     static WebserviceClient client = new WebserviceClient("ws://localhost:8765");
 
     async public static Task Main(string[] args)
@@ -15,7 +16,7 @@ public class Program
         
         await client.ConnectToWebsocket();
         Game? game;
-        int N = 2;
+        int N = 10;
         int errorCounter = 1;
         int errorCounterLoop = 0;
         int errorCounterCollect = 0;

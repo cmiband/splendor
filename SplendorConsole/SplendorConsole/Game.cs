@@ -250,6 +250,7 @@ namespace SplendorConsole
         {
 
             RequestMoveFromServerAndExecuteIt(feedbackFromPreviousRequest, player);
+            if(Program.EXTENDED_LOGGER_MODE) Console.WriteLine($"[C#] Wysłano na serwer zapytanie o ruch gracza {currentTurn} oraz feedback {feedbackFromPreviousRequest} dla poprzedniego gracza.");
             GettingNobles();
         }
 
