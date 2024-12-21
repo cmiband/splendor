@@ -496,11 +496,25 @@ namespace SplendorConsole
             }
             if (numberOfInvalidMoves == 0)
             {
-                feedbackFromPreviousRequest = 0;
+                if (moves[numberOfInvalidMoves]==1)
+                {
+                    feedbackFromPreviousRequest = (float)-0.1;
+                }
+                else
+                {
+                    feedbackFromPreviousRequest = (float)0.1;
+                }
             }
             else if (numberOfInvalidMoves <= 10)
             {
-                feedbackFromPreviousRequest = (float)-0.1;
+                if (moves[numberOfInvalidMoves] == 1)
+                {
+                    feedbackFromPreviousRequest = (float)-0.15;
+                }
+                else
+                {
+                    feedbackFromPreviousRequest = (float)-0.05;
+                }
             }
             else
             {
