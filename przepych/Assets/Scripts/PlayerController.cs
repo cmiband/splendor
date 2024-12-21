@@ -459,7 +459,7 @@ public class PlayerController : MonoBehaviour
     }
     public NobleController GetNoble(GameController game, PlayerController player)
     {
-        foreach (var noble in game.boardController.visibleNoblesListControllers)
+        foreach (var noble in game.boardController.visibleNoblesCoppied)
         {
             int canGetThisNoble = 0;
 

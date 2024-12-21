@@ -51,7 +51,7 @@ public class GameController : MonoBehaviour
         availableNoblesController.LoadNoblesFromExcel("Assets/ExternalResources/NoblesWykaz.xlsx");
         boardController.SetNobles(availableNoblesController.noblesList);
         boardController.CreateNobleObjectOnStart();
-
+        boardController.CopyNobles();
 
 
 
@@ -162,12 +162,10 @@ public class GameController : MonoBehaviour
 
     public void ChangeTurn()
     {
-        Debug.Log("old player id:  " + this.currentPlayerId);
-        this.currentPlayerId = (this.currentPlayerId + 1) % 4;
-
-        int targetedPlayerId = this.currentPlayerId;
-        Debug.Log("new player id   " + targetedPlayerId);
-
+        if(this.currentPlayerId == 3)
+            Debug.Log("new player id   " + 0);
+        else
+            Debug.Log("new player id   " + (this.currentPlayerId+1));
 
         PlayerController crntPlayerController = currentPlayer.GetComponent<PlayerController>();
         var availableNoble = crntPlayerController.GetNoble(this, crntPlayerController);
@@ -175,20 +173,13 @@ public class GameController : MonoBehaviour
         if (availableNoble is not null)
         {
             var nobleIndex = GetNobleIndex(availableNoble);
-            if (currentPlayerId == 0)
-            {
-                var addedNoble = new NobleController(availableNoble.points, availableNoble.detailedPrice, availableNoble.illustration);
-                this.playerIdToNoble[0].Add(addedNoble);
-                this.boardController.visibleNoblesListControllers.Remove(this.boardController.visibleNoblesListControllers[nobleIndex]);
-            }
-            else
-            {
-                var addedNoble = new NobleController(availableNoble.points, availableNoble.detailedPrice, availableNoble.illustration);
-                this.playerIdToNoble[currentPlayerId - 1].Add(addedNoble);
-                this.boardController.visibleNoblesListControllers.Remove(availableNoble);
-            }
+            var addedNoble = new NobleController(availableNoble.points, availableNoble.detailedPrice, availableNoble.illustration);
+            this.playerIdToNoble[currentPlayerId].Add(addedNoble);
+            this.boardController.visibleNoblesCoppied.Remove(this.boardController.visibleNoblesCoppied[nobleIndex]);
         }
-
+        
+        this.currentPlayerId = (this.currentPlayerId + 1) % 4;
+        int targetedPlayerId = this.currentPlayerId;
         foreach (GameObject player in this.players)
         {
             PlayerController playerController = player.GetComponent<PlayerController>();
@@ -197,7 +188,6 @@ public class GameController : MonoBehaviour
             playerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerId]);
             playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId]);
 
-            // to be fixed
 
             if (this.playerIdToNoble.ContainsKey(targetedPlayerId))
                 playerController.SetPlayerNoble(this.playerIdToNoble[targetedPlayerId]);
@@ -209,6 +199,10 @@ public class GameController : MonoBehaviour
 
         buyCard.SetActive(false);
         reserveCard.SetActive(false);
+        if(this.boardController.visibleNoblesCoppied.Count == 0)
+        {
+            Debug.Log("Monik");
+        }
     }
 
 
@@ -344,7 +338,7 @@ public class GameController : MonoBehaviour
     }
     private int GetNobleIndex(NobleController noble)
     {
-        var visibleNobles = boardController.visibleNoblesListControllers;
+        var visibleNobles = boardController.visibleNoblesCoppied;
         for (int i=0; i<visibleNobles.Count; i++)
         {
             if (visibleNobles[i].Equals(noble))
