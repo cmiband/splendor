@@ -197,8 +197,6 @@ public class GameController : MonoBehaviour
 
         buyCard.SetActive(false);
         reserveCard.SetActive(false);
-        if (this.boardController.visibleNoblesCoppied.Count == 0)
-            Debug.Log("tescik");
     }
     public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources)
     {
