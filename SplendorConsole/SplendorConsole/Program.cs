@@ -8,7 +8,7 @@ using SplendorConsole;
 
 public class Program
 {
-    public const bool EXTENDED_LOGGER_MODE = true;
+    public const bool EXTENDED_LOGGER_MODE = false;
     static WebserviceClient client = new WebserviceClient("ws://localhost:8765");
 
     async public static Task Main(string[] args)
@@ -16,7 +16,7 @@ public class Program
         
         await client.ConnectToWebsocket();
         Game? game;
-        int N = 10;
+        int N = 100;
         int errorCounter = 1;
         int errorCounterLoop = 0;
         int errorCounterCollect = 0;
@@ -46,7 +46,7 @@ public class Program
             Console.WriteLine();
             try
             {
-                (int turnsNumber, int winner, int[]? state) = game.GameStart();
+                (float lastFeedback, int turnsNumber, int winner, int[]? state) = game.GameStart();
                 if (winner == -200)
                 {
                     errorCounterLoop++;
@@ -62,7 +62,7 @@ public class Program
                     Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd zapętlenia");
                     errorGap = 0;
                     awards = new float[] { 0, 0, 0, 0 };
-                    await InformServerAboutFinishedGame(awards, winner);
+                    await InformServerAboutFinishedGame(awards, winner, lastFeedback);
                 }
                 else if (winner == -1)
                 {
@@ -70,7 +70,7 @@ public class Program
                     tieCounter++;
                     turnSum += turnsNumber;
                     awards = new float[] { 0, 0, 0, 0 };
-                    await InformServerAboutFinishedGame(awards, winner);
+                    await InformServerAboutFinishedGame(awards, winner, lastFeedback);
                 }
                 else
                 {
@@ -87,7 +87,7 @@ public class Program
                     }
 
                     awards = AwardsAfterGame(winner, state, turnsNumber);
-                    await InformServerAboutFinishedGame(awards, winner);
+                    await InformServerAboutFinishedGame(awards, winner, lastFeedback);
 
                     Console.WriteLine($"[C#] Nagrody dla poszczególnych graczy: {awards[0]}, {awards[1]}, {awards[2]}, {awards[3]}");
                     foreach (var item in awards)
@@ -154,7 +154,7 @@ public class Program
                 game = null;
 
                 awards = new float[] { 0, 0, 0, 0 };
-                await InformServerAboutFinishedGame(awards, -1);
+                await InformServerAboutFinishedGame(awards, -1, 0);
             }
         }
 
@@ -271,17 +271,15 @@ public class Program
         return rewards;
     }
 
-    async public static Task InformServerAboutFinishedGame(float[] rewards, int winner)
+    async public static Task InformServerAboutFinishedGame(float[] rewards, int winner, float lastFeedback)
     {
         var request = new
         {
             Id = (winner >= 0) ? 2 : -1,
+            LastFeedback = lastFeedback,
             Rewards = rewards
         };
 
-        /*string response = */await client.SendAndFetchDataFromSocket(JsonSerializer.Serialize(request));
-
-        //JObject json = JObject.Parse(response);
-        //var ODPOWIEDZ = json["NAZWAPOLA"]?.ToObject<TYPPOLA>();
+        await client.SendAndFetchDataFromSocket(JsonSerializer.Serialize(request));
     }
 }
