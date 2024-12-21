@@ -250,7 +250,6 @@ namespace SplendorConsole
         {
 
             RequestMoveFromServerAndExecuteIt(feedbackFromPreviousRequest, player);
-            if(Program.EXTENDED_LOGGER_MODE) Console.WriteLine($"[C#] Wysłano na serwer zapytanie o ruch gracza {currentTurn} oraz feedback {feedbackFromPreviousRequest} dla poprzedniego gracza.");
             GettingNobles();
         }
 
@@ -483,9 +482,18 @@ namespace SplendorConsole
 
         async public Task RequestMoveFromServerAndExecuteIt(float feedbackForPreviousMove, Player currentPlayer)
         {
+            if (false)
+            {
+                await Console.Out.WriteLineAsync($"[C#] Wysłano na serwer zapytanie o ruch gracza {currentTurn} oraz feedback {feedbackFromPreviousRequest} dla poprzedniego gracza.");
+            }
             int[] moves = await RequestMovesListFromServer(feedbackForPreviousMove);
+
             var validator = new ResponseValidator();
             int numberOfInvalidMoves = validator.CheckMoves(moves, currentPlayer, this, bank, board);
+            if (Program.EXTENDED_LOGGER_MODE)
+            {
+                await Console.Out.WriteLineAsync($"[C#] gracz {currentTurn}, feedback {feedbackFromPreviousRequest} dla poprzedniego, {moves[numberOfInvalidMoves]}");
+            }
             if (numberOfInvalidMoves == 0)
             {
                 feedbackFromPreviousRequest = 0;

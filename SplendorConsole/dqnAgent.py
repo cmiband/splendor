@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import os
 
 
 class DQNAgent:
@@ -57,11 +58,12 @@ class DQNAgent:
     def choose_action(self, state):
         """Choose an action using epsilon-greedy policy."""
         if np.random.rand() < self.epsilon:
-            return np.random.randint(1, self.action_dim + 1)  # Random action (1 to action_dim)
+            return np.random.randint(1, self.action_dim + 1)  # Random action in the range [1, action_dim]
         else:
             state_tensor = torch.FloatTensor(state).unsqueeze(0)
             q_values = self.eval_net(state_tensor)
             return torch.argmax(q_values).item() + 1  # Convert to 1-based indexing
+
 
     def store_transition(self, state, action, reward, next_state, done):
         """Store a transition in replay memory."""
@@ -100,12 +102,21 @@ class DQNAgent:
 
     def generate_action_values(self, state):
         """
-        Generate and sort action values for a given state.
+        Generate and sort action indices for a given state based on their Q-values.
+    
+        Args:
+        state (array-like): The current state of the environment.
+
+        Returns:
+        list[int]: Action indices sorted by their Q-values in descending order.
         """
-        state_tensor = torch.FloatTensor(state).unsqueeze(0)
-        action_values = self.policy_net(state_tensor).detach().numpy().squeeze()  # For DQN, use eval_net
-        sorted_actions = np.argsort(action_values)[::-1]  # Sort actions by value (descending)
-        return sorted_actions
+        state_tensor = torch.FloatTensor(state).unsqueeze(0)  
+        with torch.no_grad(): 
+            q_values = self.eval_net(state_tensor).squeeze().numpy()  
+
+        sorted_actions = np.argsort(q_values)[::-1]  # Descending order
+        
+        return sorted_actions.tolist()
     
     def punish_illegal_moves(self, state, illegal_moves):
         """
@@ -119,6 +130,38 @@ class DQNAgent:
             # Add penalty as a transition
             self.store_transition(state, move, penalty, dummy_next_state, done)
         self.learn()  # Update the model with penalties
+
+    def save_checkpoint(self, filepath):
+        """
+        Save the current state of the agent to a checkpoint.
+        """
+        checkpoint = {
+            "eval_net_state_dict": self.eval_net.state_dict(),
+            "target_net_state_dict": self.target_net.state_dict(),
+            "optimizer_state_dict": self.optimizer.state_dict(),
+            "epsilon": self.epsilon,
+            "memory": self.memory
+        }
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        torch.save(checkpoint, filepath)
+        print(f"Checkpoint saved at {filepath}")
+
+    def load_checkpoint(self, filepath):
+        """
+        Load a saved state from a checkpoint.
+        """
+        if not os.path.exists(filepath):
+            print(f"No checkpoint found at {filepath}")
+            return False
+
+        checkpoint = torch.load(filepath)
+        self.eval_net.load_state_dict(checkpoint["eval_net_state_dict"])
+        self.target_net.load_state_dict(checkpoint["target_net_state_dict"])
+        self.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+        self.epsilon = checkpoint["epsilon"]
+        self.memory = checkpoint["memory"]
+        print(f"Checkpoint loaded from {filepath}")
+        return True
 
 
 # Testing the DQNAgent class

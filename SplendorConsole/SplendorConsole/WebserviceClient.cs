@@ -26,7 +26,7 @@ namespace SplendorConsole
 
         public WebserviceClient(string endpoint)
         {
-            StartServer();
+            //StartServer();
             serverEndpoint = new Uri(endpoint);
             webSocket = new ClientWebSocket();
         }

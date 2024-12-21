@@ -1,5 +1,6 @@
 from multiagentDQN import MultiAgentDQN
 from multiagentPPO import MultiAgentPPO
+import os
 
 class MultiAgentTrainer:
     def __init__(self, algorithm, num_agents, state_dim, action_dim, **agent_kwargs):
@@ -52,3 +53,20 @@ class MultiAgentTrainer:
         for i, illegal_moves in enumerate(illegal_moves_list):
             if illegal_moves:
                 self.agent_manager.agents[i].punish_illegal_moves(states[i], illegal_moves)
+
+    def save_all_agents(self, directory):
+        """
+        Save checkpoints for all agents.
+        """
+        os.makedirs(directory, exist_ok=True)
+        for i, agent in enumerate(self.agent_manager.agents):
+            agent.save_checkpoint(os.path.join(directory, f"agent_{i}_checkpoint.pth"))
+
+    def load_all_agents(self, directory):
+        """
+        Load checkpoints for all agents.
+        """
+        for i, agent in enumerate(self.agent_manager.agents):
+            filepath = os.path.join(directory, f"agent_{i}_checkpoint.pth")
+            agent.load_checkpoint(filepath)
+
