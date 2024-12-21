@@ -15,7 +15,7 @@ public class Program
         
         await client.ConnectToWebsocket();
         Game? game;
-        int N = 100;
+        int N = 2;
         int errorCounter = 1;
         int errorCounterLoop = 0;
         int errorCounterCollect = 0;
@@ -28,7 +28,7 @@ public class Program
         int errorGap = 1;
         float turnSum = 0;
         int maxTurn = 0;
-        int minTurn = N;
+        int minTurn = int.MaxValue;
         float[] awards = new float[4];
         float maxAward = 0f;
         float minAward = 1f;
