@@ -188,10 +188,8 @@ public class GameController : MonoBehaviour
             playerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerId]);
             playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId]);
 
-
             if (this.playerIdToNoble.ContainsKey(targetedPlayerId))
                 playerController.SetPlayerNoble(this.playerIdToNoble[targetedPlayerId]);
-
             targetedPlayerId = (targetedPlayerId + 1) % 4;
         }
 
@@ -199,13 +197,9 @@ public class GameController : MonoBehaviour
 
         buyCard.SetActive(false);
         reserveCard.SetActive(false);
-        if(this.boardController.visibleNoblesCoppied.Count == 0)
-        {
-            Debug.Log("Monik");
-        }
+        if (this.boardController.visibleNoblesCoppied.Count == 0)
+            Debug.Log("tescik");
     }
-
-
     public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources)
     {
         this.playerIdToResources[playerId] = resources;
