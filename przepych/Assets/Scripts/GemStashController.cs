@@ -35,8 +35,9 @@ public class GemStashController : MonoBehaviour
     {
         if(bankController.currentMode == MODE.GIVE)
         {
-
-        } else if(bankController.currentMode == MODE.TAKE && this.color != GemColor.GOLDEN)
+            this.HandleGiveGem();
+        } 
+        else if(bankController.currentMode == MODE.TAKE && this.color != GemColor.GOLDEN)
         {
             this.HandleTakeGem();
         }
@@ -44,7 +45,14 @@ public class GemStashController : MonoBehaviour
 
     private void HandleGiveGem()
     {
+        if (this.bankController.playerController.Resources.gems[this.color] == 0)
+        {
+            Debug.Log("Nieodpowiednia operacja, ¿etony nie zosta³y oddane");
+            return;
+        }
 
+        this.amountOfGems++;
+        this.bankController.GiveGem(this.color);
     }
 
     private void HandleTakeGem()
@@ -53,7 +61,6 @@ public class GemStashController : MonoBehaviour
         ResourcesController gemsInBank = bankController.resourcesController;
         int amountOfGemsChosen = colorsAlreadyChosen.Count;
         int amountOfAvailableStacks = this.CheckAmountOfAvailableStashes(gemsInBank);
-        Debug.Log("amount of av stacks  " + amountOfAvailableStacks);
 
         if (amountOfGemsChosen == 0 && this.amountOfGems > 0)
         {

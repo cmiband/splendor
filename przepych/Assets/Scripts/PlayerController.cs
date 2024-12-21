@@ -8,6 +8,7 @@ using System.Linq;
 
 public class PlayerController : MonoBehaviour
 {
+    public const int MAXIMUM_AMOUNT_OF_GEMS = 10;
     public TextMeshProUGUI pointsText;
 
     public int playerId;
@@ -54,11 +55,6 @@ public class PlayerController : MonoBehaviour
         this.InitGemDictionary();
         this.bankController = FindObjectOfType<BankController>();
         this.goldenGemStashController = FindObjectOfType<GoldenGemStashController>();
-
-        foreach(GemColor color in Enum.GetValues(typeof(GemColor)))
-        {
-            this.BonusResources.gems[color] = 0;
-        }
     }
     public void Update()
     {
@@ -75,6 +71,11 @@ public class PlayerController : MonoBehaviour
 
     public void HandleBuyCard()
     {
+        if(this.mainGameController.actionIsTaken)
+        {
+            return;
+        }
+
         if (mainGameController.selectedCard == null)
         {
             Debug.Log("Nie wybrano żadnej karty do zakupu.");
@@ -194,12 +195,17 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
-        mainGameController.ChangeTurn();
+        this.ConfirmPlayerMove();
     }
 
 
     public void HandleReserveCard()
     {
+        if(this.mainGameController.actionIsTaken)
+        {
+            return;
+        }
+
         if(handReserved.Count < 3)
         {
             if (goldenGemStashController.TakeOne())
@@ -281,7 +287,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Nie wybrano żadnej karty do zarezerwowania");
             }
 
-            mainGameController.ChangeTurn();
+            this.ConfirmPlayerMove();
         }
         else
         {
@@ -314,9 +320,22 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(this.resources.gems)
+        int amountOfGems = this.GetAmountOfGems();
+        if(amountOfGems > 10)
+        {
+            Debug.Log("Masz za dużo żetonów musisz oddać " + (amountOfGems - MAXIMUM_AMOUNT_OF_GEMS));
+            mainGameController.actionIsTaken = true;
+            bankController.SetModeToGive(amountOfGems-MAXIMUM_AMOUNT_OF_GEMS);
+        } 
+        else
+        {
+            this.ConfirmPlayerMove();
+        }
+    }
 
-        this.ConfirmPlayerMove();
+    public void GiveGem(GemColor color)
+    {
+        this.resources.RemoveResource(color, 1);
     }
 
     public void TakeGoldenGem()
@@ -334,11 +353,18 @@ public class PlayerController : MonoBehaviour
     private void UpdatePlayersResources()
     {
         this.mainGameController.UpdateTargetedPlayerResources(this.playerId, this.resources);
+        this.mainGameController.UpdateTargetedPlayerBonusResources(this.playerId, this.bonusResources);
     }
 
-    private void ConfirmPlayerMove()
+    private void UpdatePlayersPoints()
+    {
+        this.mainGameController.UpdateTargetedPlayerPoints(this.playerId, this.points);
+    }
+
+    public void ConfirmPlayerMove()
     {
         this.UpdatePlayersResources();
+        this.UpdatePlayersPoints();
 
         this.mainGameController.ChangeTurn();
     }
@@ -353,15 +379,20 @@ public class PlayerController : MonoBehaviour
         this.handReserved = cards;
     }
 
-    public void SetPlayerResources(ResourcesController resources)
+    public void SetPlayerResources(ResourcesController resources, ResourcesController bonusResources)
     {
         this.resources = resources;
+        this.bonusResources = bonusResources;
 
         this.resourcesInfo = this.resources.ToString();
-
         this.bonusResourcesInfo = this.bonusResources.ToString();
 
         this.SetGemInfo(this.resources);
+    }
+
+    public void SetPlayerPoints(int points)
+    {
+        this.points = points;
     }
 
     public List<CardController> GetPlayerHand()
@@ -407,7 +438,7 @@ public class PlayerController : MonoBehaviour
     {
         if (bonusColor != GemColor.NONE)
         {
-            BonusResources.AddResource(bonusColor);
+            this.bonusResources.AddResource(bonusColor);
             Debug.Log($"Dodano bonusowy zas�b: {bonusColor}");
         }
     }
@@ -471,17 +502,19 @@ public class PlayerController : MonoBehaviour
     }
 
     private int GetAmountOfGems()
-
-    private void RemoveGemsOneColor(GemColor color, int amount)
     {
-        if (amount == 0)
+        int result = 0;
+
+        foreach(GemColor color in this.resources.gems.Keys)
         {
-            return;
+            if(color == GemColor.NONE)
+            {
+                continue;
+            }
+
+            result += this.resources.gems[color];
         }
-        for (int i = 0; i < amount; i++)
-        {
-            this.resources.gems[color] -= 1;
-            bankController.gemsBeingReturned.Add(color);
-        }
+
+        return result;
     }
 }
