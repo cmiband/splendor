@@ -15,7 +15,7 @@ public class Program
         
         await client.ConnectToWebsocket();
         Game? game;
-        int N = 3000;
+        int N = 100;
         int errorCounter = 1;
         int errorCounterLoop = 0;
         int errorCounterCollect = 0;
@@ -169,6 +169,7 @@ public class Program
         Console.WriteLine($"Tury: min = {minTurn}, max = {maxTurn} avg = {turnSum/(N-errorCounter+1)}");
         Console.WriteLine($"Nagrody: min = {minAward}, max = {maxAward}");
         Console.WriteLine($"Kary: min = {minLoss}, max = {maxLoss}");
+        Console.WriteLine();
     }
 
     public static float AwardWinner(int advantage, int tokensCount, int moves)
