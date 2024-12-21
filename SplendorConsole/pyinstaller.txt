@@ -1,0 +1,3 @@
+pyinstaller --onefile server.py
+
++przenieść do folderu odpowiedniego
