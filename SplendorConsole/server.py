@@ -3,12 +3,22 @@ import websockets
 import json
 from random import shuffle
 
+
+
+from real_simulation_try1 import *
+
+ifFirst = True
+
 async def handle_connection(websocket: websockets.WebSocketServerProtocol, path: str) -> None:
     try:
         async for message in websocket:
             
             data = json.loads(message)
             id = data.get("Id")
+
+
+
+            global ifFirst
 
             if id == 1:
                 # REQUEST Z WEWNĄTRZ
@@ -33,7 +43,7 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
                 rewards = data.get("Rewards")
                 last_feedback = data.get("LastFeedback")
                 print(f"[Python] Serwer odebrał wygraną {rewards} i ostatni feedback {last_feedback}")
-
+                trainer.update_with_final_rewards(rewards)
                 #TRENING
 
                 response_object = {
