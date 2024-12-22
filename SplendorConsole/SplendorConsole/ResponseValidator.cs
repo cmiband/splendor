@@ -11,7 +11,7 @@ namespace SplendorConsole
         private int passPlace = 0;
         public int CheckMoves(int[] arrayOfMoves, Player currentPlayer, Game game, Bank bank, Board board)
         {
-            for(int i = 0; i <= arrayOfMoves.Length; i++)
+            for(int i = 0; i < arrayOfMoves.Length; i++)
             {
                 if (arrayOfMoves[i]==0)
                 {
@@ -113,6 +113,10 @@ namespace SplendorConsole
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
+                        if (board.level1VisibleCards[1] == null)
+                        {
+                            throw new Exception("Nie działa try, catch :/");
+                        }
                         var cardPrice = board.level1VisibleCards[1].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
@@ -180,6 +184,10 @@ namespace SplendorConsole
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
+                        }
+                        if (board.level1VisibleCards[2] == null)
+                        {
+                            throw new Exception("Nie działa try, catch :/");
                         }
                         var cardPrice = board.level1VisibleCards[2].DetailedPrice.gems;
 
@@ -325,6 +333,10 @@ namespace SplendorConsole
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
+                        if (board.level2VisibleCards[0] == null)
+                        {
+                            throw new Exception("Nie działa try, catch :/");
+                        }
                         var cardPrice = board.level2VisibleCards[0].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
@@ -393,6 +405,10 @@ namespace SplendorConsole
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
+                        if (board.level2VisibleCards[1] == null)
+                        {
+                            throw new Exception("Nie działa try, catch :/");
+                        }
                         var cardPrice = board.level2VisibleCards[1].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
@@ -460,6 +476,10 @@ namespace SplendorConsole
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
+                        }
+                        if (board.level2VisibleCards[2] == null)
+                        {
+                            throw new Exception("Nie działa try, catch :/");
                         }
                         var cardPrice = board.level2VisibleCards[2].DetailedPrice.gems;
 
@@ -601,6 +621,10 @@ namespace SplendorConsole
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
+                        if (board.level3VisibleCards[0] == null)
+                        {
+                            throw new Exception("Nie działa try, catch :/");
+                        }
                         var cardPrice = board.level3VisibleCards[0].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
@@ -668,6 +692,10 @@ namespace SplendorConsole
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
+                        }
+                        if (board.level3VisibleCards[1] == null)
+                        {
+                            throw new Exception("Nie działa try, catch :/");
                         }
                         var cardPrice = board.level3VisibleCards[1].DetailedPrice.gems;
 
@@ -737,6 +765,10 @@ namespace SplendorConsole
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
+                        if (board.level3VisibleCards[2] == null)
+                        {
+                            throw new Exception("Nie działa try, catch :/");
+                        }
                         var cardPrice = board.level3VisibleCards[2].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
@@ -804,6 +836,10 @@ namespace SplendorConsole
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
+                        }
+                        if (board.level3VisibleCards[3] == null)
+                        {
+                            throw new Exception("Nie działa try, catch :/");
                         }
                         var cardPrice = board.level3VisibleCards[3].DetailedPrice.gems;
 
