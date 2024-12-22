@@ -142,7 +142,7 @@ namespace SplendorConsole
             while (true)
             {
                 securityCounter++;
-                if(securityCounter>=4000)
+                if(securityCounter>=10000)
                 {
                     return (feedbackFromPreviousRequest, securityCounter/4, -200, ToArray());
                 }
@@ -358,6 +358,10 @@ namespace SplendorConsole
 
         internal void RefillBankResources(Bank bank, Card card, Dictionary<GemColor, int> resourcesUsed)
         {
+            if(card==null)
+            {
+                throw new Exception("Nie działa try, catch :/");
+            }
             foreach (var gemCost in card.DetailedPrice.gems)
             {
                 GemColor color = gemCost.Key;
@@ -490,10 +494,10 @@ namespace SplendorConsole
 
             var validator = new ResponseValidator();
             int numberOfInvalidMoves = validator.CheckMoves(moves, currentPlayer, this, bank, board);
-            if (Program.EXTENDED_LOGGER_MODE)
+            /*if (Program.EXTENDED_LOGGER_MODE)
             {
                 await Console.Out.WriteLineAsync($"[C#] gracz {currentTurn}, feedback {feedbackFromPreviousRequest} dla poprzedniego, {moves[numberOfInvalidMoves]}");
-            }
+            }*/
             if (numberOfInvalidMoves == 0)
             {
                 if (moves[numberOfInvalidMoves]==0)
