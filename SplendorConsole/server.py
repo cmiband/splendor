@@ -2,8 +2,10 @@ import asyncio
 import websockets
 import json
 from random import shuffle
+
 from real_simulation_try1 import *
 
+ifFirst = True
 
 async def handle_connection(websocket: websockets.WebSocketServerProtocol, path: str) -> None:
     try:
@@ -11,22 +13,23 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
             
             data = json.loads(message)
             id = data.get("Id")
-            ifFirst = True
+
+            global ifFirst
+
             if id == 1:
-                # REQUEST Z WEWNĄTRZ
 
                 if ifFirst:
                     trainer.load_all_agents("./checkpoints")
                     ifFirst = False
-
+                # REQUEST Z WEWNĄTRZ
                 current_player = data.get("CurrentPlayer")
                 feedback = data.get("Feedback")
                 game_state = data.get("GameState")
 
-                #LOSOWY OUTPUT, NALEŻY ZASTĄPIĆ OUTPUTEM Z MODELU
-                output = step(current_player, game_state, feedback)
+                
 
                 #TRENING
+                output = step(current_player, game_state, feedback)
 
                 response_object = {
                     "MovesList": output,
@@ -35,27 +38,23 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
                 await websocket.send(response_json)
 
             elif id == 2:
-
-                # REQUEST Z ZAKOŃCZONEJ GRY Z WYGRANYM
                 ifFirst = True
-
+                # REQUEST Z ZAKOŃCZONEJ GRY Z WYGRANYM
+                trainer.save_all_agents("./checkpoints")
                 rewards = data.get("Rewards")
                 last_feedback = data.get("LastFeedback")
                 print(f"[Python] Serwer odebrał wygraną {rewards} i ostatni feedback {last_feedback}")
-
+                trainer.update_with_final_rewards(rewards)
                 #TRENING
-                trainer.save_all_agents("./checkpoints")
+
                 response_object = {
                     "ResponseCode": 0,
                 }
                 response_json = json.dumps(response_object)
-                
-
                 await websocket.send(response_json)
 
             elif id == -1:
                 # REQUEST Z ZAKOŃCZONEJ GRY Z REMISEM LUB BŁĘDEM
-                
                 rewards = data.get("Rewards")
                 last_feedback = data.get("LastFeedback")
                 print(f"[Python] Serwer odebrał remis lub błąd {rewards} i ostatni feedback {last_feedback}")

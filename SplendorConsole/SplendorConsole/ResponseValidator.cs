@@ -13,7 +13,7 @@ namespace SplendorConsole
         {
             for(int i = 0; i <= arrayOfMoves.Length; i++)
             {
-                if (arrayOfMoves[i]==1)
+                if (arrayOfMoves[i]==0)
                 {
                     passPlace = i;
                 }
@@ -28,10 +28,10 @@ namespace SplendorConsole
         {
             switch (move)
             {
-                case 1:
+                case 0:
                     game.Pass();
                     return true;
-                case 2:
+                case 1:
                     if (currentPlayer.CanAffordCard(board.level1VisibleCards[0]) || currentPlayer.CanAffordCardWithGolden(board.level1VisibleCards[0]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
@@ -39,6 +39,12 @@ namespace SplendorConsole
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
+
+                        if (board.level1VisibleCards[0] == null)
+                        {
+                            throw new Exception("Try catch nie dziala");
+                        }
+
                         var cardPrice = board.level1VisibleCards[0].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
@@ -99,7 +105,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 3:
+                case 2:
                     if (currentPlayer.CanAffordCard(board.level1VisibleCards[1]) || currentPlayer.CanAffordCardWithGolden(board.level1VisibleCards[1]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
@@ -167,7 +173,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 4:
+                case 3:
                     if (currentPlayer.CanAffordCard(board.level1VisibleCards[2]) || currentPlayer.CanAffordCardWithGolden(board.level1VisibleCards[2]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
@@ -235,7 +241,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 5:
+                case 4:
                     if (currentPlayer.CanAffordCard(board.level1VisibleCards[3]) || currentPlayer.CanAffordCardWithGolden(board.level1VisibleCards[3]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
@@ -311,7 +317,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 6:
+                case 5:
                     if (currentPlayer.CanAffordCard(board.level2VisibleCards[0]) || currentPlayer.CanAffordCardWithGolden(board.level2VisibleCards[0]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
@@ -379,7 +385,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 7:
+                case 6:
                     if (currentPlayer.CanAffordCard(board.level2VisibleCards[1]) || currentPlayer.CanAffordCardWithGolden(board.level2VisibleCards[1]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
@@ -447,7 +453,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 8:
+                case 7:
                     if (currentPlayer.CanAffordCard(board.level2VisibleCards[2]) || currentPlayer.CanAffordCardWithGolden(board.level2VisibleCards[2]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
@@ -515,7 +521,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 9:
+                case 8:
                     if (currentPlayer.CanAffordCard(board.level2VisibleCards[3]) || currentPlayer.CanAffordCardWithGolden(board.level2VisibleCards[3]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
@@ -587,7 +593,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 10:
+                case 9:
                     if (currentPlayer.CanAffordCard(board.level3VisibleCards[0]) || currentPlayer.CanAffordCardWithGolden(board.level3VisibleCards[0]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
@@ -655,7 +661,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 11:
+                case 10:
                     if (currentPlayer.CanAffordCard(board.level3VisibleCards[1]) || currentPlayer.CanAffordCardWithGolden(board.level3VisibleCards[1]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
@@ -723,7 +729,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 12:
+                case 11:
                     if (currentPlayer.CanAffordCard(board.level3VisibleCards[2]) || currentPlayer.CanAffordCardWithGolden(board.level3VisibleCards[2]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
@@ -791,7 +797,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 13:
+                case 12:
                     if (currentPlayer.CanAffordCard(board.level3VisibleCards[3]) || currentPlayer.CanAffordCardWithGolden(board.level3VisibleCards[3]))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
@@ -859,7 +865,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 14:
+                case 13:
                     if (game.NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.WHITE]>=4)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
@@ -874,7 +880,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 15:
+                case 14:
                     if (game.NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.BLUE] >= 4)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
@@ -889,7 +895,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 16:
+                case 15:
                     if (game.NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.GREEN] >= 4)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.GREEN))
@@ -904,7 +910,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 17:
+                case 16:
                     if (game.NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.RED] >= 4)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.RED))
@@ -919,7 +925,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 18:
+                case 17:
                     if (game.NumberOfPlayerTokens() <= 8 && bank.resources.gems[GemColor.BLACK] >= 4)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLACK))
@@ -934,7 +940,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 19:
+                case 18:
                     if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.RED] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.GREEN))
@@ -970,7 +976,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 20:
+                case 19:
                     if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.RED] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
@@ -1006,7 +1012,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 21:
+                case 20:
                     if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
@@ -1042,7 +1048,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 22:
+                case 21:
                     if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.RED] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.BLUE))
@@ -1078,7 +1084,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 23:
+                case 22:
                     if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.RED] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
@@ -1114,7 +1120,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 24:
+                case 23:
                     if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
@@ -1150,7 +1156,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 25:
+                case 24:
                     if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1 && bank.resources.gems[GemColor.RED] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
@@ -1186,7 +1192,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 26:
+                case 25:
                     if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.BLACK] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
@@ -1222,7 +1228,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 27:
+                case 26:
                     if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.RED] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
@@ -1258,7 +1264,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 28:
+                case 27:
                     if (game.NumberOfPlayerTokens() <= 7 && bank.resources.gems[GemColor.WHITE] >= 1 && bank.resources.gems[GemColor.BLUE] >= 1 && bank.resources.gems[GemColor.GREEN] >= 1)
                     {
                         if (currentPlayer.Resources.gems.ContainsKey(GemColor.WHITE))
@@ -1294,7 +1300,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 29:                  
+                case 28:                  
                     if(currentPlayer.ReservedCardsCounter < 3)
                     {
                         if (bank.resources.gems[GemColor.GOLDEN] > 0)
@@ -1315,7 +1321,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 30:
+                case 29:
                     if (currentPlayer.ReservedCardsCounter < 3)
                     {
                         if (bank.resources.gems[GemColor.GOLDEN] > 0)
@@ -1336,7 +1342,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 31:
+                case 30:
                     if (currentPlayer.ReservedCardsCounter < 3)
                     {
                         if (bank.resources.gems[GemColor.GOLDEN] > 0)
@@ -1357,7 +1363,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 32:
+                case 31:
                     if (currentPlayer.ReservedCardsCounter < 3)
                     {
                         if (bank.resources.gems[GemColor.GOLDEN] > 0)
@@ -1378,7 +1384,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 33:
+                case 32:
                     if (currentPlayer.ReservedCardsCounter < 3)
                     {
                         if (bank.resources.gems[GemColor.GOLDEN] > 0)
@@ -1399,7 +1405,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 34:
+                case 33:
                     if (currentPlayer.ReservedCardsCounter < 3)
                     {
                         if (bank.resources.gems[GemColor.GOLDEN] > 0)
@@ -1420,7 +1426,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 35:
+                case 34:
                     if (currentPlayer.ReservedCardsCounter < 3)
                     {
                         if (bank.resources.gems[GemColor.GOLDEN] > 0)
@@ -1441,7 +1447,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 36:
+                case 35:
                     if (currentPlayer.ReservedCardsCounter < 3)
                     {
                         if (bank.resources.gems[GemColor.GOLDEN] > 0)
@@ -1462,7 +1468,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 37:
+                case 36:
                     if (currentPlayer.ReservedCardsCounter < 3)
                     {
                         if (bank.resources.gems[GemColor.GOLDEN] > 0)
@@ -1483,7 +1489,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 38:
+                case 37:
                     if (currentPlayer.ReservedCardsCounter < 3)
                     {
                         if (bank.resources.gems[GemColor.GOLDEN] > 0)
@@ -1504,7 +1510,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 39:
+                case 38:
                     if (currentPlayer.ReservedCardsCounter < 3)
                     {
                         if (bank.resources.gems[GemColor.GOLDEN] > 0)
@@ -1525,7 +1531,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 40:
+                case 39:
                     if (currentPlayer.ReservedCardsCounter < 3)
                     {
                         if (bank.resources.gems[GemColor.GOLDEN] > 0)
@@ -1546,7 +1552,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 41:
+                case 40:
                     if (currentPlayer.ReservedCardsCounter > 0 && (currentPlayer.CanAffordCard(currentPlayer.ReservedCards[0]) || currentPlayer.CanAffordCardWithGolden(currentPlayer.ReservedCards[0])))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
@@ -1619,7 +1625,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 42:
+                case 41:
                     if (currentPlayer.ReservedCardsCounter > 1 && (currentPlayer.CanAffordCard(currentPlayer.ReservedCards[1]) || currentPlayer.CanAffordCardWithGolden(currentPlayer.ReservedCards[1])))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();
@@ -1692,7 +1698,7 @@ namespace SplendorConsole
                         return true;
                     }
                     return false;
-                case 43:
+                case 42:
                     if (currentPlayer.ReservedCardsCounter == 3 && (currentPlayer.CanAffordCard(currentPlayer.ReservedCards[2]) || currentPlayer.CanAffordCardWithGolden(currentPlayer.ReservedCards[2])))
                     {
                         var simulatedResourcesUsed = new Dictionary<GemColor, int>();

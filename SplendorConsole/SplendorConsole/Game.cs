@@ -142,7 +142,7 @@ namespace SplendorConsole
             while (true)
             {
                 securityCounter++;
-                if(securityCounter>=10000)
+                if(securityCounter>=4000)
                 {
                     return (feedbackFromPreviousRequest, securityCounter/4, -200, ToArray());
                 }
@@ -490,13 +490,13 @@ namespace SplendorConsole
 
             var validator = new ResponseValidator();
             int numberOfInvalidMoves = validator.CheckMoves(moves, currentPlayer, this, bank, board);
-            if (false)
+            if (Program.EXTENDED_LOGGER_MODE)
             {
                 await Console.Out.WriteLineAsync($"[C#] gracz {currentTurn}, feedback {feedbackFromPreviousRequest} dla poprzedniego, {moves[numberOfInvalidMoves]}");
             }
             if (numberOfInvalidMoves == 0)
             {
-                if (moves[numberOfInvalidMoves]==1)
+                if (moves[numberOfInvalidMoves]==0)
                 {
                     feedbackFromPreviousRequest = 0;
                 }
@@ -507,7 +507,7 @@ namespace SplendorConsole
             }
             else if (numberOfInvalidMoves <= 10)
             {
-                if (moves[numberOfInvalidMoves] == 1)
+                if (moves[numberOfInvalidMoves] == 0)
                 {
                     feedbackFromPreviousRequest = (float)-0.15;
                 }
