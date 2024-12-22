@@ -8,16 +8,21 @@ namespace SplendorConsole
 {
     public class ResponseValidator
     {
+        private int passPlace = 0;
         public int CheckMoves(int[] arrayOfMoves, Player currentPlayer, Game game, Bank bank, Board board)
         {
             for(int i = 0; i <= arrayOfMoves.Length; i++)
             {
-                if (IsValid(arrayOfMoves[i], currentPlayer, game, bank, board))
+                if (arrayOfMoves[i]==1)
+                {
+                    passPlace = i;
+                }
+                else if (IsValid(arrayOfMoves[i], currentPlayer, game, bank, board))
                 {
                     return i;
                 }
             }
-            return 43;
+            return passPlace;
         }
         public bool IsValid(int move,  Player currentPlayer, Game game, Bank bank, Board board) 
         {
@@ -238,6 +243,10 @@ namespace SplendorConsole
                         {
                             simulatedResourcesUsed[color] = 0;
                         }
+                        if (board.level1VisibleCards[3] == null)
+                        {
+                            throw new Exception("Nie działa try, catch :/");
+                        }
                         var cardPrice = board.level1VisibleCards[3].DetailedPrice.gems;
 
                         foreach (var colorOnCard in cardPrice)
@@ -291,7 +300,7 @@ namespace SplendorConsole
                         }
 
                         currentPlayer.AddCardToPlayer(board.level1VisibleCards[3]);
-                        if(board.level1VisibleCards[3]==null)
+                        if(board.level1VisibleCards[3]==null || board.level1VisibleCards[3].BonusColor==null)
                         {
                             throw new Exception("Nie działa try, catch :/");
                         }
@@ -513,6 +522,10 @@ namespace SplendorConsole
                         foreach (GemColor color in Enum.GetValues(typeof(GemColor)))
                         {
                             simulatedResourcesUsed[color] = 0;
+                        }
+                        if(board.level2VisibleCards[3]==null)
+                        {
+                            throw new Exception("Nie działa try, catch :/");
                         }
                         var cardPrice = board.level2VisibleCards[3].DetailedPrice.gems;
 
