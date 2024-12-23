@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public class CardController : MonoBehaviour, IPointerClickHandler
 {
+    public GameController gameController;
     public ResourcesController detailedPrice;
     public int level;
     public GemColor bonusColor;
@@ -107,9 +108,7 @@ public class CardController : MonoBehaviour, IPointerClickHandler
     {
         if(eventData.button == PointerEventData.InputButton.Right)
         {
-            GameObject clickedCard = GameObject.FindGameObjectWithTag("clickedCard");
-            clickedCard.GetComponent<CardController>().InitCardData(this);
-            clickedCard.SetActive(true);
+            this.gameController.ShowClickedCard(this);
         }
     }
 
@@ -125,33 +124,5 @@ public class CardController : MonoBehaviour, IPointerClickHandler
         {
             Debug.LogWarning("Nie znaleziono komponentu Image na karcie!");
         }
-    }
-
-    public Sprite LoadNewSprite(string FilePath, float PixelsPerUnit = 100.0f)
-    {
-        Texture2D SpriteTexture = LoadTextureFromFile(FilePath);
-        Sprite cardSprite = Sprite.Create(SpriteTexture, new Rect(0, 0, SpriteTexture.width, SpriteTexture.height), new Vector2(0, 0), PixelsPerUnit);
-
-        return cardSprite;
-    }
-
-    private Texture2D LoadTextureFromFile(string path)
-    {
-        Texture2D result;
-
-        byte[] fileData;
-
-        if(File.Exists(path))
-        {
-            fileData = File.ReadAllBytes(path);
-            result = new Texture2D(2, 2);
-
-            if(result.LoadImage(fileData))
-            {
-                return result;
-            }
-        }
-
-        return null;
     }
 }
