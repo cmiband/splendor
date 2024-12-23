@@ -195,7 +195,7 @@ public class GameController : MonoBehaviour
         targetedPlayerController.SetPlayerHand(this.playerIdToHand[targetedPlayerIndex]);
         targetedPlayerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerIndex]);
 
-        targetedPlayerController.SetPlayerResources(this.playerIdToResources[targetedPlayerIndex]);
+        targetedPlayerController.SetPlayerResources(this.playerIdToResources[targetedPlayerIndex], this.playerIdToBonusResources[targetedPlayerIndex]);
 
         if (this.playerIdToNoble.ContainsKey(targetedPlayerIndex))
             targetedPlayerController.SetPlayerNoble(this.playerIdToNoble[targetedPlayerIndex]);
@@ -288,7 +288,7 @@ public class GameController : MonoBehaviour
             playerController.SetPlayerHand(this.playerIdToHand[targetedPlayerId]);
             playerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerId]);
 
-            playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId]);
+            playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId], this.playerIdToBonusResources[targetedPlayerId]);
 
             if (this.playerIdToNoble.ContainsKey(targetedPlayerId))
                 playerController.SetPlayerNoble(this.playerIdToNoble[targetedPlayerId]);

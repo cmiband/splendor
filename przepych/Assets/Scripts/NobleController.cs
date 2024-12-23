@@ -16,6 +16,7 @@ public class NobleController :  MonoBehaviour
     private Transform playerImage;
     private Transform playerId;
     public PlayerController assignedPlayer;
+    public string detailedPriceInfo = "";
 
     private void Start()
     {
@@ -23,12 +24,6 @@ public class NobleController :  MonoBehaviour
         playerImage = transform.Find("playerImage");
         playerImage.gameObject.SetActive(false);
         assignedPlayer = null;
-
-        public ResourcesController detailedPrice;
-        public int points;
-        public string illustration;
-        private Image selectedNobleImage;
-        public string detailedPriceInfo = "";
 
 
         playerId = transform.Find("playerId");
