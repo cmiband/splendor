@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.XPath;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CardController : MonoBehaviour
+public class CardController : MonoBehaviour, IPointerClickHandler
 {
     public ResourcesController detailedPrice;
     public int level;
@@ -79,6 +82,16 @@ public class CardController : MonoBehaviour
         this.detailedPrice = card.detailedPrice;
         this.points = card.points;
         this.illustration = card.illustration;
+
+        this.SetCardSprite();
+    }
+
+    private void SetCardSprite()
+    {
+        Sprite cardSprite = UnityEngine.Resources.Load<Sprite>(this.illustration);
+
+        Image cardImage = this.gameObject.GetComponent<Image>();
+        cardImage.sprite = cardSprite;
     }
 
     private void OnMouseDown()
@@ -87,6 +100,16 @@ public class CardController : MonoBehaviour
         if (gameController != null)
         {
             gameController.SelectCard(this);
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if(eventData.button == PointerEventData.InputButton.Right)
+        {
+            GameObject clickedCard = GameObject.FindGameObjectWithTag("clickedCard");
+            clickedCard.GetComponent<CardController>().InitCardData(this);
+            clickedCard.SetActive(true);
         }
     }
 
@@ -102,5 +125,33 @@ public class CardController : MonoBehaviour
         {
             Debug.LogWarning("Nie znaleziono komponentu Image na karcie!");
         }
+    }
+
+    public Sprite LoadNewSprite(string FilePath, float PixelsPerUnit = 100.0f)
+    {
+        Texture2D SpriteTexture = LoadTextureFromFile(FilePath);
+        Sprite cardSprite = Sprite.Create(SpriteTexture, new Rect(0, 0, SpriteTexture.width, SpriteTexture.height), new Vector2(0, 0), PixelsPerUnit);
+
+        return cardSprite;
+    }
+
+    private Texture2D LoadTextureFromFile(string path)
+    {
+        Texture2D result;
+
+        byte[] fileData;
+
+        if(File.Exists(path))
+        {
+            fileData = File.ReadAllBytes(path);
+            result = new Texture2D(2, 2);
+
+            if(result.LoadImage(fileData))
+            {
+                return result;
+            }
+        }
+
+        return null;
     }
 }
