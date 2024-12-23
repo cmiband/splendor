@@ -110,6 +110,8 @@ public class BoardController : MonoBehaviour
         GameObject cardObject = Instantiate(this.cardPrefab, cardPosition, Quaternion.identity, targetedVisibleCardsContainer.transform);
         CardController cardController = cardObject.GetComponent<CardController>();
         cardController.InitCardData(targetedCard);
+        RectTransform cardRectTransform = cardObject.GetComponent<RectTransform>();
+        cardObject.GetComponent<RectTransform>().localPosition = new Vector3(xOffset, cardRectTransform.localPosition.y, cardRectTransform.localPosition.z);
     }
 
     private void CreateNobles(GameObject noblesContainer, List<NobleController> visibleNobles)

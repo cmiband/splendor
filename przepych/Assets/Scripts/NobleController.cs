@@ -19,9 +19,17 @@ public class NobleController :  MonoBehaviour
 
     private void Start()
     {
+
         playerImage = transform.Find("playerImage");
         playerImage.gameObject.SetActive(false);
         assignedPlayer = null;
+
+        public ResourcesController detailedPrice;
+        public int points;
+        public string illustration;
+        private Image selectedNobleImage;
+        public string detailedPriceInfo = "";
+
 
         playerId = transform.Find("playerId");
         playerId.gameObject.SetActive(false);          
@@ -30,6 +38,7 @@ public class NobleController :  MonoBehaviour
     {
         if(assignedPlayer != null)
         {
+
             // trzeba zainicjalizować awatary w PlayerController
             //Sprite playerAvatar = assignedPlayer.avatar;
             //if (playerAvatar != null)
@@ -51,6 +60,7 @@ public class NobleController :  MonoBehaviour
         this.points = noble.points;
         this.detailedPrice = noble.detailedPrice;
         this.illustration = noble.illustration;
+        this.detailedPriceInfo = this.detailedPrice.ToString();
     }
     public override int GetHashCode()
     {
@@ -71,6 +81,8 @@ public class NobleController :  MonoBehaviour
         this.points = points;
         this.detailedPrice = detailedPrice;
         this.illustration = illustration;
+        this.detailedPriceInfo = this.detailedPrice.ToString();
     }
+
 }
 

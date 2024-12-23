@@ -5,21 +5,29 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum MODE
+{
+    TAKE, GIVE
+}
+
 public class BankController : MonoBehaviour
 {
     public List<GemColor> gemsBeingChosen = new List<GemColor>();
-    public List<GemColor> gemsBeingReturned = new List<GemColor>();
     public bool isPlayerTakingThreeGems;
     public GameObject currentPlayer;
     public PlayerController playerController;
+    public GameController mainGameController;
     public ResourcesController resourcesController = new ResourcesController();
     public List<GemStashController> gemStashes = new List<GemStashController>();
+    public MODE currentMode;
+    public int amountOfGemsToGive = 0;
+
+    public string amountOfGemsInfo = "";
 
     void Start()
     {
         playerController = currentPlayer.GetComponent<PlayerController>();
         isPlayerTakingThreeGems = false;
-        Debug.Log(resourcesController.gems.Count);
         foreach (var item in resourcesController.gems.ToList())
         {
             if (item.Key != GemColor.GOLDEN)
@@ -27,9 +35,19 @@ public class BankController : MonoBehaviour
             else
                 resourcesController.gems[item.Key] = 5;
         }
+
+        currentMode = MODE.TAKE;
+
+        this.amountOfGemsInfo = this.resourcesController.ToString();
     }
 
-    public void ThreeGemsTaken()
+    public void SetModeToGive(int amountOfGemsToGive)
+    {
+        this.currentMode = MODE.GIVE;
+        this.amountOfGemsToGive = amountOfGemsToGive;
+    }
+
+    public void TakeGems()
     {
         foreach (GemColor color in gemsBeingChosen)
         {
@@ -41,24 +59,38 @@ public class BankController : MonoBehaviour
                 stash.amountOfGems -= 1;
             }
         }
-        playerController.TakeThreeTokens(gemsBeingChosen);
+        playerController.TakeGems(gemsBeingChosen);
         gemsBeingChosen.Clear();
-        isPlayerTakingThreeGems = false;
 
+        this.amountOfGemsInfo = this.resourcesController.ToString();
     }
 
-    public void TwoGemsTaken()
+    public void ClearSelectedGems()
     {
-        resourcesController.gems[gemsBeingChosen[0]] -= 2;
-        playerController.TakeTwoTokens(gemsBeingChosen[0]);
+        this.gemsBeingChosen = new List<GemColor>();
+    }
 
-        gemsBeingChosen.Clear(); 
+    public void GiveGem(GemColor color)
+    {
+        this.amountOfGemsToGive--;
+
+        this.resourcesController.AddResource(color);
+        this.playerController.GiveGem(color);
+
+        if(amountOfGemsToGive == 0)
+        {
+            this.mainGameController.actionIsTaken = false;
+            this.currentMode = MODE.TAKE;
+            this.playerController.ConfirmPlayerMove();
+        }
     }
 
     public void GoldenGemTaken()
     {
         resourcesController.gems[GemColor.GOLDEN] -= 1;
         playerController.TakeGoldenGem();
+
+        this.amountOfGemsInfo = this.resourcesController.ToString();
     }
     public void AddGems(Dictionary<GemColor, int> resourcesUsed)
     {
@@ -78,10 +110,14 @@ public class BankController : MonoBehaviour
                 }
             }
         }
+
+        this.amountOfGemsInfo = this.resourcesController.ToString();
     }
 
     public void AddGoldengem()
     {
         this.resourcesController.gems[GemColor.GOLDEN] += 1;
+
+        this.amountOfGemsInfo = this.resourcesController.ToString();
     }
 }

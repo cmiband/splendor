@@ -4,9 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System.Linq;
 
 public class PlayerController : MonoBehaviour
 {
+    public const int MAXIMUM_AMOUNT_OF_GEMS = 10;
+    public TextMeshProUGUI pointsText;
+
     public int playerId;
     public Sprite avatar;
     public GameObject game;
@@ -14,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public BankController bankController;
     
     public string resourcesInfo = "";
+    public string bonusResourcesInfo = "";
 
     public Dictionary<GemColor, GameObject> gemColorToResourceGameObject = new Dictionary<GemColor, GameObject>();
     public GameObject whiteGems;
@@ -22,6 +28,12 @@ public class PlayerController : MonoBehaviour
     public GameObject blackGems;
     public GameObject blueGems;
     public GameObject goldGems;
+
+    public TextMeshProUGUI bonusWhiteGems;
+    public TextMeshProUGUI bonusRedGems;
+    public TextMeshProUGUI bonusGreenGems;
+    public TextMeshProUGUI bonusBlackGems;
+    public TextMeshProUGUI bonusBlueGems;
 
     private ResourcesController resources = new ResourcesController();
     private ResourcesController bonusResources = new ResourcesController();
@@ -48,15 +60,32 @@ public class PlayerController : MonoBehaviour
         this.bankController = FindObjectOfType<BankController>();
         this.goldenGemStashController = FindObjectOfType<GoldenGemStashController>();
     }
-
+    public void Update()
+    {
+        pointsText.SetText(this.points.ToString());
+    }
+    public void PointsCounter(PlayerController player)
+    {
+        player.bonusWhiteGems.SetText(Convert.ToString(player.BonusResources.gems[GemColor.WHITE]));
+        player.bonusRedGems.SetText(Convert.ToString(player.BonusResources.gems[GemColor.RED]));
+        player.bonusGreenGems.SetText(Convert.ToString(player.BonusResources.gems[GemColor.GREEN]));
+        player.bonusBlackGems.SetText(Convert.ToString(player.BonusResources.gems[GemColor.BLACK]));
+        player.bonusBlueGems.SetText(Convert.ToString(player.BonusResources.gems[GemColor.BLUE]));
+    }
 
     public void HandleBuyCard()
     {
+        if(this.mainGameController.actionIsTaken)
+        {
+            return;
+        }
+
         if (mainGameController.selectedCard == null)
         {
             Debug.Log("Nie wybrano żadnej karty do zakupu.");
             return;
         }
+
 
         PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
         CardController selectedCard = mainGameController.selectedCard;
@@ -124,53 +153,67 @@ public class PlayerController : MonoBehaviour
         player.Points += selectedCard.points;
         int cardLevel = selectedCard.Level;
 
-        switch (cardLevel)
+        if(selectedCard.isReserved)
         {
-            case 1:
-                mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
-                Debug.Log("Kupiono kart� 1 poziomu");
-                Destroy(mainGameController.selectedCard.gameObject);
-                GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
-                gameObject1.name = "Card_Level_" + cardLevel;
-                CardController cardController1 = gameObject1.GetComponent<CardController>();
-                cardController1.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                AddCardClickListener(gameObject1, cardController1);
-                break;
+            player.handReserved.Remove(selectedCard);
+            mainGameController.reservedCardController.reservedCards.Remove(mainGameController.selectedCard.gameObject);
+            Debug.Log("Kupiono zarezerwowaną kartę");
+            Destroy(mainGameController.selectedCard.gameObject);
 
-            case 2:
-                mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
-                Debug.Log("Kupiono kart� 2 poziomu");
-                Destroy(mainGameController.selectedCard.gameObject);
-                GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
-                gameObject2.name = "Card_Level_" + cardLevel;
-                CardController cardController2 = gameObject2.GetComponent<CardController>();
-                cardController2.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                AddCardClickListener(gameObject2, cardController2);
-                break;
-
-            case 3:
-                mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
-                Debug.Log("Kupiono kart� 3 poziomu");
-                Destroy(mainGameController.selectedCard.gameObject);
-                GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
-                gameObject3.name = "Card_Level_" + cardLevel;
-                CardController cardController3 = gameObject3.GetComponent<CardController>();
-                cardController3.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                AddCardClickListener(gameObject3, cardController3);
-                break;
         }
+        else
+        {
+            switch (cardLevel)
+            {
+                case 1:
+                    mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
+                    Debug.Log("Kupiono kart� 1 poziomu");
+                    Destroy(mainGameController.selectedCard.gameObject);
+                    GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
+                    gameObject1.name = "Card_Level_" + cardLevel;
+                    CardController cardController1 = gameObject1.GetComponent<CardController>();
+                    cardController1.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                    AddCardClickListener(gameObject1, cardController1);
+                    break;
 
-        mainGameController.ChangeTurn();
+                case 2:
+                    mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
+                    Debug.Log("Kupiono kart� 2 poziomu");
+                    Destroy(mainGameController.selectedCard.gameObject);
+                    GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
+                    gameObject2.name = "Card_Level_" + cardLevel;
+                    CardController cardController2 = gameObject2.GetComponent<CardController>();
+                    cardController2.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                    AddCardClickListener(gameObject2, cardController2);
+                    break;
+
+                case 3:
+                    mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
+                    Debug.Log("Kupiono kart� 3 poziomu");
+                    Destroy(mainGameController.selectedCard.gameObject);
+                    GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
+                    gameObject3.name = "Card_Level_" + cardLevel;
+                    CardController cardController3 = gameObject3.GetComponent<CardController>();
+                    cardController3.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                    AddCardClickListener(gameObject3, cardController3);
+                    break;
+            }
+        }
+        this.ConfirmPlayerMove();
     }
 
 
     public void HandleReserveCard()
     {
+        if(this.mainGameController.actionIsTaken)
+        {
+            return;
+        }
+
         if(handReserved.Count < 3)
         {
             if (goldenGemStashController.TakeOne())
             {
-                TakeGoldenGem();
                 Debug.Log("Pobrano złoty żeton");
             }
             else Debug.Log("Nie ma już złotych żetonów");
@@ -248,7 +291,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Nie wybrano żadnej karty do zarezerwowania");
             }
 
-            mainGameController.ChangeTurn();
+            this.ConfirmPlayerMove();
         }
         else
         {
@@ -267,23 +310,9 @@ public class PlayerController : MonoBehaviour
         button.onClick.AddListener(() => mainGameController.SelectCard(cardController));
     }
 
-    public void TakeTwoTokens(GemColor color)
+    public void TakeGems(List<GemColor> colors)
     {
-
-        if (this.resources.gems.ContainsKey(color))
-        {
-            this.resources.gems[color] += 2;
-        }
-        else
-        {
-            this.resources.gems.Add(color, 2);
-        }
-
-        this.ConfirmPlayerMove();
-    }
-    public void TakeThreeTokens(List<GemColor> colors)
-    {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < colors.Count; i++)
         {
             if (this.resources.gems.ContainsKey(colors[i]))
             {
@@ -295,7 +324,22 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        this.ConfirmPlayerMove();
+        int amountOfGems = this.GetAmountOfGems();
+        if(amountOfGems > 10)
+        {
+            Debug.Log("Masz za dużo żetonów musisz oddać " + (amountOfGems - MAXIMUM_AMOUNT_OF_GEMS));
+            mainGameController.actionIsTaken = true;
+            bankController.SetModeToGive(amountOfGems-MAXIMUM_AMOUNT_OF_GEMS);
+        } 
+        else
+        {
+            this.ConfirmPlayerMove();
+        }
+    }
+
+    public void GiveGem(GemColor color)
+    {
+        this.resources.RemoveResource(color, 1);
     }
 
     public void TakeGoldenGem()
@@ -313,11 +357,18 @@ public class PlayerController : MonoBehaviour
     private void UpdatePlayersResources()
     {
         this.mainGameController.UpdateTargetedPlayerResources(this.playerId, this.resources);
+        this.mainGameController.UpdateTargetedPlayerBonusResources(this.playerId, this.bonusResources);
     }
 
-    private void ConfirmPlayerMove()
+    private void UpdatePlayersPoints()
+    {
+        this.mainGameController.UpdateTargetedPlayerPoints(this.playerId, this.points);
+    }
+
+    public void ConfirmPlayerMove()
     {
         this.UpdatePlayersResources();
+        this.UpdatePlayersPoints();
 
         this.mainGameController.ChangeTurn();
     }
@@ -332,13 +383,20 @@ public class PlayerController : MonoBehaviour
         this.handReserved = cards;
     }
 
-    public void SetPlayerResources(ResourcesController resources)
+    public void SetPlayerResources(ResourcesController resources, ResourcesController bonusResources)
     {
         this.resources = resources;
+        this.bonusResources = bonusResources;
 
         this.resourcesInfo = this.resources.ToString();
+        this.bonusResourcesInfo = this.bonusResources.ToString();
 
         this.SetGemInfo(this.resources);
+    }
+
+    public void SetPlayerPoints(int points)
+    {
+        this.points = points;
     }
 
     public List<CardController> GetPlayerHand()
@@ -383,7 +441,7 @@ public class PlayerController : MonoBehaviour
     {
         if (bonusColor != GemColor.NONE)
         {
-            BonusResources.AddResource(bonusColor);
+            this.bonusResources.AddResource(bonusColor);
             Debug.Log($"Dodano bonusowy zas�b: {bonusColor}");
         }
     }
@@ -446,17 +504,21 @@ public class PlayerController : MonoBehaviour
         return clonedCard;
     }
 
-    private void RemoveGemsOneColor(GemColor color, int amount)
+    private int GetAmountOfGems()
     {
-        if (amount == 0)
+        int result = 0;
+
+        foreach(GemColor color in this.resources.gems.Keys)
         {
-            return;
+            if(color == GemColor.NONE)
+            {
+                continue;
+            }
+
+            result += this.resources.gems[color];
         }
-        for (int i = 0; i < amount; i++)
-        {
-            this.resources.gems[color] -= 1;
-            bankController.gemsBeingReturned.Add(color);
-        }
+
+        return result;
     }
     public NobleController GetNoble(GameController game, PlayerController player)
     {
