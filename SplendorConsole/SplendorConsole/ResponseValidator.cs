@@ -46,7 +46,7 @@ namespace SplendorConsole
 
                         if (board.level1VisibleCards[0] == null)
                         {
-                            throw new Exception("Try catch nie dziala");
+                            throw new Exception("Nie działa try, catch :/");
                         }
 
                         var cardPrice = board.level1VisibleCards[0].DetailedPrice.gems;
