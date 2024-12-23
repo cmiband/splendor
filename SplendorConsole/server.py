@@ -5,7 +5,7 @@ from random import shuffle
 
 from real_simulation_try1 import *
 
-ifFirst = True
+gra1000 = 0
 
 async def handle_connection(websocket: websockets.WebSocketServerProtocol, path: str) -> None:
     try:
@@ -14,13 +14,11 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
             data = json.loads(message)
             id = data.get("Id")
 
-            global ifFirst
+            global gra1000
 
             if id == 1:
 
-                if ifFirst:
-                    trainer.load_all_agents("./checkpoints")
-                    ifFirst = False
+                
                 # REQUEST Z WEWNĄTRZ
                 current_player = data.get("CurrentPlayer")
                 feedback = data.get("Feedback")
@@ -38,9 +36,13 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
                 await websocket.send(response_json)
 
             elif id == 2:
-                ifFirst = True
+                gra1000+= 1 
+                if gra1000 % 1000 == 0:
+                    trainer.save_all_agents("./checkpoints")
+
+
                 # REQUEST Z ZAKOŃCZONEJ GRY Z WYGRANYM
-                trainer.save_all_agents("./checkpoints")
+                
                 rewards = data.get("Rewards")
                 last_feedback = data.get("LastFeedback")
                 print(f"[Python] Serwer odebrał wygraną {rewards} i ostatni feedback {last_feedback}")
@@ -61,11 +63,15 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
 
                 #TRENING
 
+                trainer.update_with_final_rewards(rewards)
+
                 response_object = {
                     "ResponseCode": 0,
                 }
                 response_json = json.dumps(response_object)
                 await websocket.send(response_json)
+            
+
 
     except websockets.exceptions.ConnectionClosedError as e:
         print(f"[Python] Połączenie zamknięte: {e}")
@@ -78,5 +84,5 @@ async def start_server() -> None:
         print("[Python] Serwer WebSocket działa na ws://localhost:8765")
         await asyncio.Future()
 
-
+trainer.load_all_agents("./checkpoints")
 asyncio.run(start_server())

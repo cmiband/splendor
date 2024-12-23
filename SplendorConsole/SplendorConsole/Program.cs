@@ -8,7 +8,7 @@ using SplendorConsole;
 
 public class Program
 {
-    public const bool EXTENDED_LOGGER_MODE = true;
+    public const bool EXTENDED_LOGGER_MODE = false;
     static WebserviceClient client = new WebserviceClient("ws://localhost:8765");
 
     async public static Task Main(string[] args)

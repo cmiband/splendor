@@ -11,6 +11,10 @@ namespace SplendorConsole
         private int passPlace = 0;
         public int CheckMoves(int[] arrayOfMoves, Player currentPlayer, Game game, Bank bank, Board board)
         {
+            if (arrayOfMoves == null)
+            {
+                throw new Exception("arrayOfMoves was null");
+            }
             for(int i = 0; i < arrayOfMoves.Length; i++)
             {
                 if (arrayOfMoves[i]==0)

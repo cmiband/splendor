@@ -26,10 +26,6 @@ def standardize(array):
 
     return final_z_score.tolist()  # Convert the NumPy array to a regular Python list before returning
 
-# Example usage:
-array = [1, 2, 3, 4, 5]
-z_scores = standardize(array)
-print(z_scores)
 
 
 # Generate the array of 348 random integers in the range [0, 30]

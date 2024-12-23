@@ -1,5 +1,5 @@
 from ppoAgent import *
-import json
+
 
 class MultiAgentPPO:
     def __init__(self, num_agents, state_dim, action_dim, **agent_kwargs):
@@ -8,33 +8,27 @@ class MultiAgentPPO:
             PPOAgent(state_dim, action_dim, **agent_kwargs) for _ in range(num_agents)
         ]
 
-    def choose_actions(self, states):
+    def choose_actions(self, inputs):
+        """
+        Processes inputs sequentially for each agent and chooses actions.
+        Args:
+            inputs: List of inputs where each entry corresponds to the input for one agent.
+                    Each input is an array containing standardized states of the game.
+        Returns:
+            actions: List of actions taken sequentially by each agent.
+            probs: List of probabilities associated with the chosen actions.
+        """
         actions = []
         probs = []
-        for agent, state in zip(self.agents, states):
-            action, prob = agent.choose_action(state)
+
+        for agent, input_state in zip(self.agents, inputs):
+            # Each agent processes its respective input_state sequentially
+            action, prob = agent.choose_action(input_state)
             actions.append(action)
             probs.append(prob)
+
         return actions, probs
 
     def update_agents(self, trajectories):
         for agent, agent_trajectories in zip(self.agents, trajectories):
             agent.update(agent_trajectories)
-
-    def format_actions_for_api(self, actions):
-        """
-        Format the actions into a JSON-compatible structure for the API server.
-        :param actions: List of actions chosen by each agent.
-        :return: JSON string of actions.
-        """
-        return json.dumps({"actions": actions})
-
-    def parse_states_from_api(self, json_data):
-        """
-        Parse the JSON input from the API server into a list of states.
-        :param json_data: JSON string containing the states.
-        :return: List of states, one per agent.
-        """
-        data = json.loads(json_data)
-        states = data.get("states", [])
-        return states

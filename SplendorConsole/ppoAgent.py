@@ -2,6 +2,11 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
+import os
+import pickle
+from collections import deque
+
+BUFFER_SIZE=50000 # OK
 
 class PPOAgent:
     def __init__(
@@ -24,7 +29,7 @@ class PPOAgent:
         self.policy_epochs = policy_epochs
         self.value_epochs = value_epochs
         self.entropy_coef = entropy_coef
-
+        self.replay_buffer = deque(maxlen=BUFFER_SIZE)
         # Policy and Value networks
         self.policy_net = self._build_policy_network()
         self.value_net = self._build_value_network()
@@ -107,24 +112,59 @@ class PPOAgent:
             value_loss.backward()
             self.value_optimizer.step()
 
-    def generate_action_values(self, state):
-        """
-        Generate and sort action values for a given state.
-        """
+    def generate_action(self, state):
+
         state_tensor = torch.FloatTensor(state).unsqueeze(0)
-        action_values = self.policy_net(state_tensor).detach().numpy().squeeze()  # For DQN, use eval_net
-        sorted_actions = np.argsort(action_values)[::-1]  # Sort actions by value (descending)
-        return sorted_actions
+        action_probs = self.policy_net(state_tensor).detach().numpy().squeeze()
+        sorted_indices = np.argsort(action_probs)[::-1]
+        return sorted_indices, action_probs
+
     
-    def punish_illegal_moves(self, state, illegal_moves):
+    def save_checkpoint(self, filepath):
         """
-        Punish the agent for recommending illegal moves.
+        Save the current state of the agent, including models, optimizers, and replay buffer.
         """
-        for move in illegal_moves:
-            penalty = -1.0  # Adjust penalty value based on severity
-            # Create a dummy next_state and done for punishment purposes
-            dummy_next_state = np.zeros_like(state)
-            done = False
-            # Add penalty as a transition
-            self.store_transition(state, move, penalty, dummy_next_state, done)
-        self.learn()  # Update the model with penalties
+        checkpoint = {
+            "policy_net_state_dict": self.policy_net.state_dict(),
+            "value_net_state_dict": self.value_net.state_dict(),
+            "policy_optimizer_state_dict": self.policy_optimizer.state_dict(),
+            "value_optimizer_state_dict": self.value_optimizer.state_dict(),
+        }
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+        # Save the checkpoint
+        torch.save(checkpoint, filepath)
+        print(f"Model checkpoint saved at {filepath}")
+
+        # Save replay buffer separately
+        replay_buffer_path = filepath + "_replay.pkl"
+        with open(replay_buffer_path, "wb") as f:
+            pickle.dump(list(self.replay_buffer), f)  # Convert deque to a list for serialization
+        print(f"Replay buffer saved at {replay_buffer_path}")
+
+    def load_checkpoint(self, filepath):
+        """
+        Load a saved state from a checkpoint, including models, optimizers, and replay buffer.
+        """
+        if not os.path.exists(filepath):
+            print(f"No checkpoint found at {filepath}")
+            return False
+
+        # Load the checkpoint
+        checkpoint = torch.load(filepath)
+        self.policy_net.load_state_dict(checkpoint["policy_net_state_dict"])
+        self.value_net.load_state_dict(checkpoint["value_net_state_dict"])
+        self.policy_optimizer.load_state_dict(checkpoint["policy_optimizer_state_dict"])
+        self.value_optimizer.load_state_dict(checkpoint["value_optimizer_state_dict"])
+        print(f"Model checkpoint loaded from {filepath}")
+
+        # Load replay buffer separately
+        replay_buffer_path = filepath + "_replay.pkl"
+        if os.path.exists(replay_buffer_path):
+            with open(replay_buffer_path, "rb") as f:
+                self.replay_buffer = deque(pickle.load(f), maxlen=BUFFER_SIZE)
+            print(f"Replay buffer loaded from {replay_buffer_path}")
+        else:
+            print(f"No replay buffer found at {replay_buffer_path}")
+
+        return True

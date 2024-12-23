@@ -15,14 +15,6 @@ class MultiAgentDQN:
             DQNAgent(state_dim, action_dim, **agent_kwargs) for _ in range(num_agents)
         ]
 
-    def choose_actions(self, states):
-        """
-        Let all agents choose their actions based on their respective states.
-        :param states: List of states, one per agent.
-        :return: List of actions chosen by each agent.
-        """
-        actions = [agent.choose_action(state) for agent, state in zip(self.agents, states)]
-        return actions
 
     def store_transitions(self, states, actions, rewards, next_states, dones):
         """
