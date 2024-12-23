@@ -184,6 +184,8 @@ public class GameController : MonoBehaviour
 
             this.boardController.visibleNoblesCoppied.RemoveAt(nobleIndex);
             Debug.Log($"Noble removed from visibleNobleCopied");
+
+            availableNoble.assignedPlayer = crntPlayerController;
         }
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
         Debug.Log($"Current player id: {this.currentPlayerId}");

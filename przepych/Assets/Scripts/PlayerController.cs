@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     public int playerId;
+    public Sprite avatar;
     public GameObject game;
     public GameController mainGameController;
     public BankController bankController;

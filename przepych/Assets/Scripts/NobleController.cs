@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,32 @@ public class NobleController :  MonoBehaviour
     public int points;
     public string illustration;
     private Image selectedNobleImage;
+    private Transform playerImage;
+    private Transform playerId;
+    public PlayerController assignedPlayer;
 
+    private void Start()
+    {
+        playerImage = transform.Find("playerImage");
+        playerImage.gameObject.SetActive(false);
+        assignedPlayer = null;
+
+        playerId = transform.Find("playerId");
+        playerId.gameObject.SetActive(false);          
+    }
+    private void Update()
+    {
+        if(assignedPlayer != null)
+        {
+            // trzeba zainicjalizować awatary w PlayerController
+            //Sprite playerAvatar = assignedPlayer.avatar;
+            //if (playerAvatar != null)
+            //{
+            //    playerImage.GetComponent<Image>().sprite = playerAvatar;
+            //}               
+            playerImage.gameObject.SetActive(true);
+        }      
+    }
     public NobleController(int points, ResourcesController detailedPrice, string illustration)
     {
         this.points = points;
