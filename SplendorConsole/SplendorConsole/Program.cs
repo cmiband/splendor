@@ -8,12 +8,13 @@ using SplendorConsole;
 
 public class Program
 {
+
     public const bool EXTENDED_LOGGER_MODE = false;
     static WebserviceClient client = new WebserviceClient("ws://localhost:8765");
 
     async public static Task Main(string[] args)
     {
-        
+
         await client.ConnectToWebsocket();
         Game? game;
 
@@ -48,7 +49,7 @@ public class Program
             Console.WriteLine();
             try
             {
-                (float lastFeedback, int turnsNumber, int winner, int[]? state) = game.GameStart();
+                (float lastFeedback, int turnsNumber, int winner, int[]? state) = ExecuteWithTimeout(() => game.GameStart(), 3000);
                 if (winner == -200)
                 {
                     errorCounterLoop++;
@@ -79,11 +80,11 @@ public class Program
                     errorGap++;
                     Console.WriteLine($"[C#] Grę nr {i} wygrywa gracz nr {winner} w {turnsNumber} tur, zap - {errorCounterLoop}, col - {errorCounterCollect}, idx - {errorCounterBound}, null - {errorCounterNull}, ??? - {errorCounterOther}");
                     turnSum += turnsNumber;
-                    if(turnsNumber>maxTurn)
+                    if (turnsNumber > maxTurn)
                     {
                         maxTurn = turnsNumber;
                     }
-                    if(turnsNumber<minTurn)
+                    if (turnsNumber < minTurn)
                     {
                         minTurn = turnsNumber;
                     }
@@ -95,7 +96,7 @@ public class Program
                     foreach (var item in awards)
                     {
                         avgAward += item;
-                        if(item>0)
+                        if (item > 0)
                         {
                             if (item > maxAward)
                             {
@@ -121,19 +122,26 @@ public class Program
                 }
                 game = null;
             }
+            catch (TimeoutException)
+            {
+                Console.WriteLine($"[C#] W grze nr {i} przekroczono limit czasu.");
+                errorCounterOther++;
+                awards = new float[] { 0, 0, 0, 0 };
+                await InformServerAboutFinishedGame(awards, -1, 0);
+            }
             catch (Exception e)
             {
-                if(e.Message=="Collection was modified; enumeration operation may not execute.")
+                if (e.Message == "Collection was modified; enumeration operation may not execute.")
                 {
                     errorCounterCollect++;
                     Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd kolekcji");
                 }
-                else if(e.Message=="Index was outside the bounds of the array.")
+                else if (e.Message == "Index was outside the bounds of the array.")
                 {
                     errorCounterBound++;
                     Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd idx");
                 }
-                else if(e.Message== "Nie działa try, catch :/")
+                else if (e.Message == "Nie działa try, catch :/")
                 {
                     errorCounterNull++;
                     Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd null");
@@ -160,16 +168,16 @@ public class Program
             }
         }
 
-    stopwatch.Stop();
-    if(errorCounter!=1)
-    {
+        stopwatch.Stop();
+        if (errorCounter != 1)
+        {
             errorCounter--;
-    }
+        }
 
         Console.WriteLine($"\n[C# Summary]\nCała pętla zakończona w czasie: {stopwatch.ElapsedMilliseconds} ms");
         Console.WriteLine($"Średni czas symulacji jednej rozgrywki: {stopwatch.ElapsedMilliseconds / N} ms");
         Console.WriteLine($"Liczba remisów = {tieCounter}, maxErrorGap = {maxErrorGap}, minErrorGap = {minErrorGap}, AvgGap = {N / errorCounter}");
-        Console.WriteLine($"Tury: min = {minTurn}, max = {maxTurn} avg = {turnSum/(N-errorCounter+1)}");
+        Console.WriteLine($"Tury: min = {minTurn}, max = {maxTurn} avg = {turnSum / (N - errorCounter + 1)}");
         Console.WriteLine($"Nagrody: min = {minAward}, max = {maxAward}");
         Console.WriteLine($"Kary: min = {minLoss}, max = {maxLoss}");
         Console.WriteLine();
@@ -179,7 +187,7 @@ public class Program
     {
         int reward = 0;
 
-        if(moves < 20)
+        if (moves < 20)
         {
             reward += 75;
         }
@@ -187,7 +195,7 @@ public class Program
         {
             reward += 65;
         }
-        else if(moves < 30)
+        else if (moves < 30)
         {
             reward += 60;
         }
@@ -195,7 +203,7 @@ public class Program
         {
             reward += 55;
         }
-        else if(moves < 40)
+        else if (moves < 40)
         {
             reward += 50;
         }
@@ -203,11 +211,11 @@ public class Program
         {
             reward += 30;
         }
-        if(advantage>=5)
+        if (advantage >= 5)
         {
             reward += 20;
         }
-        if(tokensCount>=5)
+        if (tokensCount >= 5)
         {
             reward -= 10;
         }
@@ -234,7 +242,7 @@ public class Program
         {
             reward -= 5;
         }
-        return reward/ (float)100;
+        return reward / (float)100;
     }
 
     public static float AwardLossP1(int[] arr, int moveNumber)
@@ -266,9 +274,9 @@ public class Program
         float[] rewards = new float[4];
 
         rewards[winner] = AwardLossWinner(stateFromWinnerPerspective, moveNumber);
-        rewards[(winner+1)%4] = AwardLossP1(stateFromWinnerPerspective, moveNumber);
-        rewards[(winner+2)%4] = AwardLossP2(stateFromWinnerPerspective, moveNumber);
-        rewards[(winner+3)%4] = AwardLossP3(stateFromWinnerPerspective, moveNumber);
+        rewards[(winner + 1) % 4] = AwardLossP1(stateFromWinnerPerspective, moveNumber);
+        rewards[(winner + 2) % 4] = AwardLossP2(stateFromWinnerPerspective, moveNumber);
+        rewards[(winner + 3) % 4] = AwardLossP3(stateFromWinnerPerspective, moveNumber);
 
         return rewards;
     }
@@ -284,5 +292,36 @@ public class Program
         };
 
         await client.SendAndFetchDataFromSocket(JsonSerializer.Serialize(request));
+    }
+    private static (float, int, int, int[]?) ExecuteWithTimeout(Func<(float, int, int, int[]?)> func, int timeoutMilliseconds)
+    {
+        (float, int, int, int[]?) result = (0f, 0, -1, null);
+        Exception? exception = null;
+
+        Thread thread = new Thread(() =>
+        {
+            try
+            {
+                result = func();
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+            }
+        });
+
+        thread.Start();
+        bool completed = thread.Join(timeoutMilliseconds);
+
+        if (!completed)
+        {
+            thread.Interrupt();
+            throw new TimeoutException("Funkcja przekroczyła limit czasu.");
+        }
+
+        if (exception != null)
+            throw exception;
+
+        return result;
     }
 }
