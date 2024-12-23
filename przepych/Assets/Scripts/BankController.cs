@@ -28,7 +28,6 @@ public class BankController : MonoBehaviour
     {
         playerController = currentPlayer.GetComponent<PlayerController>();
         isPlayerTakingThreeGems = false;
-        Debug.Log(resourcesController.gems.Count);
         foreach (var item in resourcesController.gems.ToList())
         {
             if (item.Key != GemColor.GOLDEN)
