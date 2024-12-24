@@ -460,6 +460,80 @@ namespace SplendorConsole
 
         }
 
+        public void CreateFile(string Path, int number, int player_id) //string[] args
+        {
+            //string folderPath = args[0];
+            int fileNumber = number;
+            string fileName;
+            string filePath;
+            string datePart = System.DateTime.Now.ToString("yyyy-MM-dd");
+
+            fileName = $"File_{datePart}_{fileNumber}_{player_id}.txt";
+            filePath = System.IO.Path.Combine(Path, fileName);
+
+            File.Create(filePath);
+
+            string greeting = "Start";
+            File.WriteAllText(filePath, greeting);
+        }
+
+        public void Write_File(int[] input, int[] output, float award_loss,string filePath, int number, int player_id)  
+        {
+            if (File.Exists(filePath))
+            {
+                StreamWriter sw = new StreamWriter(filePath);
+                sw.WriteLine(input);
+                sw.Write(" , ");
+                sw.Write(output);
+                sw.Write(" , ");
+                sw.Write(award_loss);
+                sw.WriteLine("|break|");    
+            }
+            else
+            {
+                CreateFile(filePath,number, player_id);
+            }
+
+        }
+        public void Write_File_end(float award_loss_winner_or_loser, string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                StreamWriter sw = new StreamWriter(filePath);
+                sw.WriteLine("Koniec gry");
+                sw.WriteLine(award_loss_winner_or_loser);       //winner or loser, zaleznie od id i patrzac w glownej petli
+                sw.Write("KONIEC");
+            }
+            else
+            {
+                throw new Exception("file doesn't exist");
+            }
+        }
+
+        public void txt_to_json(string txtFilePath)     //nie mam pewnosci tutaj
+        {
+            try
+            {
+                string[] lines = File.ReadAllLines(txtFilePath);
+
+                var jsonData = new
+                {
+                    FileName = System.IO.Path.GetFileName(txtFilePath),
+                    Content = lines
+                };
+
+                string jsonFilePath = System.IO.Path.ChangeExtension(txtFilePath, ".json");
+
+                // serializacja i zapis do pliku - json
+                string jsonString = JsonSerializer.Serialize(jsonData, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(jsonFilePath, jsonString);
+            
+            }
+            catch (Exception ex)
+            {
+                //
+            }
+        }
         async public Task<int[]?> RequestMovesListFromServer(float feedback)
         {
 
