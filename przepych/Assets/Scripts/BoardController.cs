@@ -47,6 +47,8 @@ public class BoardController : MonoBehaviour
     public List<NobleController> loadedNoblesListControllers = new List<NobleController>();
     public List<NobleController> visibleNoblesListControllers = new List<NobleController>();
 
+    public GameController gameController;
+
     private void Start()
     {
         this.level1StackController = this.level1Stack.GetComponent<CardStackController>();
@@ -109,6 +111,7 @@ public class BoardController : MonoBehaviour
         GameObject cardObject = Instantiate(this.cardPrefab, cardPosition, Quaternion.identity, targetedVisibleCardsContainer.transform);
         CardController cardController = cardObject.GetComponent<CardController>();
         cardController.InitCardData(targetedCard);
+        cardController.gameController = this.gameController;
         RectTransform cardRectTransform = cardObject.GetComponent<RectTransform>();
         cardObject.GetComponent<RectTransform>().localPosition = new Vector3(xOffset, cardRectTransform.localPosition.y, cardRectTransform.localPosition.z);
     }

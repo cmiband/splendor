@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.XPath;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CardController : MonoBehaviour
+public class CardController : MonoBehaviour, IPointerClickHandler
 {
+    public GameController gameController;
     public ResourcesController detailedPrice;
     public int level;
     public GemColor bonusColor;
@@ -79,6 +83,16 @@ public class CardController : MonoBehaviour
         this.detailedPrice = card.detailedPrice;
         this.points = card.points;
         this.illustration = card.illustration;
+
+        this.SetCardSprite();
+    }
+
+    private void SetCardSprite()
+    {
+        Sprite cardSprite = UnityEngine.Resources.Load<Sprite>(this.illustration);
+
+        Image cardImage = this.gameObject.GetComponent<Image>();
+        cardImage.sprite = cardSprite;
     }
 
     private void OnMouseDown()
@@ -87,6 +101,14 @@ public class CardController : MonoBehaviour
         if (gameController != null)
         {
             gameController.SelectCard(this);
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if(eventData.button == PointerEventData.InputButton.Right)
+        {
+            this.gameController.ShowClickedCard(this);
         }
     }
 
