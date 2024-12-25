@@ -211,6 +211,20 @@ namespace SplendorConsole
                 }
             }
         }
+
+        public  (float, int, int, int[]?) GameLoop_new(int numberOfPlayers)
+        {
+
+
+
+            return (feedbackFromPreviousRequest, 20000, 20000, ToArray()); //cokolwiek na razie
+
+
+
+        }
+
+
+
         private Player? MoreThan1Winner(List<Player> winners)
         {
             int minimum = 100;

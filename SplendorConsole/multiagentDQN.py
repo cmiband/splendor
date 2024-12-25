@@ -15,14 +15,6 @@ class MultiAgentDQN:
             DQNAgent(state_dim, action_dim, **agent_kwargs) for _ in range(num_agents)
         ]
 
-    def choose_actions(self, states):
-        """
-        Let all agents choose their actions based on their respective states.
-        :param states: List of states, one per agent.
-        :return: List of actions chosen by each agent.
-        """
-        actions = [agent.choose_action(state) for agent, state in zip(self.agents, states)]
-        return actions
 
     def store_transitions(self, states, actions, rewards, next_states, dones):
         """
@@ -50,42 +42,4 @@ class MultiAgentDQN:
         for agent in self.agents:
             agent.update_target_network()
 
-    def format_actions_for_api(self, actions):
-        """
-        Format the actions into a JSON-compatible structure for the API server.
-        :param actions: List of actions chosen by each agent.
-        :return: JSON string of actions.
-        """
-        return json.dumps({"actions": actions})
 
-    def parse_states_from_api(self, json_data):
-        """
-        Parse the JSON input from the API server into a list of states.
-        :param json_data: JSON string containing the states.
-        :return: List of states, one per agent.
-        """
-        data = json.loads(json_data)
-        states = data.get("states", [])
-        return states
-
-
-# Testing MultiAgentDQN class with mock data
-multi_agent_dqn = MultiAgentDQN(num_agents=3, state_dim=348, action_dim=43)
-mock_states = [np.random.rand(348) for _ in range(3)]
-mock_actions = multi_agent_dqn.choose_actions(mock_states)
-
-# Mock transition data
-mock_next_states = [np.random.rand(348) for _ in range(3)]
-mock_rewards = [1.0, -1.0, 0.5]
-mock_dones = [False, False, True]
-
-# Store transitions and perform learning
-multi_agent_dqn.store_transitions(mock_states, mock_actions, mock_rewards, mock_next_states, mock_dones)
-multi_agent_dqn.learn()
-
-# Update target networks
-multi_agent_dqn.update_target_networks()
-
-# Format actions for API
-actions_json = multi_agent_dqn.format_actions_for_api(mock_actions)
-actions_json
