@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SplendorTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+590d1e5c459c2cc36a4429dfbb122a806b2e3f1c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+72f8cc72faeebee2c70ba112b2d37d754344b5c8")]
 [assembly: System.Reflection.AssemblyProductAttribute("SplendorTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SplendorTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

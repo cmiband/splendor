@@ -39,7 +39,6 @@ public class Program
         Stopwatch stopwatch = Stopwatch.StartNew();
 
 
-
         for (int i = 1; i <= N; i++)
         {
             game = new Game(client);

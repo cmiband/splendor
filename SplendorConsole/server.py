@@ -2,6 +2,11 @@ from flask import Flask, request
 from flask_socketio import SocketIO, emit
 import json
 from random import shuffle
+from real_simulation_try1 import *
+
+
+gra1000 = 0
+
 
 app = Flask(__name__)
 #socketio = SocketIO(app, cors_allowed_origins="*")
@@ -15,6 +20,7 @@ def index():
 @socketio.on('message')
 def handle_message(message):
     try:
+        global gra1000
         data = json.loads(message)
         id = data.get("Id")
 
@@ -25,8 +31,9 @@ def handle_message(message):
             game_state = data.get("GameState")
 
             # LOSOWY OUTPUT, NALEŻY ZASTĄPIĆ OUTPUTEM Z MODELU
-            output = [i for i in range(1, 44)]
-            shuffle(output)
+            #output = [i for i in range(1, 44)]
+            #shuffle(output)
+            output = step(current_player, game_state, feedback)
 
             response_object = {
                 "MovesList": output,
@@ -38,6 +45,12 @@ def handle_message(message):
             rewards = data.get("Rewards")
             last_feedback = data.get("LastFeedback")
             print(f"[Python] Serwer odebrał wygraną {rewards} i ostatni feedback {last_feedback}")
+
+            gra1000 += 1 
+
+            if gra1000 % 10 == 0:
+                #trainer.save_all_agents("./checkpoints")
+                trainer.save_all_agents("C:/Users/macie/Documents/GitHub/splendor/SplendorConsole")
 
             response_object = {
                 "ResponseCode": 0,
@@ -69,4 +82,5 @@ def handle_disconnect():
     print("[Python] Klient rozłączony")
 
 if __name__ == '__main__':
-    socketio.run(app, host='localhost', port=8765, debug=True)
+    trainer.load_all_agents("./checkpoints")
+    socketio.run(app, host='localhost', port=8765, debug=True)  #8999
