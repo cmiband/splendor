@@ -9,18 +9,6 @@ using UnityEngine;
 
     public class AvailableNoblesController : MonoBehaviour, IEnumerable<NobleController>
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
         public List<NobleController> noblesList = new List<NobleController>();
 
         public void LoadNoblesFromExcel(string filePath = "NoblesWykaz.xlsx")
@@ -38,6 +26,8 @@ using UnityEngine;
                     detailedPrice.gems[GemColor.GREEN] = int.Parse(row.Cell(4).GetString());
                     detailedPrice.gems[GemColor.RED] = int.Parse(row.Cell(5).GetString());
                     detailedPrice.gems[GemColor.BLACK] = int.Parse(row.Cell(6).GetString());
+                    detailedPrice.gems[GemColor.GOLDEN] = 0;
+                    detailedPrice.gems[GemColor.NONE] = 0;
 
                     string illustration = row.Cell(7).GetString();
 

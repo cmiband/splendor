@@ -173,6 +173,7 @@ public class PlayerController : MonoBehaviour
                     gameObject1.name = "Card_Level_" + cardLevel;
                     CardController cardController1 = gameObject1.GetComponent<CardController>();
                     cardController1.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                    cardController1.gameController = mainGameController;
                     AddCardClickListener(gameObject1, cardController1);
                     break;
 
@@ -184,6 +185,7 @@ public class PlayerController : MonoBehaviour
                     gameObject2.name = "Card_Level_" + cardLevel;
                     CardController cardController2 = gameObject2.GetComponent<CardController>();
                     cardController2.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                    cardController2.gameController = mainGameController;
                     AddCardClickListener(gameObject2, cardController2);
                     break;
 
@@ -195,6 +197,7 @@ public class PlayerController : MonoBehaviour
                     gameObject3.name = "Card_Level_" + cardLevel;
                     CardController cardController3 = gameObject3.GetComponent<CardController>();
                     cardController3.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                    cardController3.gameController = mainGameController;
                     AddCardClickListener(gameObject3, cardController3);
                     break;
             }
