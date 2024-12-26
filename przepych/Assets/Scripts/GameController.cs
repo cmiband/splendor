@@ -19,6 +19,8 @@ public class GameController : MonoBehaviour
     public float countdownTime = 600f;
     private float remainingTime;
 
+    public GameObject clickedCard;
+
     public bool actionIsTaken = false;
     public GameObject board;
     public BoardController boardController;
@@ -323,6 +325,12 @@ public class GameController : MonoBehaviour
     public void UpdateTargetedPlayerPoints(int playerId, int points)
     {
         this.playerIdToPoints[playerId] = points;
+    }
+
+    public void ShowClickedCard(CardController card)
+    {
+        this.clickedCard.GetComponent<ClickedCardController>().SetCard(card);
+        this.clickedCard.SetActive(true);
     }
 
     public void SelectCard(CardController card)

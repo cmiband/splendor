@@ -79,6 +79,7 @@ public class BoughtCardsController : MonoBehaviour
             GameObject cardObject = Instantiate(this.cardPrefab, cardPosition, Quaternion.identity, targetedPlayerPlace.transform);
             CardController cardController = cardObject.GetComponent<CardController>();
             cardController.InitCardData(card);
+            cardController.gameController = this.gameController;
 
             this.cardsCreated.Add(cardObject);
             currentXOffset += CARD_X_OFFSET;

@@ -149,7 +149,7 @@ public class PlayerController : MonoBehaviour
         bankController.AddGems(resourcesUsed);
 
         player.hand.Add(CloneCard());
-        player.BonusResources.AddResource(selectedCard.bonusColor);
+        player.AddBonusResource(selectedCard.bonusColor);
         player.Points += selectedCard.points;
         int cardLevel = selectedCard.Level;
 
