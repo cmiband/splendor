@@ -81,7 +81,6 @@
     <Compile Include="Assets\Scripts\CardStackController.cs" />
     <Compile Include="Assets\Scripts\BaseScripts\Noble.cs" />
     <Compile Include="Assets\Scripts\CardController.cs" />
-    <Compile Include="Assets\Scripts\GoldenGemStashController.cs" />
     <Compile Include="Assets\Scripts\BaseScripts\AvailableCards.cs" />
     <Compile Include="Assets\Scripts\BaseScripts\Resources.cs" />
     <Compile Include="Assets\Scripts\BoughtCardsController.cs" />

@@ -1965,6 +1965,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 9094224824765345752, guid: 7ad7118bf7e8a72428642aa83a37dcfe, type: 3}
   m_PrefabInstance: {fileID: 286651052}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &286651054 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1929600361364695100, guid: 7ad7118bf7e8a72428642aa83a37dcfe, type: 3}
+  m_PrefabInstance: {fileID: 286651052}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &292873806
 GameObject:
   m_ObjectHideFlags: 0
@@ -3910,6 +3915,7 @@ MonoBehaviour:
   level3VisibleCardControllers: []
   loadedNoblesListControllers: []
   visibleNoblesListControllers: []
+  visibleNoblesCoppied: []
   gameController: {fileID: 2008468893}
 --- !u!114 &526158505
 MonoBehaviour:
@@ -4373,6 +4379,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointsText: {fileID: 443517865}
   playerId: 0
+  avatar: {fileID: 0}
   game: {fileID: 2008468892}
   mainGameController: {fileID: 0}
   bankController: {fileID: 0}
@@ -4384,6 +4391,7 @@ MonoBehaviour:
   blackGems: {fileID: 1093421187}
   blueGems: {fileID: 715408227}
   goldGems: {fileID: 1976158548}
+  goldenGemStash: {fileID: 286651054}
   bonusWhiteGems: {fileID: 758079961}
   bonusRedGems: {fileID: 1558010923}
   bonusGreenGems: {fileID: 790948401}
@@ -4391,6 +4399,8 @@ MonoBehaviour:
   bonusBlueGems: {fileID: 687040788}
   hand: []
   handReserved: []
+  nobleController: []
+  goldenGemStashController: {fileID: 0}
   points: 0
 --- !u!1 &568867870 stripped
 GameObject:
@@ -9197,6 +9207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointsText: {fileID: 810047553}
   playerId: 2
+  avatar: {fileID: 0}
   game: {fileID: 2008468892}
   mainGameController: {fileID: 0}
   bankController: {fileID: 0}
@@ -9208,6 +9219,7 @@ MonoBehaviour:
   blackGems: {fileID: 2101035551}
   blueGems: {fileID: 399147501}
   goldGems: {fileID: 1158312718}
+  goldenGemStash: {fileID: 286651054}
   bonusWhiteGems: {fileID: 1041673685}
   bonusRedGems: {fileID: 1665521139}
   bonusGreenGems: {fileID: 72215459}
@@ -9215,6 +9227,8 @@ MonoBehaviour:
   bonusBlueGems: {fileID: 828592337}
   hand: []
   handReserved: []
+  nobleController: []
+  goldenGemStashController: {fileID: 0}
   points: 0
 --- !u!1 &1158312718 stripped
 GameObject:
@@ -12331,6 +12345,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointsText: {fileID: 37706700}
   playerId: 1
+  avatar: {fileID: 0}
   game: {fileID: 2008468892}
   mainGameController: {fileID: 0}
   bankController: {fileID: 0}
@@ -12342,6 +12357,7 @@ MonoBehaviour:
   blackGems: {fileID: 501884646}
   blueGems: {fileID: 124946173}
   goldGems: {fileID: 196232845}
+  goldenGemStash: {fileID: 286651054}
   bonusWhiteGems: {fileID: 667857016}
   bonusRedGems: {fileID: 1031051507}
   bonusGreenGems: {fileID: 749272619}
@@ -12349,6 +12365,8 @@ MonoBehaviour:
   bonusBlueGems: {fileID: 980490967}
   hand: []
   handReserved: []
+  nobleController: []
+  goldenGemStashController: {fileID: 0}
   points: 0
 --- !u!1 &1591002895
 GameObject:
@@ -14547,6 +14565,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointsText: {fileID: 482256725}
   playerId: 3
+  avatar: {fileID: 0}
   game: {fileID: 2008468892}
   mainGameController: {fileID: 0}
   bankController: {fileID: 0}
@@ -14558,6 +14577,7 @@ MonoBehaviour:
   blackGems: {fileID: 1551730363}
   blueGems: {fileID: 888987804}
   goldGems: {fileID: 467739428}
+  goldenGemStash: {fileID: 286651054}
   bonusWhiteGems: {fileID: 896742906}
   bonusRedGems: {fileID: 2001026605}
   bonusGreenGems: {fileID: 1018522652}
@@ -14565,6 +14585,8 @@ MonoBehaviour:
   bonusBlueGems: {fileID: 387321274}
   hand: []
   handReserved: []
+  nobleController: []
+  goldenGemStashController: {fileID: 0}
   points: 0
 --- !u!114 &2090406504 stripped
 MonoBehaviour:
