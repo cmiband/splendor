@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Wordprocessing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,9 +13,11 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI pointsText;
 
     public int playerId;
+    public Sprite avatar;
     public GameObject game;
     public GameController mainGameController;
     public BankController bankController;
+    
     public string resourcesInfo = "";
     public string bonusResourcesInfo = "";
 
@@ -44,6 +47,7 @@ public class PlayerController : MonoBehaviour
     public ResourcesController Resources { get => resources; set => resources = value; }
     public List<CardController> hand;
     public List<CardController> handReserved;
+    public List<NobleController> nobleController;
     public int points;
     public int Points { get => points; set => points = value; }
 
@@ -418,7 +422,6 @@ public class PlayerController : MonoBehaviour
     private void SetGemInfo(ResourcesController resources)
     {
 
-
         foreach(KeyValuePair<GemColor, int> val in resources.gems)
         {
             if(val.Key == GemColor.NONE)
@@ -516,5 +519,45 @@ public class PlayerController : MonoBehaviour
         }
 
         return result;
+    }
+    public NobleController GetNoble(GameController game, PlayerController player)
+    {
+        foreach (var noble in game.boardController.visibleNoblesCoppied)
+        {
+            int canGetThisNoble = 0;
+
+            if (player.BonusResources.gems.Count == 0)
+                return null;
+            else
+            {
+                foreach (var bonus in player.BonusResources.gems)
+                {
+                    var color = bonus.Key;
+                    var amount = bonus.Value;
+                    var nobleAmountForColor = noble.detailedPrice.gems[color];
+
+                    if (nobleAmountForColor!=0 && amount >= nobleAmountForColor)
+                        canGetThisNoble++;
+                }
+            }
+            if (canGetThisNoble == NumberOfRequiredBonuses(noble))
+                return noble;
+        }
+        return null;
+    }
+    public void SetPlayerNoble(List<NobleController> nobles)
+    {
+        this.nobleController = nobles;
+    }
+    private int NumberOfRequiredBonuses(NobleController noble)
+    {
+        int amount = 0;
+        foreach(var kpv in noble.detailedPrice.gems)
+        {
+            var value = kpv.Value;
+            if (value!=0)
+                amount++;
+        }
+        return amount;
     }
 }

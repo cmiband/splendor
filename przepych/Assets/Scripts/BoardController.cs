@@ -46,6 +46,7 @@ public class BoardController : MonoBehaviour
 
     public List<NobleController> loadedNoblesListControllers = new List<NobleController>();
     public List<NobleController> visibleNoblesListControllers = new List<NobleController>();
+    public List<NobleController> visibleNoblesCoppied = new List<NobleController>();
 
     public GameController gameController;
 
@@ -186,6 +187,13 @@ public class BoardController : MonoBehaviour
         for (int i = 0; i < 7; i++)
         {
             Instantiate(gemPrefab).transform.parent = gameObject.transform;
+        }
+    }
+    public void CopyNobles()
+    {
+        foreach (var item in visibleNoblesListControllers)
+        {
+            visibleNoblesCoppied.Add(item);
         }
     }
 }

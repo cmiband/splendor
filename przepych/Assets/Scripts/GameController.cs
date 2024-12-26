@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,8 +30,13 @@ public class GameController : MonoBehaviour
     public Dictionary<int, List<CardController>> playerIdToHand = new Dictionary<int, List<CardController>>();
     public Dictionary<int, List<CardController>> playerIdToReserveHand = new Dictionary<int, List<CardController>>();
     public Dictionary<int, ResourcesController> playerIdToResources = new Dictionary<int, ResourcesController>();
+
+    public Dictionary<int, List<NobleController>> playerIdToNoble = new Dictionary<int, List<NobleController>>();
+
+
     public Dictionary<int, ResourcesController> playerIdToBonusResources = new Dictionary<int, ResourcesController>();
     public Dictionary<int, int> playerIdToPoints = new Dictionary<int, int>();
+
     public int currentPlayerId;
 
     public List<GameObject> players;
@@ -78,6 +84,10 @@ public class GameController : MonoBehaviour
         availableNoblesController.LoadNoblesFromExcel("Assets/ExternalResources/NoblesWykaz.xlsx");
         boardController.SetNobles(availableNoblesController.noblesList);
         boardController.CreateNobleObjectOnStart();
+
+        boardController.CopyNobles();
+
+
 
         reservedCardController = this.reservedCards.GetComponent<ReservedCardController>();
 
@@ -149,7 +159,11 @@ public class GameController : MonoBehaviour
             List<CardController> initHand = new List<CardController>();
             List<CardController> initReservedHand = new List<CardController>();
             ResourcesController initResources = new ResourcesController();
+
+            List<NobleController> initNobles = new List<NobleController>();
+
             ResourcesController initBonusResources = new ResourcesController();
+
             initResources.FillDictionaryWithZeros();
             initBonusResources.FillDictionaryWithZeros();
 
@@ -158,8 +172,12 @@ public class GameController : MonoBehaviour
             this.playerIdToHand.Add(i, initHand);
             this.playerIdToReserveHand.Add(i, initReservedHand);
             this.playerIdToResources.Add(i, initResources);
+
+            this.playerIdToNoble.Add(i, initNobles);
+
             this.playerIdToBonusResources.Add(i, initBonusResources);
             this.playerIdToPoints.Add(i, 0);
+
         }
     }
 
@@ -174,11 +192,18 @@ public class GameController : MonoBehaviour
     private void FillPlayerWithData(GameObject targetedPlayer, int targetedPlayerIndex)
     {
         PlayerController targetedPlayerController = targetedPlayer.GetComponent<PlayerController>();
+
+        targetedPlayerController.SetPlayerId(targetedPlayerIndex);
         targetedPlayerController.SetPlayerHand(this.playerIdToHand[targetedPlayerIndex]);
         targetedPlayerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerIndex]);
+
         targetedPlayerController.SetPlayerResources(this.playerIdToResources[targetedPlayerIndex], this.playerIdToBonusResources[targetedPlayerIndex]);
-        targetedPlayerController.SetPlayerPoints(this.playerIdToPoints[targetedPlayerIndex]);
+
+        if (this.playerIdToNoble.ContainsKey(targetedPlayerIndex))
+            targetedPlayerController.SetPlayerNoble(this.playerIdToNoble[targetedPlayerIndex]);
+
     }
+
 
     private void HandleOpenBoughtCards()
     {
@@ -219,13 +244,42 @@ public class GameController : MonoBehaviour
 
     public void ChangeTurn()
     {
-        ResetCountdown();
+
+        if (this.currentPlayerId == 3)
+            Debug.Log("new player id   " + 0);
+        else
+            Debug.Log("new player id   " + (this.currentPlayerId + 1));
+
+        PlayerController crntPlayerController = currentPlayer.GetComponent<PlayerController>();
+
+        var availableNoble = crntPlayerController.GetNoble(this, crntPlayerController);
+
+        if (availableNoble is not null)
+        {
+            var nobleIndex = GetNobleIndex(availableNoble);
+
+            NobleController addedNoble = currentPlayer.AddComponent<NobleController>();
+
+            addedNoble.Init(availableNoble.points, availableNoble.detailedPrice, availableNoble.illustration);
+
+            this.playerIdToNoble[this.currentPlayerId].Add(addedNoble);
+            Debug.Log($"Noble added to player with id: {currentPlayerId}");
+
+            this.boardController.visibleNoblesCoppied.RemoveAt(nobleIndex);
+            Debug.Log($"Noble removed from visibleNobleCopied");
+
+            availableNoble.assignedPlayer = crntPlayerController;
+        }
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
+        Debug.Log($"Current player id: {this.currentPlayerId}");
+
+        ResetCountdown();
         if(this.currentPlayerId == 0)
         {
             stageNumber++;
             stageInfo.SetText(stageNumber.ToString());
         }
+
 
         int targetedPlayerId = this.currentPlayerId;
 
@@ -235,20 +289,27 @@ public class GameController : MonoBehaviour
             playerController.SetPlayerId(targetedPlayerId);
             playerController.SetPlayerHand(this.playerIdToHand[targetedPlayerId]);
             playerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerId]);
+
             playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId], this.playerIdToBonusResources[targetedPlayerId]);
-            playerController.SetPlayerPoints(this.playerIdToPoints[targetedPlayerId]);
+
+            if (this.playerIdToNoble.ContainsKey(targetedPlayerId))
+                playerController.SetPlayerNoble(this.playerIdToNoble[targetedPlayerId]);
+
             targetedPlayerId = (targetedPlayerId + 1) % 4;
 
             playerController.PointsCounter(playerController);
         }
+
         reservedCardController.UpdateReservedCards(this.currentPlayerId);
         NextPlayerOneReservedCardController.UpdateReservedCardsOthers((this.currentPlayerId + 1) % 4);
         NextPlayerTwoReservedCardController.UpdateReservedCardsOthers((this.currentPlayerId + 2) % 4);
         NextPlayerThreeReservedCardController.UpdateReservedCardsOthers((this.currentPlayerId + 3) % 4);
         this.bankController.ClearSelectedGems();
 
+
         buyCard.SetActive(false);
         reserveCard.SetActive(false);
+
     }
 
     public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources)
@@ -391,6 +452,18 @@ public class GameController : MonoBehaviour
         }
     }
 
+    private int GetNobleIndex(NobleController noble)
+    {
+        var visibleNobles = boardController.visibleNoblesCoppied;
+        for (int i=0; i<visibleNobles.Count; i++)
+        {
+            if (visibleNobles[i].Equals(noble))
+                return i;
+        }
+        throw new Exception("Noble not found in visible nobles");
+    }
+
+
     private void ResetCountdown()
     {
         remainingTime = countdownTime;
@@ -402,5 +475,6 @@ public class GameController : MonoBehaviour
         int minutes = Mathf.FloorToInt(remainingTime / 60F);
         int seconds = Mathf.FloorToInt(remainingTime % 60F);
         countdownText.text = string.Format("{0:00}:{1:00}", minutes, seconds); 
+
     }
 }
