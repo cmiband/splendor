@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     public GameObject blackGems;
     public GameObject blueGems;
     public GameObject goldGems;
+    public GameObject goldenGemStash;
 
     public TextMeshProUGUI bonusWhiteGems;
     public TextMeshProUGUI bonusRedGems;
@@ -37,7 +38,6 @@ public class PlayerController : MonoBehaviour
 
     private ResourcesController resources = new ResourcesController();
     private ResourcesController bonusResources = new ResourcesController();
-    private GoldenGemStashController goldenGemStashController = new GoldenGemStashController();
 
     public ResourcesController BonusResources
     {
@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     public List<CardController> hand;
     public List<CardController> handReserved;
     public List<NobleController> nobleController;
+    public GemStashController goldenGemStashController = new GemStashController();
     public int points;
     public int Points { get => points; set => points = value; }
 
@@ -55,10 +56,10 @@ public class PlayerController : MonoBehaviour
     {
         this.hand = new List<CardController>();
         this.mainGameController = this.game.GetComponent<GameController>();
+        this.goldenGemStashController = this.goldenGemStash.GetComponent<GemStashController>();
 
         this.InitGemDictionary();
         this.bankController = FindObjectOfType<BankController>();
-        this.goldenGemStashController = FindObjectOfType<GoldenGemStashController>();
     }
     public void Update()
     {
@@ -215,7 +216,7 @@ public class PlayerController : MonoBehaviour
 
         if(handReserved.Count < 3)
         {
-            if (goldenGemStashController.TakeOne())
+            if (goldenGemStashController.TakeGolden())
             {
                 Debug.Log("Pobrano złoty żeton");
             }
