@@ -214,10 +214,83 @@ namespace SplendorConsole
 
         public  (float, int, int, int[]?) GameLoop_new(int numberOfPlayers)
         {
-            
 
-
-            return (feedbackFromPreviousRequest, 20000, 20000, ToArray()); //cokolwiek na razie
+            int securityCounter = 0;
+            while (true)
+            {
+                securityCounter++;
+                if (securityCounter >= 1000)
+                {
+                    return (feedbackFromPreviousRequest, securityCounter / 4, -200, ToArray());
+                }
+                Turn(listOfPlayers[currentTurn]);
+                if(RequestMovesListFromServer(feedbackFromPreviousRequest) != null)
+                {
+                    Write_File(ToArray(), RequestMovesListFromServer(feedbackFromPreviousRequest), feedbackFromPreviousRequest, "FilesToLlama", securityCounter, (currentTurn % 4));
+                }
+                
+                currentTurn = (currentTurn + 1) % numberOfPlayers;
+                if (currentTurn == 0)
+                {
+                    int winnersCount = 0;
+                    List<Player> winners = new List<Player>();
+                    foreach (Player player in listOfPlayers)
+                    {
+                        player.PointsCounter();
+                        if (CheckIfWinner(player))
+                        {
+                            winnersCount++;
+                            winners.Add(player);
+                        }
+                    }
+                    if (winnersCount == 1)
+                    {
+                        //1 zwyciezca to listOfPlayers.IndexOf(winners[0]);
+                        // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
+                        currentTurn = listOfPlayers.IndexOf(winners[0]);
+                        return (feedbackFromPreviousRequest, securityCounter / 4, currentTurn, ToArray());
+                    }
+                    else if (winnersCount > 1)
+                    {
+                        winnersCount = 0;
+                        int winnersPoints = 0;
+                        int playerIndex = 0;
+                        foreach (Player player in winners)
+                        {
+                            if (player.Points == winnersPoints) winnersCount++;
+                            if (player.Points > winnersPoints)
+                            {
+                                winnersPoints = player.Points;
+                                winnersCount = 1;
+                                playerIndex = listOfPlayers.IndexOf(player);
+                            }
+                        }
+                        if (winnersCount == 1)
+                        {
+                            //2 zwyciezca playerIndex
+                            // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
+                            currentTurn = playerIndex;
+                            return (feedbackFromPreviousRequest, securityCounter / 4, currentTurn, ToArray());
+                        }
+                        else
+                        {
+                            Player OfficialWinner = MoreThan1Winner(winners);
+                            if (OfficialWinner != null)
+                            {
+                                // 3 zwyciezca listOfPlayers.IndexOf(OfficialWinner)
+                                // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
+                                currentTurn = listOfPlayers.IndexOf(OfficialWinner);
+                                return (feedbackFromPreviousRequest, securityCounter / 4, currentTurn, ToArray());
+                            }
+                            else
+                            {
+                                // 4 remis (na zwrocie nie ma znaczenia kto jest brany jako main bo nikt nie wygrywa)
+                                return (feedbackFromPreviousRequest, securityCounter / 4, -1, ToArray());
+                            }
+                        }
+                    }
+                }
+            }
 
 
 
@@ -491,7 +564,7 @@ namespace SplendorConsole
             File.WriteAllText(filePath, greeting);
         }
 
-        public void Write_File(int[] input, int[] output, float award_loss,string filePath, int number, int player_id)  
+        public void Write_File(int[] input, Task<int[]?> output, float award_loss,string filePath, int number, int player_id)  
         {
             if (File.Exists(filePath))
             {
