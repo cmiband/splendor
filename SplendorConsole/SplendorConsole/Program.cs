@@ -38,7 +38,7 @@ public class Program
         float minLoss = -1f;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-
+        //cos
         for (int i = 1; i <= N; i++)
         {
             game = new Game(client);
