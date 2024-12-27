@@ -30,13 +30,13 @@ public class NobleController :  MonoBehaviour
         {
 
             // trzeba zainicjalizować awatary w PlayerController
+            // trzeba zrobić Noble Stack Controllera aby kontrollować noble na boardzie w grze
             //Sprite playerAvatar = assignedPlayer.avatar;
             //if (playerAvatar != null)
             //{
             //    playerImage.GetComponent<Image>().sprite = playerAvatar;
             //}               
-            playerImage.gameObject.SetActive(true);
-            Debug.Log("cos");
+            playerImage.gameObject.SetActive(true);            
         }      
     }
     public NobleController(int points, ResourcesController detailedPrice, string illustration)
