@@ -142,7 +142,7 @@ namespace SplendorConsole
             while (true)
             {
                 securityCounter++;
-                if(securityCounter>=1000)
+                if(securityCounter >= 1000)
                 {
                     return (feedbackFromPreviousRequest, securityCounter/4, -200, ToArray());
                 }
@@ -214,7 +214,7 @@ namespace SplendorConsole
 
         public  (float, int, int, int[]?) GameLoop_new(int numberOfPlayers)
         {
-
+            
 
 
             return (feedbackFromPreviousRequest, 20000, 20000, ToArray()); //cokolwiek na razie
@@ -524,7 +524,7 @@ namespace SplendorConsole
             }
         }
 
-        public void txt_to_json(string txtFilePath)     //nie mam pewnosci tutaj
+        public void txt_to_json(string txtFilePath)     
         {
             try
             {

@@ -30,6 +30,12 @@ def handle_message(message):
             feedback = data.get("Feedback")
             game_state = data.get("GameState")
 
+            gra1000 += 1 
+
+            if gra1000 % 10 == 0:
+                #trainer.save_all_agents("./checkpoints")
+                trainer.save_all_agents("C:/Users/macie/Documents/GitHub/splendor/SplendorConsole")
+
             # LOSOWY OUTPUT, NALEŻY ZASTĄPIĆ OUTPUTEM Z MODELU
             #output = [i for i in range(1, 44)]
             #shuffle(output)
@@ -59,6 +65,12 @@ def handle_message(message):
 
         elif id == -1:
             # REQUEST Z ZAKOŃCZONEJ GRY Z REMISEM LUB BŁĘDEM
+            gra1000 += 1 
+
+            if gra1000 % 10 == 0:
+                #trainer.save_all_agents("./checkpoints")
+                trainer.save_all_agents("C:/Users/macie/Documents/GitHub/splendor/SplendorConsole")
+
             rewards = data.get("Rewards")
             last_feedback = data.get("LastFeedback")
             print(f"[Python] Serwer odebrał remis lub błąd {rewards} i ostatni feedback {last_feedback}")
@@ -83,4 +95,4 @@ def handle_disconnect():
 
 if __name__ == '__main__':
     trainer.load_all_agents("./checkpoints")
-    socketio.run(app, host='localhost', port=8765, debug=True)  #8999
+    socketio.run(app, host='localhost', port=8765, debug=True)  #8999 8765
