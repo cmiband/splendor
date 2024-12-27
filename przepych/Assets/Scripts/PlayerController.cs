@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
+using JetBrains.Annotations;
 
 public class PlayerController : MonoBehaviour
 {
@@ -153,59 +154,46 @@ public class PlayerController : MonoBehaviour
         player.AddBonusResource(selectedCard.bonusColor);
         player.Points += selectedCard.points;
         int cardLevel = selectedCard.Level;
-
-        if(selectedCard.isReserved)
+        if (selectedCard.isReserved)
         {
             player.handReserved.Remove(selectedCard);
             mainGameController.reservedCardController.reservedCards.Remove(mainGameController.selectedCard.gameObject);
             Debug.Log("Kupiono zarezerwowaną kartę");
-            Destroy(mainGameController.selectedCard.gameObject);
+            Destroy(selectedCard.gameObject);
 
         }
         else
         {
+
             switch (cardLevel)
             {
                 case 1:
-                    mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
-                    Debug.Log("Kupiono kart� 1 poziomu");
-                    Destroy(mainGameController.selectedCard.gameObject);
-                    GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
-                    gameObject1.name = "Card_Level_" + cardLevel;
-                    CardController cardController1 = gameObject1.GetComponent<CardController>();
-                    cardController1.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                    cardController1.gameController = mainGameController;
-                    AddCardClickListener(gameObject1, cardController1);
+                    List<CardController> level1VisibleCardControllers = mainGameController.boardController.level1VisibleCardControllers;
+                    GameObject level1VisibleCards = mainGameController.boardController.level1VisibleCards;
+                    CardStackController level1Stack = mainGameController.boardController.level1StackController;
+                    Debug.Log("Kupiono karte 1 poziomu");
+                    AfterAction(cardLevel, level1VisibleCardControllers, level1VisibleCards, level1Stack, vector, selectedCard);
                     break;
 
                 case 2:
-                    mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
-                    Debug.Log("Kupiono kart� 2 poziomu");
-                    Destroy(mainGameController.selectedCard.gameObject);
-                    GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
-                    gameObject2.name = "Card_Level_" + cardLevel;
-                    CardController cardController2 = gameObject2.GetComponent<CardController>();
-                    cardController2.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                    cardController2.gameController = mainGameController;
-                    AddCardClickListener(gameObject2, cardController2);
+                    List<CardController> level2VisibleCardControllers = mainGameController.boardController.level2VisibleCardControllers;
+                    GameObject level2VisibleCards = mainGameController.boardController.level2VisibleCards;
+                    CardStackController level2Stack = mainGameController.boardController.level2StackController;
+                    Debug.Log("Kupiono karte 2 poziomu");
+                    AfterAction(cardLevel, level2VisibleCardControllers, level2VisibleCards, level2Stack, vector, selectedCard);
                     break;
 
                 case 3:
-                    mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
-                    Debug.Log("Kupiono kart� 3 poziomu");
-                    Destroy(mainGameController.selectedCard.gameObject);
-                    GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
-                    gameObject3.name = "Card_Level_" + cardLevel;
-                    CardController cardController3 = gameObject3.GetComponent<CardController>();
-                    cardController3.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                    cardController3.gameController = mainGameController;
-                    AddCardClickListener(gameObject3, cardController3);
+                    List<CardController> level3VisibleCardControllers = mainGameController.boardController.level2VisibleCardControllers;
+                    GameObject level3VisibleCards = mainGameController.boardController.level2VisibleCards;
+                    CardStackController level3Stack = mainGameController.boardController.level2StackController;
+                    Debug.Log("Kupiono karte 3 poziomu");
+                    AfterAction(cardLevel, level3VisibleCardControllers, level3VisibleCards, level3Stack, vector, selectedCard);
                     break;
             }
         }
         this.ConfirmPlayerMove();
     }
-
 
     public void HandleReserveCard()
     {
@@ -227,6 +215,7 @@ public class PlayerController : MonoBehaviour
                 int cardLevel = mainGameController.selectedCard.level;
                 PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
                 Vector3 vector = mainGameController.selectedCard.transform.position;
+                CardController selectedCard = mainGameController.selectedCard;
 
                 mainGameController.selectedCard.isReserved = true;
 
@@ -237,36 +226,27 @@ public class PlayerController : MonoBehaviour
                 switch (cardLevel)
                 {
                     case 1:
-                        mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
-                        Debug.Log("Zarezerwowano kart� 1 poziomu");
-                        Destroy(mainGameController.selectedCard.gameObject);
-                        GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
-                        gameObject1.name = "Card_Level_" + cardLevel;
-                        CardController cardController1 = gameObject1.GetComponent<CardController>();
-                        cardController1.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                        AddCardClickListener(gameObject1, cardController1);
+                        List<CardController> level1VisibleCardControllers = mainGameController.boardController.level1VisibleCardControllers;
+                        GameObject level1VisibleCards = mainGameController.boardController.level1VisibleCards;
+                        CardStackController level1Stack = mainGameController.boardController.level1StackController;
+                        Debug.Log("Zarezerwowano karte 1 poziomu");
+                        AfterAction(cardLevel, level1VisibleCardControllers, level1VisibleCards, level1Stack, vector, selectedCard);
                         break;
 
                     case 2:
-                        mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
-                        Debug.Log("Zarezerwowano kart� 2 poziomu");
-                        Destroy(mainGameController.selectedCard.gameObject);
-                        GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
-                        gameObject2.name = "Card_Level_" + cardLevel;
-                        CardController cardController2 = gameObject2.GetComponent<CardController>();
-                        cardController2.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                        AddCardClickListener(gameObject2, cardController2);
+                        List<CardController> level2VisibleCardControllers = mainGameController.boardController.level2VisibleCardControllers;
+                        GameObject level2VisibleCards = mainGameController.boardController.level2VisibleCards;
+                        CardStackController level2Stack = mainGameController.boardController.level2StackController;
+                        Debug.Log("Zarezerwowano karte 2 poziomu");
+                        AfterAction(cardLevel, level2VisibleCardControllers, level2VisibleCards, level2Stack, vector, selectedCard);
                         break;
 
                     case 3:
-                        mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
-                        Debug.Log("Zarezerwowano kart� 3 poziomu");
-                        Destroy(mainGameController.selectedCard.gameObject);
-                        GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
-                        gameObject3.name = "Card_Level_" + cardLevel;
-                        CardController cardController3 = gameObject3.GetComponent<CardController>();
-                        cardController3.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
-                        AddCardClickListener(gameObject3, cardController3);
+                        List<CardController> level3VisibleCardControllers = mainGameController.boardController.level2VisibleCardControllers;
+                        GameObject level3VisibleCards = mainGameController.boardController.level2VisibleCards;
+                        CardStackController level3Stack = mainGameController.boardController.level2StackController;
+                        Debug.Log("Zarezerwowano karte 3 poziomu");
+                        AfterAction(cardLevel, level3VisibleCardControllers, level3VisibleCards, level3Stack, vector, selectedCard);
                         break;
                 }
             }
@@ -303,6 +283,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void AfterAction(int CardLevel, List<CardController> VisibleCardControllers, GameObject VisibleCards, CardStackController Stack, Vector3 vector, CardController selectedCard)
+    {
+        VisibleCardControllers.Remove(selectedCard);
+        Destroy(selectedCard.gameObject);
+        GameObject gameObject = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, VisibleCards.transform);
+        gameObject.name = "Card_Level_" + CardLevel;
+        CardController cardController = gameObject.GetComponent<CardController>();
+        cardController.InitCardData(Stack.PopCardFromStack());
+        AddCardClickListener(gameObject, cardController);
+    }
     private void AddCardClickListener(GameObject cardGameObject, CardController cardController)
     {
         Button button = cardGameObject.GetComponent<Button>();
