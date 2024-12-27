@@ -258,17 +258,18 @@ public class GameController : MonoBehaviour
         {
             var nobleIndex = GetNobleIndex(availableNoble);
 
-            NobleController addedNoble = currentPlayer.AddComponent<NobleController>();
+            //NobleController addedNoble = currentPlayer.AddComponent<NobleController>();
 
-            addedNoble.Init(availableNoble.points, availableNoble.detailedPrice, availableNoble.illustration);
+            //addedNoble.Init(availableNoble.points, availableNoble.detailedPrice, availableNoble.illustration);
 
-            this.playerIdToNoble[this.currentPlayerId].Add(addedNoble);
+            this.playerIdToNoble[this.currentPlayerId].Add(availableNoble);
             Debug.Log($"Noble added to player with id: {currentPlayerId}");
 
             this.boardController.visibleNoblesCoppied.RemoveAt(nobleIndex);
             Debug.Log($"Noble removed from visibleNobleCopied");
-
-            availableNoble.assignedPlayer = crntPlayerController;
+            crntPlayerController.points += 3;
+            this.boardController.visibleNoblesListControllers[nobleIndex].assignedPlayer = crntPlayerController;
+            Debug.Log("koniec");
         }
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
         Debug.Log($"Current player id: {this.currentPlayerId}");
