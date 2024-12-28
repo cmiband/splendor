@@ -26,7 +26,7 @@ namespace SplendorConsole
 
         public WebserviceClient(string endpoint)
         {
-            StartServer();
+            //StartServer();
             serverEndpoint = new Uri(endpoint);
             webSocket = new ClientWebSocket();
         }
@@ -36,6 +36,10 @@ namespace SplendorConsole
             try
             {
                 await webSocket.ConnectAsync(serverEndpoint, CancellationToken.None);
+            }
+            catch (WebSocketException ex)
+            {
+                Console.WriteLine("WebSocket error: " + ex.Message);
             } 
             catch(Exception e)
             {
@@ -49,6 +53,10 @@ namespace SplendorConsole
             {
                 ArraySegment<byte> bytesToSend = new ArraySegment<byte>(Encoding.UTF8.GetBytes(data));
                 await webSocket.SendAsync(bytesToSend, WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+            catch (WebSocketException ex)
+            {
+                Console.WriteLine("WebSocket error: " + ex.Message);
             } 
             catch(Exception e)
             {
@@ -63,6 +71,10 @@ namespace SplendorConsole
                 await this.SendDataToSocket(data);
 
                 return await this.FetchDataFromSocket();
+            }
+            catch (WebSocketException ex)
+            {
+                Console.WriteLine("WebSocket error: " + ex.Message);
             }
             catch (Exception e)
             {
@@ -81,6 +93,10 @@ namespace SplendorConsole
                 string receivedMessage = Encoding.UTF8.GetString(buffer.Array, 0, result.Count);
 
                 return receivedMessage;
+            }
+            catch (WebSocketException ex)
+            {
+                Console.WriteLine("WebSocket error: " + ex.Message);
             } 
             catch(Exception e)
             {
@@ -99,6 +115,10 @@ namespace SplendorConsole
                     callback(data);
                 }
             }
+            catch (WebSocketException ex)
+            {
+                Console.WriteLine("WebSocket error: " + ex.Message);
+            }
             catch (Exception e)
             {
                 Console.WriteLine(FETCH_DATA_WITH_CALLBACK_EXCEPTION_MESSAGE + " " + e.StackTrace);
@@ -111,6 +131,10 @@ namespace SplendorConsole
             {
                 await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, CLOSING_STATUS, CancellationToken.None);
             } 
+            catch (WebSocketException ex)
+            {
+                Console.WriteLine("WebSocket error: " + ex.Message);
+            }
             catch(Exception e)
             {
                 throw new WebserviceClientException(DISCONNECT_ERROR_MESSAGE, e);
@@ -122,6 +146,10 @@ namespace SplendorConsole
             try
             {
                 Process.Start(@"server.exe");
+            }
+            catch (WebSocketException ex)
+            {
+                Console.WriteLine("WebSocket error: " + ex.Message);
             }
             catch (Exception e)
             {

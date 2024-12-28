@@ -3,15 +3,20 @@ from flask_socketio import SocketIO, emit
 import json
 from random import shuffle
 from real_simulation_try1 import *
-
+import logging
 
 gra1000 = 0
 
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)  # Set the logging level to DEBUG
+logger = logging.getLogger(__name__)
 
+# Set up Flask
 app = Flask(__name__)
 #socketio = SocketIO(app, cors_allowed_origins="*")
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
-
+#socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
+socketio = SocketIO(app)
+                    
 @app.route('/')
 def index():
     return "Flask WebSocket Server is running!"

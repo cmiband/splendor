@@ -9,14 +9,14 @@ using SplendorConsole;
 public class Program
 {
     public const bool EXTENDED_LOGGER_MODE = false;
-    static WebserviceClient client = new WebserviceClient("ws://localhost:8765");
+    static WebserviceClient client = new WebserviceClient("ws://localhost:8765/socket.io/?EIO=3&transport=websocket"); // BRT - Dodać path w URL, EIO w wersji 4, transport = websocket
 
     async public static Task Main(string[] args)
     {
         
         await client.ConnectToWebsocket();
         Game? game;
-        int N = 500;
+        int N = 50;
         int errorCounter = 1;
         int errorCounterLoop = 0;
         int errorCounterCollect = 0;
