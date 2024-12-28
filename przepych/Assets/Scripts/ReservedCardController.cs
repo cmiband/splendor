@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections; 
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -48,6 +48,7 @@ public class ReservedCardController : MonoBehaviour
             CardController cardController = cardObject.GetComponent<CardController>();
             cardController.isReserved = true;
             cardController.InitCardData(card);
+            cardController.gameController = this.gameController;
 
             this.reservedCards.Add(cardObject);
             currentXOffset += CARD_X_OFFSET;
@@ -76,6 +77,7 @@ public class ReservedCardController : MonoBehaviour
             CardController cardController = cardObject.GetComponent<CardController>();
             cardController.isReserved = true;
             cardController.InitCardData(card);
+            cardController.gameController = this.gameController;
 
             this.reservedCards.Add(cardObject);
             currentXOffset += CARD_X_OFFSET_OTHERS;
@@ -106,9 +108,6 @@ public class ReservedCardController : MonoBehaviour
         button.onClick.AddListener(() => cardGameObject.SetActive(true));
     }
 
-
-
-
     public void UpdateReservedCards(int playerIndex)
     {
         RemoveCardObjects(); 
@@ -119,7 +118,6 @@ public class ReservedCardController : MonoBehaviour
         RemoveCardObjects();
         initCardsOthers(playerIndex);
     }
-
 
     private void RemoveCardObjects()
     {
