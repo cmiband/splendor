@@ -8,6 +8,9 @@ using TMPro;
 
 public class GameController : MonoBehaviour
 {
+    public int WIN_THRESHOLD = 15;
+
+    public bool blockAction = false;
     public TextMeshProUGUI stageInfo;
     private int stageNumber = 1;
 
@@ -30,10 +33,7 @@ public class GameController : MonoBehaviour
     public Dictionary<int, List<CardController>> playerIdToHand = new Dictionary<int, List<CardController>>();
     public Dictionary<int, List<CardController>> playerIdToReserveHand = new Dictionary<int, List<CardController>>();
     public Dictionary<int, ResourcesController> playerIdToResources = new Dictionary<int, ResourcesController>();
-
     public Dictionary<int, List<NobleController>> playerIdToNoble = new Dictionary<int, List<NobleController>>();
-
-
     public Dictionary<int, ResourcesController> playerIdToBonusResources = new Dictionary<int, ResourcesController>();
     public Dictionary<int, int> playerIdToPoints = new Dictionary<int, int>();
 
@@ -65,6 +65,8 @@ public class GameController : MonoBehaviour
     public CardController selectedCard;
     public CardStackController selectedStack;
 
+    public GameObject gameEndModal;
+
     private void Start()
     {
         stageInfo.SetText(stageNumber.ToString());
@@ -86,8 +88,6 @@ public class GameController : MonoBehaviour
         boardController.CreateNobleObjectOnStart();
 
         boardController.CopyNobles();
-
-
 
         reservedCardController = this.reservedCards.GetComponent<ReservedCardController>();
 
@@ -196,8 +196,8 @@ public class GameController : MonoBehaviour
         targetedPlayerController.SetPlayerId(targetedPlayerIndex);
         targetedPlayerController.SetPlayerHand(this.playerIdToHand[targetedPlayerIndex]);
         targetedPlayerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerIndex]);
-
         targetedPlayerController.SetPlayerResources(this.playerIdToResources[targetedPlayerIndex], this.playerIdToBonusResources[targetedPlayerIndex]);
+        targetedPlayerController.SetPlayerPoints(this.playerIdToPoints[targetedPlayerIndex]);
 
         if (this.playerIdToNoble.ContainsKey(targetedPlayerIndex))
             targetedPlayerController.SetPlayerNoble(this.playerIdToNoble[targetedPlayerIndex]);
@@ -207,6 +207,11 @@ public class GameController : MonoBehaviour
 
     private void HandleOpenBoughtCards()
     {
+        if(this.blockAction)
+        {
+            return;
+        }
+
         BoughtCardsController boughtCardsController = this.boughtCards.GetComponent<BoughtCardsController>();
         boughtCardsController.OpenModal();
 
@@ -223,7 +228,7 @@ public class GameController : MonoBehaviour
 
     public void HandlePass()
     {
-        if(actionIsTaken)
+        if(actionIsTaken || blockAction)
         {
             return;
         }
@@ -244,6 +249,10 @@ public class GameController : MonoBehaviour
 
     public void ChangeTurn()
     {
+        if(this.blockAction)
+        {
+            return;
+        }
 
         if (this.currentPlayerId == 3)
             Debug.Log("new player id   " + 0);
@@ -261,6 +270,12 @@ public class GameController : MonoBehaviour
         {
             stageNumber++;
             stageInfo.SetText(stageNumber.ToString());
+
+            if(this.CheckWinRequirements())
+            {
+                this.HandleGameEnd();
+                return;
+            }
         }
 
 
@@ -272,7 +287,7 @@ public class GameController : MonoBehaviour
             playerController.SetPlayerId(targetedPlayerId);
             playerController.SetPlayerHand(this.playerIdToHand[targetedPlayerId]);
             playerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerId]);
-
+            playerController.SetPlayerPoints(this.playerIdToPoints[targetedPlayerId]);
             playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId], this.playerIdToBonusResources[targetedPlayerId]);
 
             if (this.playerIdToNoble.ContainsKey(targetedPlayerId))
@@ -295,6 +310,66 @@ public class GameController : MonoBehaviour
 
     }
 
+    private void HandleGameEnd()
+    {
+        this.blockAction = true;
+        List<int> sortedPlayerIds = this.GetSortedPlayers();
+
+        this.gameEndModal.SetActive(true);
+        this.gameEndModal.GetComponent<GameEndModalController>().InitModal(this.stageNumber, sortedPlayerIds, this.playerIdToPoints);
+    }
+
+    private bool CheckWinRequirements()
+    {
+        foreach(int i in this.playerIdToPoints.Keys)
+        {
+            if (this.playerIdToPoints[i] >= WIN_THRESHOLD)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private List<int> GetSortedPlayers()
+    {
+        List<int> result = new List<int>();
+
+        List<int> points = new List<int>();
+
+        foreach(int point in this.playerIdToPoints.Values)
+        {
+            if(!points.Contains(point))
+            {
+                points.Add(point);
+            }
+        }
+        points.Sort(delegate(int x, int y) {  return y - x; });
+        
+        foreach(int x in points)
+        {
+            result.AddRange(FindKeysByValue(this.playerIdToPoints, x));
+        }
+
+        return result;
+    }
+
+    private List<int> FindKeysByValue(Dictionary<int, int> collection, int value)
+    {
+        List<int> keys = new List<int>();
+
+        foreach(int key in collection.Keys)
+        {
+            if (collection[key] == value)
+            {
+                keys.Add(key);
+            }
+        }
+
+        return keys;
+    }
+
     private void GettingNobles(PlayerController crntPlayerController)
     {
         var availableNoble = crntPlayerController.GetNoble(this, crntPlayerController);
@@ -313,7 +388,7 @@ public class GameController : MonoBehaviour
             Debug.Log($"Noble removed from visibleNobleCopied. NobleIndex: {nobleIndex}");
             crntPlayerController.points += 3;
 
-            //do zmiany potem, przy u¿yciu noble stack controllera
+            //do zmiany potem, przy uï¿½yciu noble stack controllera
             this.boardController.visibleNoblesListControllers[nobleIndex].assignedPlayer = crntPlayerController;
             //
         }
@@ -336,12 +411,22 @@ public class GameController : MonoBehaviour
 
     public void ShowClickedCard(CardController card)
     {
+        if(this.blockAction)
+        {
+            return;
+        }
+
         this.clickedCard.GetComponent<ClickedCardController>().SetCard(card);
         this.clickedCard.SetActive(true);
     }
 
     public void SelectCard(CardController card)
     {
+        if(this.blockAction)
+        {
+            return;
+        }
+
         if (selectedCard != null && selectedCard != card)
         {
             selectedCard.SetSelected(false);
@@ -364,6 +449,11 @@ public class GameController : MonoBehaviour
 
     public void SelectStack(CardStackController cardStack)
     {
+        if(this.blockAction)
+        {
+            return;
+        }
+
         if (selectedStack != null && selectedStack != cardStack)
         {
             selectedStack.SetSelected(false);
@@ -409,6 +499,11 @@ public class GameController : MonoBehaviour
 
     private void HandleCardClick(GameObject card)
     {
+        if(this.blockAction)
+        {
+            return;
+        }
+
         CardController cardController = card.GetComponent<CardController>();
         if (cardController != null)
         {
@@ -445,6 +540,11 @@ public class GameController : MonoBehaviour
 
     private void HandleCardStackClick (GameObject cardStack)
     {
+        if(this.blockAction)
+        {
+            return;
+        }
+
         CardStackController cardStackController = cardStack.GetComponent<CardStackController>();
         if (cardStackController != null)
         {
@@ -470,18 +570,17 @@ public class GameController : MonoBehaviour
         throw new Exception("Noble not found in visible nobles");
     }
 
-
     private void ResetCountdown()
     {
         remainingTime = countdownTime;
         isTimerRunning = true;
         UpdateTimerText();
     }
+
     private void UpdateTimerText()
     {
         int minutes = Mathf.FloorToInt(remainingTime / 60F);
         int seconds = Mathf.FloorToInt(remainingTime % 60F);
         countdownText.text = string.Format("{0:00}:{1:00}", minutes, seconds); 
-
     }
 }

@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
 
     public void HandleBuyCard()
     {
-        if(this.mainGameController.actionIsTaken)
+        if(this.mainGameController.actionIsTaken || this.mainGameController.blockAction)
         {
             return;
         }
@@ -209,7 +209,7 @@ public class PlayerController : MonoBehaviour
 
     public void HandleReserveCard()
     {
-        if(this.mainGameController.actionIsTaken)
+        if(this.mainGameController.actionIsTaken || this.mainGameController.blockAction)
         {
             return;
         }
