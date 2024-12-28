@@ -83,7 +83,6 @@ public class PlayerController : MonoBehaviour
 
         if (mainGameController.selectedCard == null)
         {
-            Debug.Log("Nie wybrano żadnej karty do zakupu.");
             return;
         }
 
@@ -94,7 +93,6 @@ public class PlayerController : MonoBehaviour
 
         if (!player.CanAffordCardWithGolden(selectedCard) && !player.CanAffordCard(selectedCard))
         {
-            Debug.Log("Nie stać cię na tę kartę.");
             return;
         }
 
