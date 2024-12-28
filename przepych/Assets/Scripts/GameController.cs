@@ -19,6 +19,15 @@ public class GameController : MonoBehaviour
     public float countdownTime = 600f;
     private float remainingTime;
 
+    public GameObject endgamePanel;
+    public TextMeshProUGUI Miejsce1;
+    public TextMeshProUGUI Miejsce2;
+    public TextMeshProUGUI Miejsce3;
+    public TextMeshProUGUI Miejsce4;
+    public TextMeshProUGUI Punkty1;
+    public TextMeshProUGUI Punkty2;
+    public TextMeshProUGUI Punkty3;
+    public TextMeshProUGUI Punkty4;
     public GameObject clickedCard;
 
     public bool actionIsTaken = false;
@@ -67,6 +76,7 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
+        endgamePanel.SetActive(false);
         stageInfo.SetText(stageNumber.ToString());
         isTimerRunning = true;
         remainingTime = countdownTime;
@@ -242,9 +252,61 @@ public class GameController : MonoBehaviour
         this.ChangeTurn();
     }
 
+    private List<PlayerController> Sort(List<PlayerController> players)
+    {
+        List<PlayerController> sortedList = new List<PlayerController>();
+        for (int i = 0; i < players.Count - 1; i++)
+        {
+            for (int j = 0; j < players.Count - 1 - i; j++)
+            {
+                if (players[j].Points < players[j + 1].Points)
+                {
+                    PlayerController temp = players[j];
+                    players[j] = players[j + 1];
+                    players[j + 1] = temp;
+                }
+            }
+        }
+        return players;
+    }
+
     public void ChangeTurn()
     {
-
+        if(this.currentPlayerId==3)
+        {
+            int winnersCount = 0;
+            foreach (GameObject player in players)
+            {
+                PlayerController playerController = player.GetComponent<PlayerController>();
+                if (playerController.points>=15)
+                {
+                    winnersCount++;
+                }
+            }
+            if (winnersCount > 0)
+            {
+                List<PlayerController> lista = new List<PlayerController>();
+                foreach(GameObject player in players)
+                {
+                    lista.Add(player.GetComponent<PlayerController>());
+                }
+                List<PlayerController> sortedPlayers = Sort(lista);
+                board.SetActive(false);
+                buyCard.SetActive(false);
+                reserveCard.SetActive(false);
+                openBoughtCards.SetActive(false);
+                reservedCards.SetActive(false);
+                endgamePanel.SetActive(true);
+                Miejsce1.text = "Gracz "+ sortedPlayers[0].playerId;
+                Miejsce2.text = "Gracz "+ sortedPlayers[1].playerId;
+                Miejsce3.text = "Gracz "+ sortedPlayers[2].playerId;
+                Miejsce4.text = "Gracz "+ sortedPlayers[3].playerId;
+                Punkty1.text = sortedPlayers[0].points.ToString();
+                Punkty2.text = sortedPlayers[1].points.ToString();
+                Punkty3.text = sortedPlayers[2].points.ToString();
+                Punkty4.text = sortedPlayers[3].points.ToString();
+            }
+        }
         if (this.currentPlayerId == 3)
             Debug.Log("new player id   " + 0);
         else
