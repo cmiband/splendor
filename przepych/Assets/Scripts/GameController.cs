@@ -55,6 +55,8 @@ public class GameController : MonoBehaviour
     public GameObject NextPlyerTwoReservedCards;
     public GameObject NextPlyerThreeReservedCards;
 
+    public GameObject gameInfo;
+
     public GameObject reserveCard;
     public ReservedCardController reservedCardController;
 
@@ -204,7 +206,6 @@ public class GameController : MonoBehaviour
 
     }
 
-
     private void HandleOpenBoughtCards()
     {
         if(this.blockAction)
@@ -224,6 +225,8 @@ public class GameController : MonoBehaviour
         this.pass.SetActive(visibility);
         this.buyCard.SetActive(visibility);
         this.reserveCard.SetActive(visibility);
+        this.gameInfo.SetActive(visibility);
+        this.reservedCards.SetActive(visibility);
     }
 
     public void HandlePass()
