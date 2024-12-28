@@ -17,7 +17,8 @@ public class GemStashController : MonoBehaviour
     void Start()
     {
         bankController = bank.GetComponent<BankController>();
-        amountOfGems = 7;
+        if (color != GemColor.GOLDEN) amountOfGems = 7;
+        else amountOfGems = 5;
 
         bankController.gemStashes.Add(this);
 
@@ -41,7 +42,21 @@ public class GemStashController : MonoBehaviour
         {
             this.HandleTakeGem();
         }
-    } 
+    }
+
+    public bool TakeGolden()
+    {
+        if (amountOfGems >= 1)
+        {
+            amountOfGems -= 1;
+            bankController.GoldenGemTaken();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     private void HandleGiveGem()
     {

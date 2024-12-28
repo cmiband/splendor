@@ -260,30 +260,13 @@ public class GameController : MonoBehaviour
             Debug.Log("new player id   " + (this.currentPlayerId + 1));
 
         PlayerController crntPlayerController = currentPlayer.GetComponent<PlayerController>();
-
-        var availableNoble = crntPlayerController.GetNoble(this, crntPlayerController);
-
-        if (availableNoble is not null)
-        {
-            var nobleIndex = GetNobleIndex(availableNoble);
-
-            NobleController addedNoble = currentPlayer.AddComponent<NobleController>();
-
-            addedNoble.Init(availableNoble.points, availableNoble.detailedPrice, availableNoble.illustration);
-
-            this.playerIdToNoble[this.currentPlayerId].Add(addedNoble);
-            Debug.Log($"Noble added to player with id: {currentPlayerId}");
-
-            this.boardController.visibleNoblesCoppied.RemoveAt(nobleIndex);
-            Debug.Log($"Noble removed from visibleNobleCopied");
-
-            availableNoble.assignedPlayer = crntPlayerController;
-        }
+        GettingNobles(crntPlayerController);
+        playerIdToPoints[currentPlayerId] += 3;
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
         Debug.Log($"Current player id: {this.currentPlayerId}");
 
         ResetCountdown();
-        if(this.currentPlayerId == 0)
+        if (this.currentPlayerId == 0)
         {
             stageNumber++;
             stageInfo.SetText(stageNumber.ToString());
@@ -385,6 +368,30 @@ public class GameController : MonoBehaviour
         }
 
         return keys;
+    }
+
+    private void GettingNobles(PlayerController crntPlayerController)
+    {
+        var availableNoble = crntPlayerController.GetNoble(this, crntPlayerController);
+
+        if (availableNoble is not null)
+        {
+            var nobleIndex = GetNobleIndex(availableNoble);
+
+            //NobleController addedNoble = currentPlayer.AddComponent<NobleController>();
+            //addedNoble.Init(availableNoble.points, availableNoble.detailedPrice, availableNoble.illustration);
+
+            this.playerIdToNoble[this.currentPlayerId].Add(availableNoble);
+            Debug.Log($"Noble added to player with id: {currentPlayerId}");
+
+            this.boardController.visibleNoblesCoppied.RemoveAt(nobleIndex);
+            Debug.Log($"Noble removed from visibleNobleCopied. NobleIndex: {nobleIndex}");
+            crntPlayerController.points += 3;
+
+            //do zmiany potem, przy u�yciu noble stack controllera
+            this.boardController.visibleNoblesListControllers[nobleIndex].assignedPlayer = crntPlayerController;
+            //
+        }
     }
 
     public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources)

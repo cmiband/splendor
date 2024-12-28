@@ -13,34 +13,30 @@ public class NobleController :  MonoBehaviour
     public int points;
     public string illustration;
     private Image selectedNobleImage;
-    private Transform playerImage;
-    private Transform playerId;
+    [SerializeField]
+    private Image playerImage;   
     public PlayerController assignedPlayer;
     public string detailedPriceInfo = "";
 
-    private void Start()
-    {
-
-        playerImage = transform.Find("playerImage");
+    public void Awake()
+    {    
         playerImage.gameObject.SetActive(false);
         assignedPlayer = null;
-
-
-        playerId = transform.Find("playerId");
-        playerId.gameObject.SetActive(false);          
-    }
+          
+    }   
     private void Update()
     {
         if(assignedPlayer != null)
         {
 
             // trzeba zainicjalizować awatary w PlayerController
+            // trzeba zrobić Noble Stack Controllera aby kontrollować noble na boardzie w grze
             //Sprite playerAvatar = assignedPlayer.avatar;
             //if (playerAvatar != null)
             //{
             //    playerImage.GetComponent<Image>().sprite = playerAvatar;
             //}               
-            playerImage.gameObject.SetActive(true);
+            playerImage.gameObject.SetActive(true);            
         }      
     }
     public NobleController(int points, ResourcesController detailedPrice, string illustration)

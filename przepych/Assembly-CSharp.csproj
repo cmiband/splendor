@@ -56,10 +56,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-
     <Analyzer Include="D:\2022.3.50f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="D:\2022.3.50f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
-
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\GameController.cs" />
@@ -77,12 +75,12 @@
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\ResourcesController.cs" />
     <Compile Include="Assets\Scripts\MainMenuController.cs" />
+    <Compile Include="Assets\Scripts\ClickedCardController.cs" />
     <Compile Include="Assets\Scripts\GemStashController.cs" />
     <Compile Include="Assets\Scripts\AvailableCardsController.cs" />
     <Compile Include="Assets\Scripts\CardStackController.cs" />
     <Compile Include="Assets\Scripts\BaseScripts\Noble.cs" />
     <Compile Include="Assets\Scripts\CardController.cs" />
-    <Compile Include="Assets\Scripts\GoldenGemStashController.cs" />
     <Compile Include="Assets\Scripts\BaseScripts\AvailableCards.cs" />
     <Compile Include="Assets\Scripts\BaseScripts\Resources.cs" />
     <Compile Include="Assets\Scripts\BoughtCardsController.cs" />
@@ -140,7 +138,6 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
-
       <HintPath>D:\2022.3.50f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -470,7 +467,6 @@
     </Reference>
     <Reference Include="UnityEditor.UnityConnectModule">
       <HintPath>D:\2022.3.50f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
-
       <Private>False</Private>
     </Reference>
     <Reference Include="ClosedXML.Parser">
@@ -518,7 +514,6 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="netstandard">
-
       <HintPath>D:\2022.3.50f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -1004,7 +999,6 @@
     </Reference>
     <Reference Include="System.Xml.Serialization">
       <HintPath>D:\2022.3.50f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
-
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.2D.IK.Runtime">
