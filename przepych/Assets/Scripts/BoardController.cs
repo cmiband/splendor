@@ -47,7 +47,7 @@ public class BoardController : MonoBehaviour
     public List<NobleController> loadedNoblesListControllers = new List<NobleController>();
     public List<NobleController> visibleNoblesListControllers = new List<NobleController>();
     public List<NobleController> visibleNoblesCoppied = new List<NobleController>();
-
+   
     public GameController gameController;
 
     private void Start()
