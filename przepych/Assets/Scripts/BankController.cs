@@ -44,6 +44,7 @@ public class BankController : MonoBehaviour
     public void SetModeToGive(int amountOfGemsToGive)
     {
         this.currentMode = MODE.GIVE;
+        this.gemsBeingChosen.Clear();
         this.amountOfGemsToGive = amountOfGemsToGive;
     }
 
@@ -75,7 +76,7 @@ public class BankController : MonoBehaviour
         this.amountOfGemsToGive--;
 
         this.resourcesController.AddResource(color);
-        this.playerController.GiveGem(color);
+        this.playerController.RemoveResource(color);
 
         if(amountOfGemsToGive == 0)
         {

@@ -204,7 +204,6 @@ public class PlayerController : MonoBehaviour
         this.ConfirmPlayerMove();
     }
 
-
     public void HandleReserveCard()
     {
         if(this.mainGameController.actionIsTaken || this.mainGameController.blockAction)
@@ -296,7 +295,8 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Nie wybrano żadnej karty do zarezerwowania");
             }
 
-            this.ConfirmPlayerMove();
+            this.SetGemInfo(this.resources);
+            this.PerformEndOfTurnDecision();
         }
         else
         {
@@ -329,22 +329,29 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        this.PerformEndOfTurnDecision();
+    }
+
+    private void PerformEndOfTurnDecision()
+    {
         int amountOfGems = this.GetAmountOfGems();
-        if(amountOfGems > 10)
+        if (amountOfGems > 10)
         {
+            this.SetGemInfo(this.resources);
             Debug.Log("Masz za dużo żetonów musisz oddać " + (amountOfGems - MAXIMUM_AMOUNT_OF_GEMS));
             mainGameController.actionIsTaken = true;
-            bankController.SetModeToGive(amountOfGems-MAXIMUM_AMOUNT_OF_GEMS);
-        } 
+            bankController.SetModeToGive(amountOfGems - MAXIMUM_AMOUNT_OF_GEMS);
+        }
         else
         {
             this.ConfirmPlayerMove();
         }
     }
 
-    public void GiveGem(GemColor color)
+    public void RemoveResource(GemColor color)
     {
         this.resources.RemoveResource(color, 1);
+        this.SetGemInfo(this.resources);
     }
 
     public void TakeGoldenGem()
@@ -426,7 +433,6 @@ public class PlayerController : MonoBehaviour
 
     private void SetGemInfo(ResourcesController resources)
     {
-
         foreach(KeyValuePair<GemColor, int> val in resources.gems)
         {
             if(val.Key == GemColor.NONE)

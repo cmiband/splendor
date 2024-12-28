@@ -261,7 +261,6 @@ public class GameController : MonoBehaviour
 
         PlayerController crntPlayerController = currentPlayer.GetComponent<PlayerController>();
         GettingNobles(crntPlayerController);
-        playerIdToPoints[currentPlayerId] += 3;
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
         Debug.Log($"Current player id: {this.currentPlayerId}");
 
