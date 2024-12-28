@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 public class BoughtCardsController : MonoBehaviour
 {
     private float CARD_X_OFFSET;
+    private const int MAXIMUM_CARD_AMOUNT_IN_ROW = 9;
 
     public List<GameObject> players;
     public GameObject playerOneCards;
@@ -21,7 +22,7 @@ public class BoughtCardsController : MonoBehaviour
     public GameController gameController;
     public GameObject closeButton;
 
-    List<GameObject> cardsCreated;
+    private List<GameObject> cardsCreated;
 
     private void InitComponents()
     {
@@ -71,18 +72,30 @@ public class BoughtCardsController : MonoBehaviour
     private void CreateCardObjectsForOneLevel(List<CardController> cards, int playerIndex)
     {
         GameObject targetedPlayerPlace = this.players[playerIndex];
+        RectTransform targetedPlayerPlaceRect = targetedPlayerPlace.GetComponent<RectTransform>();
         float currentXOffset = 0;
+        float currentYOffset = 0;
+        int cardInRowCounter = 0;
         foreach(CardController card in cards)
         {
-            Vector3 cardPosition = new Vector3(targetedPlayerPlace.transform.position.x + currentXOffset, targetedPlayerPlace.transform.position.y, targetedPlayerPlace.transform.position.z);
-
-            GameObject cardObject = Instantiate(this.cardPrefab, cardPosition, Quaternion.identity, targetedPlayerPlace.transform);
+            if(cardInRowCounter == MAXIMUM_CARD_AMOUNT_IN_ROW)
+            {
+                cardInRowCounter = 0;
+                currentXOffset = 0;
+                currentYOffset -= (targetedPlayerPlaceRect.rect.height + 10);
+            }
+            GameObject cardObject = Instantiate(this.cardPrefab, new Vector3(0,0,0), Quaternion.identity, targetedPlayerPlace.transform);
             CardController cardController = cardObject.GetComponent<CardController>();
             cardController.InitCardData(card);
             cardController.gameController = this.gameController;
 
+            RectTransform cardRectTransform = cardObject.GetComponent<RectTransform>();
+            cardRectTransform.localPosition = new Vector3(currentXOffset, currentYOffset, 0);
+            
             this.cardsCreated.Add(cardObject);
             currentXOffset += CARD_X_OFFSET;
+
+            cardInRowCounter++;
         }
     }
 
