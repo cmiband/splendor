@@ -20,7 +20,7 @@ Po zmianie na Flask i SocketIO pojawiły się następujące kwestie:
 	Flask SocketIO v.5.x : EIO = 4
 	Flask SocketIO v.4.x : EIO = 3
 - Zatem żeby działało;
-	Zmienić wersje Flask-SocketIO na 4.3.2 : pip install flask-socketio==2.0.0
+	Zmienić wersje Flask-SocketIO na 4.3.2 : pip install flask-socketio==4.3.2
 	Zmienić Flask na 1.1.3 :pip install flask==1.1.3
 	Zmienić markupsafe na 2.0.0 : pip install markupsafe==2.0.0
 

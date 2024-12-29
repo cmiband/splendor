@@ -9,14 +9,14 @@ using SplendorConsole;
 public class Program
 {
     public const bool EXTENDED_LOGGER_MODE = false;
-    static WebserviceClient client = new WebserviceClient("ws://localhost:8765/socket.io/?EIO=3&transport=websocket"); // BRT - Dodać path w URL, EIO w wersji 4, transport = websocket
+    static WebserviceClient client = new WebserviceClient("ws://localhost:8765/socket.io/?EIO=3&transport=websocket");
 
     async public static Task Main(string[] args)
     {
         
         await client.ConnectToWebsocket();
         Game? game;
-        int N = 50;
+        int N = 2;
         int errorCounter = 1;
         int errorCounterLoop = 0;
         int errorCounterCollect = 0;
@@ -115,6 +115,15 @@ public class Program
                             }
                         }
                     }
+                    string path0 = game.filePath_c0;
+                    string path1 = game.filePath_c1;
+                    string path2 = game.filePath_c2;
+                    string path3 = game.filePath_c3;
+
+                    Write_File_end(awards[0],path0);
+                    Write_File_end(awards[1],path1);
+                    Write_File_end(awards[2],path2);
+                    Write_File_end(awards[3],path3);
                 }
                 game = null;
             }
@@ -172,6 +181,47 @@ public class Program
         Console.WriteLine();
     }
 
+    public static void SafeWriteToFile(string filePath, Action<StreamWriter> writeAction)
+    {
+        int retries = 3;
+        for (int i = 0; i < retries; i++)
+        {
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(filePath, append: true))
+                {
+                    writeAction(sw);
+                }
+                break; 
+            }
+            catch (IOException)
+            {
+                System.Threading.Thread.Sleep(100); 
+            }
+        }
+    }
+
+    public static void Write_File_end(float award_loss_winner_or_loser, string filePath)
+        {
+            string alfa;
+            if  (award_loss_winner_or_loser > 0)
+                {
+                    alfa = "Wygrana";
+                }
+                else{
+                    alfa = "Przegrana";
+                }
+
+            SafeWriteToFile(filePath, sw => {
+                sw.WriteLine();
+                sw.Write("Koniec, ");
+                
+                sw.Write("["+string.Join(",", award_loss_winner_or_loser)+"] , ");
+
+                sw.Write(alfa);
+                
+            });
+        }
     public static float AwardWinner(int advantage, int tokensCount, int moves)
     {
         int reward = 0;

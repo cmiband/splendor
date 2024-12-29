@@ -4,6 +4,7 @@ import json
 from random import shuffle
 from real_simulation_try1 import *
 import logging
+import eventlet
 
 gra1000 = 0
 
@@ -15,7 +16,8 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 #socketio = SocketIO(app, cors_allowed_origins="*")
 #socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='eventlet')
+#socketio = SocketIO(app)
                     
 @app.route('/')
 def index():
@@ -42,9 +44,9 @@ def handle_message(message):
                 trainer.save_all_agents("C:/Users/macie/Documents/GitHub/splendor/SplendorConsole")
 
             # LOSOWY OUTPUT, NALEŻY ZASTĄPIĆ OUTPUTEM Z MODELU
-            #output = [i for i in range(1, 44)]
-            #shuffle(output)
-            output = step(current_player, game_state, feedback)
+            output = [i for i in range(1, 44)]
+            shuffle(output)
+            # output = step(current_player, game_state, feedback)
 
             response_object = {
                 "MovesList": output,

@@ -14,6 +14,7 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json.Linq;
 using static ClosedXML.Excel.XLPredefinedFormat;
 using static SplendorConsole.WebserviceClient;
@@ -32,8 +33,14 @@ namespace SplendorConsole
         private static List<Card> level3Shuffled = new List<Card>();
         private Bank bank = new Bank();
         private Board board;
+        public int number;
+        
+        public string filePath_c0="";
+        public string filePath_c1="";
+        public string filePath_c2="";
+        public string filePath_c3="";
 
-
+        public int[] moves = new int[43];
         private static List<Card> level1VisibleCards = new List<Card>();
         private static List<Card> level2VisibleCards = new List<Card>();
         private static List<Card> level3VisibleCards = new List<Card>();
@@ -136,7 +143,7 @@ namespace SplendorConsole
             bank.resources.gems.Add(GemColor.GOLDEN, 5);
         }
 
-        private (float, int, int, int[]?) GameLoop(int numberOfPlayers)
+        private (float, int, int, int[]?) GameLoop2(int numberOfPlayers)
         {
             int securityCounter = 0;
             while (true)
@@ -210,12 +217,18 @@ namespace SplendorConsole
                     }
                 }
             }
-        }
+        } 
 
-        public  (float, int, int, int[]?) GameLoop_new(int numberOfPlayers)
+        public  (float, int, int, int[]?) GameLoop(int numberOfPlayers)
         {
-
             int securityCounter = 0;
+
+                  //"C:/Users/macie/Documents/GitHub/splendor/SplendorConsole/files_to_llama
+
+            CreateFile("./files_to_llama", securityCounter, currentTurn);
+            CreateFile("./files_to_llama", securityCounter,(currentTurn+1)%4);
+            CreateFile("./files_to_llama", securityCounter,(currentTurn+2)%4); 
+            CreateFile("./files_to_llama", securityCounter,(currentTurn+3)%4);
             while (true)
             {
                 securityCounter++;
@@ -223,13 +236,31 @@ namespace SplendorConsole
                 {
                     return (feedbackFromPreviousRequest, securityCounter / 4, -200, ToArray());
                 }
+
                 Turn(listOfPlayers[currentTurn]);
-                if(RequestMovesListFromServer(feedbackFromPreviousRequest) != null)
-                {
-                    Write_File(ToArray(), RequestMovesListFromServer(feedbackFromPreviousRequest), feedbackFromPreviousRequest, "FilesToLlama", securityCounter, (currentTurn % 4));
-                }
                 
+                if(moves != null)
+                {
+                    if (currentTurn ==1)
+                    {
+                        Write_File(ToArray(), moves, feedbackFromPreviousRequest, filePath_c1, securityCounter, 1);
+                    }
+                    else if (currentTurn ==2)
+                    {
+                        Write_File(ToArray(), moves, feedbackFromPreviousRequest, filePath_c2, securityCounter, 2);
+                    }
+                    else if (currentTurn ==3)
+                    {
+                        Write_File(ToArray(), moves, feedbackFromPreviousRequest, filePath_c3, securityCounter, 3);
+                    }
+                    else if (currentTurn ==0)
+                    {
+                        Write_File(ToArray(), moves, feedbackFromPreviousRequest, filePath_c0, securityCounter, 0);
+                    }
+                }
+
                 currentTurn = (currentTurn + 1) % numberOfPlayers;
+                
                 if (currentTurn == 0)
                 {
                     int winnersCount = 0;
@@ -248,6 +279,9 @@ namespace SplendorConsole
                         //1 zwyciezca to listOfPlayers.IndexOf(winners[0]);
                         // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                         currentTurn = listOfPlayers.IndexOf(winners[0]);
+
+                        //temp_write();
+
                         return (feedbackFromPreviousRequest, securityCounter / 4, currentTurn, ToArray());
                     }
                     else if (winnersCount > 1)
@@ -270,6 +304,9 @@ namespace SplendorConsole
                             //2 zwyciezca playerIndex
                             // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                             currentTurn = playerIndex;
+
+                            //temp_write();
+
                             return (feedbackFromPreviousRequest, securityCounter / 4, currentTurn, ToArray());
                         }
                         else
@@ -280,10 +317,17 @@ namespace SplendorConsole
                                 // 3 zwyciezca listOfPlayers.IndexOf(OfficialWinner)
                                 // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                                 currentTurn = listOfPlayers.IndexOf(OfficialWinner);
+
+                                //temp_write();
+
                                 return (feedbackFromPreviousRequest, securityCounter / 4, currentTurn, ToArray());
                             }
                             else
                             {
+                                //Write_File_end(-1,filePath_c0);
+                                //Write_File_end(-1,filePath_c1);
+                                //Write_File_end(-1,filePath_c2);
+                                //Write_File_end(-1,filePath_c3);
                                 // 4 remis (na zwrocie nie ma znaczenia kto jest brany jako main bo nikt nie wygrywa)
                                 return (feedbackFromPreviousRequest, securityCounter / 4, -1, ToArray());
                             }
@@ -291,9 +335,40 @@ namespace SplendorConsole
                     }
                 }
             }
+            
 
-
-
+        }
+        public void temp_write()
+        {
+            if (currentTurn ==1)
+                    {
+                        Write_File_end(1,filePath_c1);
+                        Write_File_end(-1,filePath_c2);
+                        Write_File_end(-1,filePath_c3);
+                        Write_File_end(-1,filePath_c0);
+                    }
+            else if (currentTurn ==2)
+                    {
+                        Write_File_end(-1,filePath_c1);
+                        Write_File_end(1,filePath_c2);
+                        Write_File_end(-1,filePath_c3);
+                        Write_File_end(-1,filePath_c0);
+                    }
+            else if (currentTurn ==3)
+                    {
+                       Write_File_end(-1,filePath_c1);
+                        Write_File_end(-1,filePath_c2);
+                        Write_File_end(1,filePath_c3);
+                        Write_File_end(-1,filePath_c0);
+                    }
+            else if (currentTurn ==0)
+                    {
+                        Write_File_end(-1,filePath_c1);
+                        Write_File_end(-1,filePath_c2);
+                        Write_File_end(-1,filePath_c3);
+                        Write_File_end(1,filePath_c0);
+                    }
+  
         }
 
 
@@ -549,52 +624,110 @@ namespace SplendorConsole
 
         public void CreateFile(string Path, int number, int player_id) //string[] args
         {
+            if (!Directory.Exists(Path))
+            {
+                    Directory.CreateDirectory(Path);
+            }
             //string folderPath = args[0];
             int fileNumber = number;
             string fileName;
             string filePath;
-            string datePart = System.DateTime.Now.ToString("yyyy-MM-dd");
+            string datePart = System.DateTime.Now.ToString("yyyy-MM-dd h.m.s.fff");
+            Random rnd = new Random();
 
-            fileName = $"File_{datePart}_{fileNumber}_{player_id}.txt";
+            fileName = $"File_{datePart}_{fileNumber}_{player_id}_{rnd.Next()}.txt";
             filePath = System.IO.Path.Combine(Path, fileName);
 
             File.Create(filePath);
 
-            string greeting = "Start";
-            File.WriteAllText(filePath, greeting);
+            if (player_id ==1)
+            {
+                filePath_c1 = filePath;
+            }
+
+            else if (player_id ==2)
+            {
+                filePath_c2 = filePath;
+            }
+
+            else if (player_id ==3)
+            {
+                filePath_c3 = filePath;
+            }
+
+            else if (player_id ==0)
+            {
+                filePath_c0 = filePath;
+            }
+            
+
+            //string greeting = "Start";
+            //File.WriteAllText(filePath, greeting);
+            
         }
 
-        public void Write_File(int[] input, Task<int[]?> output, float award_loss,string filePath, int number, int player_id)  
+        public void SafeWriteToFile(string filePath, Action<StreamWriter> writeAction)
         {
-            if (File.Exists(filePath))
+            int retries = 3;
+            for (int i = 0; i < retries; i++)
             {
-                StreamWriter sw = new StreamWriter(filePath);
-                sw.WriteLine(input);
-                sw.Write(" , ");
-                sw.Write(output);
-                sw.Write(" , ");
-                sw.Write(award_loss);
-                sw.WriteLine("|break|");    
+                try
+                {
+                    using (StreamWriter sw = new StreamWriter(filePath, append: true))
+                    {
+                        writeAction(sw);
+                    }
+                    break; 
+                }
+                catch (IOException)
+                {
+                    System.Threading.Thread.Sleep(100); 
+                }
             }
-            else
-            {
-                CreateFile(filePath,number, player_id);
-            }
+        }
+
+        public void Write_File(int[] input, int[] output, float award_loss, string filePath, int number, int player_id)  
+        {
+            SafeWriteToFile(filePath, sw => {
+                //sw.WriteLine("[ ");
+                sw.Write("["+ string.Join(",", input)+"] , ");
+                //sw.Write(" ]");
+                //sw.Write(" , ");
+                //sw.Write("[ ");
+                sw.Write("["+string.Join(",", output)+"] , ");
+                //sw.Write(" ]");
+                //sw.Write(" , ");
+                //sw.WriteLine("[ ");
+                sw.Write("[" +award_loss+"]");
+                //sw.Write(" ]");
+                sw.WriteLine();
+                sw.WriteLine("|break|");
+                sw.WriteLine();
+            });
 
         }
         public void Write_File_end(float award_loss_winner_or_loser, string filePath)
         {
-            if (File.Exists(filePath))
-            {
-                StreamWriter sw = new StreamWriter(filePath);
-                sw.WriteLine("Koniec gry");
-                sw.WriteLine(award_loss_winner_or_loser);       //winner or loser, zaleznie od id i patrzac w glownej petli
-                sw.Write("KONIEC");
-            }
-            else
-            {
-                throw new Exception("file doesn't exist");
-            }
+            string alfa;
+            if  (award_loss_winner_or_loser > 0)
+                {
+                    alfa = "Wygrana";
+                }
+                else{
+                    alfa = "Przegrana";
+                }
+
+            SafeWriteToFile(filePath, sw => {
+                sw.WriteLine();
+                sw.WriteLine("Koniec");
+                
+                sw.WriteLine("["+string.Join(",", award_loss_winner_or_loser)+"] , ");
+
+                sw.Write(alfa);
+                
+            });
+
+            
         }
 
         public void txt_to_json(string txtFilePath)     
@@ -620,6 +753,27 @@ namespace SplendorConsole
             {
                 //
             }
+        }
+
+        async public void RequestMovesListFromServer2(float feedback)
+        {
+
+            float[] gameState = Standartize(ToArray());
+
+            var request = new
+            {
+                Id = 1,
+                CurrentPlayer = currentTurn,
+                Feedback = feedback, 
+                GameState = gameState
+            };
+
+            string response = await client.SendAndFetchDataFromSocket(JsonSerializer.Serialize(request));
+
+            JObject json = JObject.Parse(response);
+            moves = json["MovesList"]?.ToObject<int[]>();
+
+            
         }
         async public Task<int[]?> RequestMovesListFromServer(float feedback)
         {
