@@ -16,7 +16,7 @@ public class Program
         
         await client.ConnectToWebsocket();
         Game? game;
-        int N = 2;
+        int N = 60;
         int errorCounter = 1;
         int errorCounterLoop = 0;
         int errorCounterCollect = 0;

@@ -40,13 +40,13 @@ def handle_message(message):
             gra1000 += 1 
 
             if gra1000 % 10 == 0:
-                #trainer.save_all_agents("./checkpoints")
-                trainer.save_all_agents("C:/Users/macie/Documents/GitHub/splendor/SplendorConsole")
+                trainer.save_all_agents("./checkpoints")
+                #trainer.save_all_agents("C:/Users/macie/Documents/GitHub/splendor/SplendorConsole")
 
             # LOSOWY OUTPUT, NALEŻY ZASTĄPIĆ OUTPUTEM Z MODELU
-            output = [i for i in range(1, 44)]
-            shuffle(output)
-            # output = step(current_player, game_state, feedback)
+            #output = [i for i in range(1, 44)]
+            #shuffle(output)
+            output = step(current_player, game_state, feedback)
 
             response_object = {
                 "MovesList": output,
@@ -62,8 +62,8 @@ def handle_message(message):
             gra1000 += 1 
 
             if gra1000 % 10 == 0:
-                #trainer.save_all_agents("./checkpoints")
-                trainer.save_all_agents("C:/Users/macie/Documents/GitHub/splendor/SplendorConsole")
+                trainer.save_all_agents("./checkpoints")
+                #trainer.save_all_agents("C:/Users/macie/Documents/GitHub/splendor/SplendorConsole")
 
             response_object = {
                 "ResponseCode": 0,
@@ -75,8 +75,8 @@ def handle_message(message):
             gra1000 += 1 
 
             if gra1000 % 10 == 0:
-                #trainer.save_all_agents("./checkpoints")
-                trainer.save_all_agents("C:/Users/macie/Documents/GitHub/splendor/SplendorConsole")
+                trainer.save_all_agents("./checkpoints")
+                #trainer.save_all_agents("C:/Users/macie/Documents/GitHub/splendor/SplendorConsole")
 
             rewards = data.get("Rewards")
             last_feedback = data.get("LastFeedback")
