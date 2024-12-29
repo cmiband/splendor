@@ -81,3 +81,14 @@ przepych/Library/Bee/
 przepych/UserSettings/
 
 SplendorConsole/SplendorConsole/obj
+
+# Generated txt files and zip
+SplendorConsole/SplendorConsole/bin/Debug/net6.0/files_to_llama/*.*
+SplendorConsole/SplendorConsole/bin/Debug/net6.0/files_to_llama.zip
+
+# Cache files
+SplendorConsole/SplendorConsole/obj/Debug/net6.0/*.cache
+SplendorConsole/SplendorConsole/obj/Debug/net6.0/*.*.cache
+SplendorConsole/SplendorConsole/obj/Debug/net6.0/SplendorConsole.AssemblyInfoInputs.cache
+SplendorConsole/SplendorTests/obj/Debug/net6.0/SplendorTests.AssemblyInfoInputs.cache
+SplendorConsole/SplendorTests/obj/Debug/net6.0/SplendorTests.csproj.AssemblyReference.cache

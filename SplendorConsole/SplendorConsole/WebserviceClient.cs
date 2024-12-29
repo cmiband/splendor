@@ -26,7 +26,7 @@ namespace SplendorConsole
 
         public WebserviceClient(string endpoint)
         {
-            StartServer();
+            //StartServer();
             serverEndpoint = new Uri(endpoint);
             webSocket = new ClientWebSocket();
         }
@@ -39,6 +39,8 @@ namespace SplendorConsole
             } 
             catch(Exception e)
             {
+                Console.WriteLine($"Connection Error: {e.Message}");
+                Console.WriteLine($"Stack Trace: {e.StackTrace}");
                 throw new WebserviceClientException(CONNECTION_ERROR_MESSAGE, e);
             }
         }
@@ -52,7 +54,9 @@ namespace SplendorConsole
             } 
             catch(Exception e)
             {
-                Console.WriteLine(SEND_DATA_EXCEPTION_MESSAGE + " " + e.Message+ " " + e.StackTrace);
+                Console.WriteLine($"Connection Error: {e.Message}");
+                Console.WriteLine($"Stack Trace: {e.StackTrace}");
+                Console.WriteLine(SEND_DATA_EXCEPTION_MESSAGE);
             }
         }
 
@@ -66,7 +70,9 @@ namespace SplendorConsole
             }
             catch (Exception e)
             {
-                Console.WriteLine(SEND_AND_FETCH_EXCEPTION_MESSAGE + " " + e.Message + " " + e.StackTrace);
+                Console.WriteLine($"Connection Error: {e.Message}");
+                Console.WriteLine($"Stack Trace: {e.StackTrace}");
+                Console.WriteLine(SEND_AND_FETCH_EXCEPTION_MESSAGE);
             }
 
             return "";
@@ -84,7 +90,9 @@ namespace SplendorConsole
             } 
             catch(Exception e)
             {
-                Console.WriteLine(FETCH_DATA_EXCEPTION_MESSAGE + " " + e.Message + " "+ e.StackTrace);
+                Console.WriteLine($"Connection Error: {e.Message}");
+                Console.WriteLine($"Stack Trace: {e.StackTrace}");
+                Console.WriteLine(FETCH_DATA_EXCEPTION_MESSAGE);
             }
             return "";
         }
@@ -101,7 +109,9 @@ namespace SplendorConsole
             }
             catch (Exception e)
             {
-                Console.WriteLine(FETCH_DATA_WITH_CALLBACK_EXCEPTION_MESSAGE + " " + e.StackTrace);
+                Console.WriteLine($"Connection Error: {e.Message}");
+                Console.WriteLine($"Stack Trace: {e.StackTrace}");
+                Console.WriteLine(FETCH_DATA_WITH_CALLBACK_EXCEPTION_MESSAGE);
             }
         }
 
@@ -113,6 +123,8 @@ namespace SplendorConsole
             } 
             catch(Exception e)
             {
+                Console.WriteLine($"Connection Error: {e.Message}");
+                Console.WriteLine($"Stack Trace: {e.StackTrace}");
                 throw new WebserviceClientException(DISCONNECT_ERROR_MESSAGE, e);
             }
         }
@@ -125,6 +137,8 @@ namespace SplendorConsole
             }
             catch (Exception e)
             {
+                Console.WriteLine($"Connection Error: {e.Message}");
+                Console.WriteLine($"Stack Trace: {e.StackTrace}");                
                 throw new WebserviceClientException(SERVER_START_FAILED_MESSAGE, e);
             }
         }
