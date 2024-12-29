@@ -278,17 +278,10 @@ public class PlayerController : MonoBehaviour
                 CardController reservedCard = mainGameController.selectedStack.PopCardFromStack();
                 reservedCard.isReserved = true;
 
-                Vector3 vector = mainGameController.selectedStack.transform.position;
-
                 Debug.Log($"Zarezerwowano kartę ze stosu poziomu {reservedCard.level}");
 
                 player.handReserved.Add(reservedCard);
 
-                GameObject gameObject = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, player.transform);
-                CardController cardController = gameObject.GetComponent<CardController>();
-                cardController.InitCardData(reservedCard);
-
-                AddCardClickListener(gameObject, cardController);
             }
             else
             {
