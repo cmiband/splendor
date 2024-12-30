@@ -9,6 +9,7 @@ public class BoardController : MonoBehaviour
     public const int AMOUNT_OF_CARDS_VISIBLE_PER_LEVEL = 4;
     public const int AMOUNT_OF_VISIBLE_NOBLES = 5;
     public const float GAP_SIZE = 10;
+    public const float NOBLE_OFFSET = 80;
     /*private Noble[] nobles;
     private static Noble[] visibleNobles;
     public static Noble[] VisibleNobles
@@ -125,7 +126,7 @@ public class BoardController : MonoBehaviour
             NobleController nobleToInsert = this.loadedNoblesListControllers[i];
 
             this.CreateNobleObject(nobleToInsert, noblesContainer, currentXOffset);
-            currentXOffset += 80;
+            currentXOffset += NOBLE_OFFSET;
 
             visibleNobles.Add(nobleToInsert);
         }
@@ -133,10 +134,13 @@ public class BoardController : MonoBehaviour
 
     private void CreateNobleObject(NobleController targetedNoble, GameObject targetedVisibleNoblesContainer, float xOffset)
     {
-        Vector3 noblePosition = new Vector3 (targetedVisibleNoblesContainer.transform.position.x + xOffset, targetedVisibleNoblesContainer.transform.position.y, targetedVisibleNoblesContainer.transform.position.z);
-        GameObject nobleObject = Instantiate(this.noblePrefab, noblePosition, Quaternion.identity, targetedVisibleNoblesContainer.transform);
+        RectTransform containerRectTransform = targetedVisibleNoblesContainer.GetComponent<RectTransform>();
+        GameObject nobleObject = Instantiate(this.noblePrefab, new Vector3(0,0,0), Quaternion.identity, targetedVisibleNoblesContainer.transform);
         NobleController nobleController = nobleObject.GetComponent<NobleController>();
         nobleController.InitNobleData(targetedNoble);
+
+        RectTransform nobleRectTransform = nobleObject.GetComponent<RectTransform>();
+        nobleRectTransform.localPosition = new Vector3(xOffset, 0, containerRectTransform.localPosition.z);
     }
 
     private void ShuffleDecks()

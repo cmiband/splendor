@@ -52,7 +52,18 @@ public class NobleController :  MonoBehaviour
         this.detailedPrice = noble.detailedPrice;
         this.illustration = noble.illustration;
         this.detailedPriceInfo = this.detailedPrice.ToString();
+
+        this.SetNobleSprite();
     }
+
+    private void SetNobleSprite()
+    {
+        Sprite nobleSprite = UnityEngine.Resources.Load<Sprite>(this.illustration);
+
+        Image nobleImage = this.gameObject.GetComponent<Image>();
+        nobleImage.sprite = nobleSprite;
+    }
+
     public override int GetHashCode()
     {
         return HashCode.Combine(illustration, points, detailedPrice);
