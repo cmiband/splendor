@@ -47,7 +47,7 @@ public class GemStashController : MonoBehaviour
         {
             this.gameObject.SetActive(true);
             string targetedSpritePath = STASH_IMAGE_PATH + spriteType + this.amountOfGems;
-            Sprite targetedSprite = UnityEngine.Resources.Load<Sprite>(STASH_IMAGE_PATH + spriteType + this.amountOfGems);
+            Sprite targetedSprite = UnityEngine.Resources.Load<Sprite>(targetedSpritePath);
 
             this.stashImage.sprite = targetedSprite;
         }
@@ -83,7 +83,7 @@ public class GemStashController : MonoBehaviour
     {
         if (this.bankController.playerController.Resources.gems[this.color] == 0)
         {
-            Debug.Log("Nieodpowiednia operacja, ¿etony nie zosta³y oddane");
+            Debug.Log("Nieodpowiednia operacja, ï¿½etony nie zostaï¿½y oddane");
             return;
         }
 
@@ -161,7 +161,7 @@ public class GemStashController : MonoBehaviour
     {
         bankController.gemsBeingChosen.Clear();
 
-        Debug.Log("Nieodpowiednia operacja, ¿etony nie zosta³y pobrane");
+        Debug.Log("Nieodpowiednia operacja, ï¿½etony nie zostaï¿½y pobrane");
     }
 
     private int CheckAmountOfAvailableStashes(ResourcesController resources)
