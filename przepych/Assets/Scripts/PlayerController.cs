@@ -252,7 +252,7 @@ public class PlayerController : MonoBehaviour
                         GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
                         gameObject2.name = "Card_Level_" + cardLevel;
                         CardController cardController2 = gameObject2.GetComponent<CardController>();
-                        cardController2.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                        cardController2.InitCardData(mainGameController.boardController.level2StackController.PopCardFromStack());
                         cardController2.gameController = this.mainGameController;
                         AddCardClickListener(gameObject2, cardController2);
                         break;
@@ -264,7 +264,7 @@ public class PlayerController : MonoBehaviour
                         GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
                         gameObject3.name = "Card_Level_" + cardLevel;
                         CardController cardController3 = gameObject3.GetComponent<CardController>();
-                        cardController3.InitCardData(mainGameController.boardController.level1StackController.PopCardFromStack());
+                        cardController3.InitCardData(mainGameController.boardController.level3StackController.PopCardFromStack());
                         cardController3.gameController = this.mainGameController;
                         AddCardClickListener(gameObject3, cardController3);
                         break;
