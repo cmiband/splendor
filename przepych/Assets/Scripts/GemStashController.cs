@@ -8,14 +8,19 @@ using UnityEngine.UIElements;
 
 public class GemStashController : MonoBehaviour
 {
+    public const string STASH_IMAGE_PATH = "ResourcesSprites/";
+
     public GemColor color;
+    public string spriteType;
     public int amountOfGems;
     public GameObject bank;
     public BankController bankController;
     public TextMeshProUGUI amountInfo;
+    public UnityEngine.UI.Image stashImage;
 
     void Start()
     {
+        this.stashImage = this.gameObject.GetComponent<UnityEngine.UI.Image>();
         bankController = bank.GetComponent<BankController>();
         if (color != GemColor.GOLDEN) amountOfGems = 7;
         else amountOfGems = 5;
@@ -30,6 +35,22 @@ public class GemStashController : MonoBehaviour
     private void Update()
     {
         amountInfo.SetText(this.amountOfGems.ToString());
+    }
+
+    public void HandleAmountChange()
+    {
+        if(this.amountOfGems == 0)
+        {
+            this.gameObject.SetActive(false);
+        } 
+        else
+        {
+            this.gameObject.SetActive(true);
+            string targetedSpritePath = STASH_IMAGE_PATH + spriteType + this.amountOfGems;
+            Sprite targetedSprite = UnityEngine.Resources.Load<Sprite>(STASH_IMAGE_PATH + spriteType + this.amountOfGems);
+
+            this.stashImage.sprite = targetedSprite;
+        }
     }
 
     public void OnClick()

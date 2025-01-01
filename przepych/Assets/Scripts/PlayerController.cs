@@ -299,7 +299,6 @@ public class PlayerController : MonoBehaviour
 
     public void SetPlayerAvatar(string avatarPath)
     {
-        Debug.Log(avatarPath);
         Sprite playerAvatar = UnityEngine.Resources.Load<Sprite>(avatarPath);
 
         this.avatar.sprite = playerAvatar;
