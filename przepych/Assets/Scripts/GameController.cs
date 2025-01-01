@@ -379,9 +379,7 @@ public class GameController : MonoBehaviour
         if (availableNoble is not null)
         {
             var nobleIndex = GetNobleIndex(availableNoble);
-
-            //NobleController addedNoble = currentPlayer.AddComponent<NobleController>();
-            //addedNoble.Init(availableNoble.points, availableNoble.detailedPrice, availableNoble.illustration);
+            var nobleIndexInVisible = GetNobleIndexInVisible(availableNoble);
 
             this.playerIdToNoble[this.currentPlayerId].Add(availableNoble);
             Debug.Log($"Noble added to player with id: {currentPlayerId}");
@@ -389,10 +387,9 @@ public class GameController : MonoBehaviour
             this.boardController.visibleNoblesCoppied.RemoveAt(nobleIndex);
             Debug.Log($"Noble removed from visibleNobleCopied. NobleIndex: {nobleIndex}");
             crntPlayerController.points += 3;
+            this.playerIdToPoints[this.currentPlayerId] += 3;
 
-            //do zmiany potem, przy u�yciu noble stack controllera
-            this.boardController.visibleNoblesListControllers[nobleIndex].assignedPlayer = crntPlayerController;
-            //
+            this.boardController.visibleNoblesListControllers[nobleIndexInVisible].assignedPlayer = crntPlayerController;
         }
     }
 
@@ -571,7 +568,6 @@ public class GameController : MonoBehaviour
         }
         throw new Exception("Noble not found in visible nobles");
     }
-
     private void ResetCountdown()
     {
         remainingTime = countdownTime;
@@ -584,5 +580,15 @@ public class GameController : MonoBehaviour
         int minutes = Mathf.FloorToInt(remainingTime / 60F);
         int seconds = Mathf.FloorToInt(remainingTime % 60F);
         countdownText.text = string.Format("{0:00}:{1:00}", minutes, seconds); 
+    }
+    private int GetNobleIndexInVisible(NobleController noble)
+    {
+        var visibleNobles = boardController.visibleNoblesListControllers;
+        for (int i = 0; i < visibleNobles.Count; i++)
+        {
+            if (visibleNobles[i].Equals(noble))
+                return i;
+        }
+        throw new Exception("Noble not found in visible nobles");
     }
 }
