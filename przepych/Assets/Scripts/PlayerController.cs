@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI pointsText;
 
     public int playerId;
-    public Sprite avatar;
+    public Image avatar;
     public GameObject game;
     public GameController mainGameController;
     public BankController bankController;
@@ -295,6 +295,14 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Za dużo zarezerwowałeś kart");
         }
+    }
+
+    public void SetPlayerAvatar(string avatarPath)
+    {
+        Debug.Log(avatarPath);
+        Sprite playerAvatar = UnityEngine.Resources.Load<Sprite>(avatarPath);
+
+        this.avatar.sprite = playerAvatar;
     }
 
     private void AddCardClickListener(GameObject cardGameObject, CardController cardController)

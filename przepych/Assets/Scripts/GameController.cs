@@ -36,6 +36,9 @@ public class GameController : MonoBehaviour
     public Dictionary<int, List<NobleController>> playerIdToNoble = new Dictionary<int, List<NobleController>>();
     public Dictionary<int, ResourcesController> playerIdToBonusResources = new Dictionary<int, ResourcesController>();
     public Dictionary<int, int> playerIdToPoints = new Dictionary<int, int>();
+    public Dictionary<int, string> playerIdToAvatar = new Dictionary<int, string>();
+
+    private List<string> availablePlayerAvatars;
 
     public int currentPlayerId;
 
@@ -80,6 +83,8 @@ public class GameController : MonoBehaviour
 
         availableCardsController.LoadCardsFromExcel("Assets/ExternalResources/KartyWykaz.xlsx");
 
+        this.FillAvailablePlayerAvatars();
+        this.AssignPlayersToRandomAvatars();
         boardController.SetDecks(availableCardsController.level1Cards, availableCardsController.level2Cards, availableCardsController.level3Cards);
         boardController.SetCardsInStacks();
         boardController.CreateCardObjectsOnStart();
@@ -137,6 +142,46 @@ public class GameController : MonoBehaviour
         {
             HandlePass();
         }
+    }
+
+    private void FillAvailablePlayerAvatars()
+    {
+        this.availablePlayerAvatars = new List<string>();
+
+        for(int i = 1; i<=11; i++)
+        {
+            availablePlayerAvatars.Add("Avatars/awatar" + i);
+        }
+    }
+
+    private void AssignPlayersToRandomAvatars()
+    {
+        this.playerIdToAvatar.Clear();
+        List<string> shuffledAvatars = this.ShuffleAvatars(this.availablePlayerAvatars);
+
+        for(int i = 0; i<4; i++)
+        {
+            this.playerIdToAvatar.Add(i, shuffledAvatars[i]);
+        }
+    }
+
+    private List<string> ShuffleAvatars(List<string> avatars)
+    {
+        List<string> listCopy = new List<string>(avatars);
+
+        System.Random rng = new System.Random();
+
+        int n = listCopy.Count;
+        while(n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            string value = listCopy[k];
+            listCopy[k] = listCopy[n];
+            listCopy[n] = value;
+        }
+
+        return listCopy;
     }
 
     private void AddEventListeners()
@@ -200,6 +245,7 @@ public class GameController : MonoBehaviour
         targetedPlayerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerIndex]);
         targetedPlayerController.SetPlayerResources(this.playerIdToResources[targetedPlayerIndex], this.playerIdToBonusResources[targetedPlayerIndex]);
         targetedPlayerController.SetPlayerPoints(this.playerIdToPoints[targetedPlayerIndex]);
+        targetedPlayerController.SetPlayerAvatar(this.playerIdToAvatar[targetedPlayerIndex]);
 
         if (this.playerIdToNoble.ContainsKey(targetedPlayerIndex))
             targetedPlayerController.SetPlayerNoble(this.playerIdToNoble[targetedPlayerIndex]);
@@ -291,6 +337,7 @@ public class GameController : MonoBehaviour
             playerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerId]);
             playerController.SetPlayerPoints(this.playerIdToPoints[targetedPlayerId]);
             playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId], this.playerIdToBonusResources[targetedPlayerId]);
+            playerController.SetPlayerAvatar(this.playerIdToAvatar[targetedPlayerId]);
 
             if (this.playerIdToNoble.ContainsKey(targetedPlayerId))
                 playerController.SetPlayerNoble(this.playerIdToNoble[targetedPlayerId]);

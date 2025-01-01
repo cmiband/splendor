@@ -1713,6 +1713,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1813060233}
     m_Modifications:
+    - target: {fileID: 4815261798914332046, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4815261798914332046, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4815261798914332046, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6831864373905316961, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
       propertyPath: m_Name
       value: testPlayer
@@ -4915,7 +4927,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointsText: {fileID: 443517865}
   playerId: 0
-  avatar: {fileID: 0}
+  avatar: {fileID: 221827103}
   game: {fileID: 2008468892}
   mainGameController: {fileID: 0}
   bankController: {fileID: 0}
@@ -9763,6 +9775,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1813060233}
     m_Modifications:
+    - target: {fileID: 4815261798914332046, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4815261798914332046, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4815261798914332046, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6831864373905316961, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
       propertyPath: m_Name
       value: testPlayer (1)
@@ -10027,7 +10051,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointsText: {fileID: 810047553}
   playerId: 2
-  avatar: {fileID: 0}
+  avatar: {fileID: 1145949829}
   game: {fileID: 2008468892}
   mainGameController: {fileID: 0}
   bankController: {fileID: 0}
@@ -10050,6 +10074,17 @@ MonoBehaviour:
   nobleController: []
   goldenGemStashController: {fileID: 0}
   points: 0
+--- !u!114 &1145949829 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4815261798914332046, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
+  m_PrefabInstance: {fileID: 1111451813}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1145949826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1158312718 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3496800232969062827, guid: 1490717cfa37e584997661bdc51a705f, type: 3}
@@ -12156,6 +12191,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1813060233}
     m_Modifications:
+    - target: {fileID: 4815261798914332046, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4815261798914332046, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4815261798914332046, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6831864373905316961, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
       propertyPath: m_Name
       value: testPlayer (2)
@@ -13913,7 +13960,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointsText: {fileID: 37706700}
   playerId: 1
-  avatar: {fileID: 0}
+  avatar: {fileID: 1582672591}
   game: {fileID: 2008468892}
   mainGameController: {fileID: 0}
   bankController: {fileID: 0}
@@ -13936,6 +13983,17 @@ MonoBehaviour:
   nobleController: []
   goldenGemStashController: {fileID: 0}
   points: 0
+--- !u!114 &1582672591 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4815261798914332046, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
+  m_PrefabInstance: {fileID: 189700863}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1582672588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1591002895
 GameObject:
   m_ObjectHideFlags: 0
@@ -16268,7 +16326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointsText: {fileID: 482256725}
   playerId: 3
-  avatar: {fileID: 0}
+  avatar: {fileID: 2069584157}
   game: {fileID: 2008468892}
   mainGameController: {fileID: 0}
   bankController: {fileID: 0}
@@ -16291,6 +16349,17 @@ MonoBehaviour:
   nobleController: []
   goldenGemStashController: {fileID: 0}
   points: 0
+--- !u!114 &2069584157 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4815261798914332046, guid: 8b7c04dc354fd1545b0eae6c64c5dd11, type: 3}
+  m_PrefabInstance: {fileID: 1416538756}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2069584154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2090406504 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4764497413651230149, guid: 1490717cfa37e584997661bdc51a705f, type: 3}
