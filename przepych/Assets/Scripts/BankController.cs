@@ -58,6 +58,7 @@ public class BankController : MonoBehaviour
             if (stash != null)
             {
                 stash.amountOfGems -= 1;
+                stash.HandleAmountChange();
             }
         }
         playerController.TakeGems(gemsBeingChosen);
@@ -104,6 +105,7 @@ public class BankController : MonoBehaviour
                 if (matchingStash != null)
                 {
                     matchingStash.amountOfGems += resource.Value;
+                    matchingStash.HandleAmountChange();
                 }
                 else
                 {
