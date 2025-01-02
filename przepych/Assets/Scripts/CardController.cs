@@ -106,8 +106,11 @@ public class CardController : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log(this.gameController);
-        if(eventData.button == PointerEventData.InputButton.Right)
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            SetSelected(!isSelected); 
+        }
+        else if (eventData.button == PointerEventData.InputButton.Right)
         {
             this.gameController.ShowClickedCard(this);
         }

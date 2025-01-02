@@ -492,7 +492,8 @@ public class GameController : MonoBehaviour
             selectedCard = card;
             selectedCard.SetSelected(true);
             buyCard.SetActive(true);
-            if(selectedCard.isReserved != true) reserveCard.SetActive(true);
+            if (selectedCard.isReserved != true) reserveCard.SetActive(true);
+            else reserveCard.SetActive(false);
         }
     }
 
