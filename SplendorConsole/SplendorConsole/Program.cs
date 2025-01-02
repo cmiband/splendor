@@ -49,7 +49,7 @@ public class Program
             Console.WriteLine();
             try
             {
-                (float lastFeedback, int turnsNumber, int winner, int[]? state) = ExecuteWithTimeout(() => game.GameStart(), 3000);
+                (float lastFeedback, int turnsNumber, int winner, int[]? state) = ExecuteWithTimeout(() => game.GameStart(), 10000);
                 if (winner == -200)
                 {
                     errorCounterLoop++;
