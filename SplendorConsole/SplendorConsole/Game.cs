@@ -22,6 +22,24 @@ namespace SplendorConsole
 {
     public class Game
     {
+        //shuffling array
+        private static Random random = new Random();
+
+        private static int[] Shuffle(int[] array)
+        {
+            if (array is null)
+                throw new ArgumentNullException(nameof(array));
+
+            for (int i = 0; i < array.Length - 1; ++i)
+            {
+                int r = random.Next(i, array.Length);
+                (array[r], array[i]) = (array[i], array[r]);
+            }
+            return array;
+        }
+        private static int[] move = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42};
+
+
         private int currentTurn = 0;
         private float feedbackFromPreviousRequest = 0;
         private static AvailableCards availableCards = new AvailableCards();
@@ -486,43 +504,56 @@ namespace SplendorConsole
 
         async public Task RequestMoveFromServerAndExecuteIt(float feedbackForPreviousMove, Player currentPlayer)
         {
-            if (false)
+            if(this.currentTurn==0)
             {
-                await Console.Out.WriteLineAsync($"[C#] Wysłano na serwer zapytanie o ruch gracza {currentTurn} oraz feedback {feedbackFromPreviousRequest} dla poprzedniego gracza.");
-            }
-            int[] moves = await RequestMovesListFromServer(feedbackForPreviousMove);
+                if (false)
+                {
+                    await Console.Out.WriteLineAsync($"[C#] Wysłano na serwer zapytanie o ruch gracza {currentTurn} oraz feedback {feedbackFromPreviousRequest} dla poprzedniego gracza.");
+                }
+                int[] moves = await RequestMovesListFromServer(feedbackForPreviousMove);
 
-            var validator = new ResponseValidator();
-            int numberOfInvalidMoves = validator.CheckMoves(moves, currentPlayer, this, bank, board);
-            /*if (Program.EXTENDED_LOGGER_MODE)
-            {
-                await Console.Out.WriteLineAsync($"[C#] gracz {currentTurn}, feedback {feedbackFromPreviousRequest} dla poprzedniego, {moves[numberOfInvalidMoves]}");
-            }*/
-            if (numberOfInvalidMoves == 0)
-            {
-                if (moves[numberOfInvalidMoves]==0)
+                var validator = new ResponseValidator();
+                int numberOfInvalidMoves = validator.CheckMoves(moves, currentPlayer, this, bank, board);
+                /*if (Program.EXTENDED_LOGGER_MODE)
                 {
-                    feedbackFromPreviousRequest = 0;
+                    await Console.Out.WriteLineAsync($"[C#] gracz {currentTurn}, feedback {feedbackFromPreviousRequest} dla poprzedniego, {moves[numberOfInvalidMoves]}");
+                }*/
+                if (numberOfInvalidMoves == 0)
+                {
+                    if (moves[numberOfInvalidMoves] == 0)
+                    {
+                        feedbackFromPreviousRequest = 0;
+                    }
+                    else
+                    {
+                        feedbackFromPreviousRequest = (float)0.1;
+                    }
+                }
+                else if (numberOfInvalidMoves <= 10)
+                {
+                    if (moves[numberOfInvalidMoves] == 0)
+                    {
+                        feedbackFromPreviousRequest = (float)-0.15;
+                    }
+                    else
+                    {
+                        feedbackFromPreviousRequest = (float)-0.05;
+                    }
                 }
                 else
                 {
-                    feedbackFromPreviousRequest = (float)0.1;
-                }
-            }
-            else if (numberOfInvalidMoves <= 10)
-            {
-                if (moves[numberOfInvalidMoves] == 0)
-                {
-                    feedbackFromPreviousRequest = (float)-0.15;
-                }
-                else
-                {
-                    feedbackFromPreviousRequest = (float)-0.05;
+                    feedbackFromPreviousRequest = (float)-0.25;
                 }
             }
             else
             {
-                feedbackFromPreviousRequest = (float)-0.25;
+                int[] moves = Shuffle(move);
+                var validator = new ResponseValidator();
+                int numberOfInvalidMoves = validator.CheckMoves(moves, currentPlayer, this, bank, board);
+                /*if (Program.EXTENDED_LOGGER_MODE)
+                {
+                    await Console.Out.WriteLineAsync($"[C#] gracz {currentTurn}, feedback {feedbackFromPreviousRequest} dla poprzedniego, {moves[numberOfInvalidMoves]}");
+                }*/
             }
         }
     }
