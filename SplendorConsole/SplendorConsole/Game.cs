@@ -506,7 +506,7 @@ namespace SplendorConsole
         {
             if(this.currentTurn==0)
             {
-                if (false)
+                if (true)
                 {
                     await Console.Out.WriteLineAsync($"[C#] Wysłano na serwer zapytanie o ruch gracza {currentTurn} oraz feedback {feedbackFromPreviousRequest} dla poprzedniego gracza.");
                 }
@@ -550,10 +550,10 @@ namespace SplendorConsole
                 int[] moves = Shuffle(move);
                 var validator = new ResponseValidator();
                 int numberOfInvalidMoves = validator.CheckMoves(moves, currentPlayer, this, bank, board);
-                /*if (Program.EXTENDED_LOGGER_MODE)
+                if (true)
                 {
                     await Console.Out.WriteLineAsync($"[C#] gracz {currentTurn}, feedback {feedbackFromPreviousRequest} dla poprzedniego, {moves[numberOfInvalidMoves]}");
-                }*/
+                }
             }
         }
     }

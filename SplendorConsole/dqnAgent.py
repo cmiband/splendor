@@ -24,7 +24,7 @@ class DQNAgent:
         self.epsilon = epsilon
         # Replay memory
         self.replay_buffer = deque(maxlen=BUFFER_SIZE) # OK
-        
+        self.global_step = 0
         # Neural networks
         self.eval_net = self._build_network() # OK
         self.target_net = self._build_network() # OK
@@ -51,11 +51,11 @@ class DQNAgent:
         """Choose an action using epsilon-greedy policy."""
         
         if np.random.rand() < self.epsilon:
-            return np.random.randint(1, self.action_dim + 1)  # Random action (1 to action_dim)
+            return np.random.randint(0, self.action_dim)
         else:
             state_tensor = torch.FloatTensor(state).unsqueeze(0)
             q_values = self.eval_net(state_tensor)
-            return torch.argmax(q_values).item() + 1  # Convert to 1-based indexing
+            return torch.argmax(q_values).item()
 
     def store_transition(self, state, action, reward, next_state, done):
 
@@ -65,7 +65,7 @@ class DQNAgent:
         self.replay_buffer.append((state, action, reward, next_state, done))
 
     def learn(self, update_target_every=100):
-        global_step = 0
+        
         if len(self.replay_buffer) < MIN_REPLAY_SIZE:
             return
 
@@ -87,37 +87,9 @@ class DQNAgent:
         loss.backward()
         self.optimizer.step()
 
-        global_step += 1
-        if global_step % update_target_every == 0:
+        self.global_step += 1
+        if self.global_step % update_target_every == 0:
             self.update_target_network()
-
-
-    def learn(self):
-        """Sample from memory and perform a learning step."""
-        if len(self.replay_buffer) < MIN_REPLAY_SIZE:
-            return  # Not enough samples to learn
-
-        # Sample a batch
-        batch = np.random.choice(len(self.replay_buffer), batch_size, replace=False)
-        states, actions, rewards, next_states, dones = zip(*[self.replay_buffer[i] for i in batch])
-
-        states = torch.FloatTensor(states)
-        actions = torch.LongTensor(actions).unsqueeze(1) - 1  # Convert to 0-based
-        rewards = torch.FloatTensor(rewards).unsqueeze(1)
-        next_states = torch.FloatTensor(next_states)
-        dones = torch.FloatTensor(dones).unsqueeze(1)
-
-        # Q-value computation
-        q_values = self.eval_net(states).gather(1, actions)
-        next_q_values = self.target_net(next_states).max(1, keepdim=True)[0].detach()
-        q_targets = rewards + gamma * next_q_values * (1 - dones)
-
-        # Loss and optimization
-        loss = self.loss_fn(q_values, q_targets)
-        self.optimizer.zero_grad()
-        loss.backward()
-        self.optimizer.step()
-
 
     def generate_action_values(self, state):
 
@@ -164,7 +136,7 @@ class DQNAgent:
             return False
 
         # Load model checkpoint
-        checkpoint = torch.load(filepath)
+        checkpoint = torch.load(filepath, weights_only=True)
         self.eval_net.load_state_dict(checkpoint["eval_net_state_dict"])
         self.target_net.load_state_dict(checkpoint["target_net_state_dict"])
         self.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
@@ -181,5 +153,57 @@ class DQNAgent:
             print(f"No replay buffer found at {replay_buffer_path}")
 
         return True
+
+    # def update_with_final_rewards(self, final_reward):
+
+
+    #     states, actions = [], []
+    #     for transition in self.replay_buffer:
+    #         state, action, _, _, _ = transition
+    #         states.append(state)
+    #         actions.append(action)
+
+    #     if not states:
+    #         print("Replay buffer empty, skipping update.")
+    #         return
+
+    #     # Convert states and actions to tensors
+    #     states = torch.FloatTensor(states)
+    #     actions = torch.LongTensor(actions).unsqueeze(1) - 1
+
+    #     # Compute Q-values for the actions taken
+    #     q_values = self.eval_net(states).gather(1, actions)
+
+    #     # Final reward for all transitions
+    #     targets = torch.FloatTensor([final_reward] * len(states)).unsqueeze(1)
+
+    #     # Ensure target shape matches Q-value shape
+    #     targets = targets.view(-1, 1)  # Remove extra dimensions, if any
+
+    #     # Compute loss and backpropagate
+    #     loss = self.loss_fn(q_values, targets)
+    #     self.optimizer.zero_grad()
+    #     loss.backward()
+    #     self.optimizer.step()
+
+    def update_with_final_rewards(self, final_reward, reward_decay=gamma):
+        """
+        Distribute the final reward across all transitions with a decay factor.
+        """
+        n = len(self.replay_buffer)
+        discounted_reward = final_reward
+        total_discount = sum(reward_decay**i for i in range(n))  # Normalization factor
+
+        updated_buffer = []
+        for i, (state, action, reward, next_state, done) in enumerate(self.replay_buffer):
+            # Proportional reward based on time decay
+            reward_contribution = (reward_decay**i / total_discount) * final_reward
+            updated_reward = reward + reward_contribution
+            updated_buffer.append((state, action, updated_reward, next_state, done))
+
+        self.replay_buffer = deque(updated_buffer, maxlen=BUFFER_SIZE)
+
+
+
 
 
