@@ -17046,6 +17046,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1005553212}
     m_Modifications:
+    - target: {fileID: -6683117271996667576, guid: 92855d8934a60f64d87d3c1c65f053d0, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3085901701218085446, guid: 92855d8934a60f64d87d3c1c65f053d0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -17125,6 +17129,10 @@ PrefabInstance:
     - target: {fileID: 3085901701218085446, guid: 92855d8934a60f64d87d3c1c65f053d0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5433656647312935007, guid: 92855d8934a60f64d87d3c1c65f053d0, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6791204780865393749, guid: 92855d8934a60f64d87d3c1c65f053d0, type: 3}
       propertyPath: m_Name
