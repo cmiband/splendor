@@ -9,12 +9,12 @@ agent = DQNAgent(state_dim=STATE_DIM, action_dim=ACTION_DIM)
 
 # Initialize to track previous states and actions
 previous_state = None
-previous_action = None
+
 done = False
 
-def step(state, previous_reward):
+def step(state, previous_reward, previous_action):
 
-    global previous_state, previous_action, done
+    global previous_state, done
 
     try:
         if len(state) != STATE_DIM:
@@ -29,12 +29,11 @@ def step(state, previous_reward):
                 done
             )
     
-        action = agent.choose_action(state)  # Choose action using epsilon-greedy policy
+        #action = agent.choose_action(state)  # Choose action using epsilon-greedy policy
         sorted_actions = agent.generate_action_values(state)
-
+        
         # Save the current state and action for the next call
         previous_state = state
-        previous_action = action
 
         # Learn for the agent if memory size is sufficient
         agent.learn()

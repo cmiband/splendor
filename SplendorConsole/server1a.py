@@ -22,12 +22,12 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
                 # REQUEST Z WEWNĄTRZ
                 current_player = data.get("CurrentPlayer")
                 feedback = data.get("Feedback")
-                previou_smove = data.get("PreviousMove")
+                previous_move = data.get("PreviousMove")
                 game_state = data.get("GameState")
 
                 
                 #TRENING
-                output = step(game_state, feedback)#np.random.permutation(range(0, 42)).tolist()#
+                output = step(game_state, feedback, previous_move)#np.random.permutation(range(0, 42)).tolist()#
 
                 response_object = {
                     "MovesList": output,

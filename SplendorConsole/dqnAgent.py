@@ -51,11 +51,11 @@ class DQNAgent:
         """Choose an action using epsilon-greedy policy."""
         
         if np.random.rand() < self.epsilon:
-            return np.random.randint(1, self.action_dim+1)
+            return np.random.randint(0, self.action_dim)
         else:
             state_tensor = torch.FloatTensor(state).unsqueeze(0)
             q_values = self.eval_net(state_tensor)
-            return torch.argmax(q_values).item()+1
+            return torch.argmax(q_values).item()
 
     def store_transition(self, state, action, reward, next_state, done):
 
@@ -73,7 +73,8 @@ class DQNAgent:
         states, actions, rewards, next_states, dones = zip(*[self.replay_buffer[i] for i in batch])
 
         states = torch.FloatTensor(states)
-        actions = torch.LongTensor(actions).unsqueeze(1) - 1
+        actions = torch.LongTensor(actions).unsqueeze(1) #- 1
+
         rewards = torch.FloatTensor(rewards).unsqueeze(1)
         next_states = torch.FloatTensor(next_states)
         dones = torch.FloatTensor(dones).unsqueeze(1)
@@ -153,38 +154,6 @@ class DQNAgent:
             print(f"No replay buffer found at {replay_buffer_path}")
 
         return True
-
-    # def update_with_final_rewards(self, final_reward):
-
-
-    #     states, actions = [], []
-    #     for transition in self.replay_buffer:
-    #         state, action, _, _, _ = transition
-    #         states.append(state)
-    #         actions.append(action)
-
-    #     if not states:
-    #         print("Replay buffer empty, skipping update.")
-    #         return
-
-    #     # Convert states and actions to tensors
-    #     states = torch.FloatTensor(states)
-    #     actions = torch.LongTensor(actions).unsqueeze(1) - 1
-
-    #     # Compute Q-values for the actions taken
-    #     q_values = self.eval_net(states).gather(1, actions)
-
-    #     # Final reward for all transitions
-    #     targets = torch.FloatTensor([final_reward] * len(states)).unsqueeze(1)
-
-    #     # Ensure target shape matches Q-value shape
-    #     targets = targets.view(-1, 1)  # Remove extra dimensions, if any
-
-    #     # Compute loss and backpropagate
-    #     loss = self.loss_fn(q_values, targets)
-    #     self.optimizer.zero_grad()
-    #     loss.backward()
-    #     self.optimizer.step()
 
     def update_with_final_rewards(self, final_reward, reward_decay=gamma):
         """
