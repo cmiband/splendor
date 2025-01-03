@@ -267,7 +267,7 @@ namespace SplendorConsole
         private void ChoiceOfAction(Player player)
         {
 
-            RequestMoveFromServerAndExecuteIt(feedbackFromPreviousRequest, player);
+            RequestMoveFromServerAndExecuteIt(feedbackFromPreviousRequest, player).Wait();
             GettingNobles();
         }
 
