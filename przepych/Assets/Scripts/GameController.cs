@@ -309,10 +309,9 @@ public class GameController : MonoBehaviour
             Debug.Log("new player id   " + (this.currentPlayerId + 1));
 
         PlayerController crntPlayerController = currentPlayer.GetComponent<PlayerController>();
-        for (int i = 0; i < 5; i++)
-        {
-            GettingNobles(crntPlayerController);
-        }
+
+        GettingNobles(crntPlayerController);
+
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
         Debug.Log($"Current player id: {this.currentPlayerId}");
 
@@ -440,6 +439,7 @@ public class GameController : MonoBehaviour
             this.playerIdToPoints[this.currentPlayerId] += 3;
 
             this.boardController.visibleNoblesListControllers[nobleIndexInVisible].assignedPlayer = crntPlayerController;
+            availableNoble.PlayerImage = crntPlayerController.avatar;
         }
     }
 
