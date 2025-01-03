@@ -58,14 +58,13 @@ class DQNAgent:
             return torch.argmax(q_values).item()
 
     def store_transition(self, state, action, reward, next_state, done):
-
-        if len(self.replay_buffer) >= BUFFER_SIZE:
-            self.replay_buffer.pop(0)  
-            
+        if len(state) != self.state_dim or len(next_state) != self.state_dim:
+            print(f"Invalid transition dimensions: {len(state)}, {len(next_state)}")
+            return
         self.replay_buffer.append((state, action, reward, next_state, done))
 
+
     def learn(self, update_target_every=100):
-        
         if len(self.replay_buffer) < MIN_REPLAY_SIZE:
             return
 
@@ -74,7 +73,6 @@ class DQNAgent:
 
         states = torch.FloatTensor(states)
         actions = torch.LongTensor(actions).unsqueeze(1) #- 1
-
         rewards = torch.FloatTensor(rewards).unsqueeze(1)
         next_states = torch.FloatTensor(next_states)
         dones = torch.FloatTensor(dones).unsqueeze(1)
@@ -83,7 +81,10 @@ class DQNAgent:
         next_q_values = self.target_net(next_states).max(1, keepdim=True)[0].detach()
         q_targets = rewards + gamma * next_q_values * (1 - dones)
 
+       
+
         loss = self.loss_fn(q_values, q_targets)
+
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
@@ -91,6 +92,7 @@ class DQNAgent:
         self.global_step += 1
         if self.global_step % update_target_every == 0:
             self.update_target_network()
+
 
     def generate_action_values(self, state):
 
@@ -104,7 +106,7 @@ class DQNAgent:
                 q_values = self.eval_net(state_tensor).squeeze().numpy()
 
             sorted_actions = np.argsort(q_values)[::-1]  # Descending order
-            return (sorted_actions + 1).tolist()  
+            return (sorted_actions).tolist()  
 
     def save_checkpoint(self, filepath):
         """

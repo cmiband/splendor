@@ -92,7 +92,7 @@ namespace SplendorConsole
         public Board Board { get => board; }
 
 
-        public (float, int, int, int[]?) GameStart()
+        public (float, int, int, int[]?, int) GameStart()
         {
             Random random = new Random();
             listOfPlayers = SetNumberOfPlayers();
@@ -155,7 +155,7 @@ namespace SplendorConsole
             bank.resources.gems.Add(GemColor.GOLDEN, 5);
         }
 
-        private (float, int, int, int[]?) GameLoop(int numberOfPlayers)
+        private (float, int, int, int[]?, int) GameLoop(int numberOfPlayers)
         {
             int securityCounter = 0;
             while (true)
@@ -163,7 +163,7 @@ namespace SplendorConsole
                 securityCounter++;
                 if(securityCounter>=10000)
                 {
-                    return (feedbackFromPreviousRequest, securityCounter/4, -200, ToArray());
+                    return (feedbackFromPreviousRequest, securityCounter/4, -200, ToArray(), previousMove);
                 }
                 Turn(listOfPlayers[currentTurn]);
 
@@ -186,7 +186,7 @@ namespace SplendorConsole
                         //1 zwyciezca to listOfPlayers.IndexOf(winners[0]);
                         // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                         currentTurn = listOfPlayers.IndexOf(winners[0]);
-                        return (feedbackFromPreviousRequest, securityCounter / 4, currentTurn, ToArray());
+                        return (feedbackFromPreviousRequest, securityCounter / 4, currentTurn, ToArray(), previousMove);
                     }
                     else if (winnersCount > 1)
                     {
@@ -208,7 +208,7 @@ namespace SplendorConsole
                             //2 zwyciezca playerIndex
                             // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                             currentTurn = playerIndex;
-                            return (feedbackFromPreviousRequest, securityCounter / 4, currentTurn, ToArray());
+                            return (feedbackFromPreviousRequest, securityCounter / 4, currentTurn, ToArray(), previousMove);
                         }
                         else
                         {
@@ -218,12 +218,12 @@ namespace SplendorConsole
                                 // 3 zwyciezca listOfPlayers.IndexOf(OfficialWinner)
                                 // Trzeba odpowiednio ustawić currentTurn żeby ToArray() zaczął od winnera
                                 currentTurn = listOfPlayers.IndexOf(OfficialWinner);
-                                return (feedbackFromPreviousRequest, securityCounter / 4, currentTurn, ToArray());
+                                return (feedbackFromPreviousRequest, securityCounter / 4, currentTurn, ToArray(), previousMove);
                             }
                             else
                             {
                                 // 4 remis (na zwrocie nie ma znaczenia kto jest brany jako main bo nikt nie wygrywa)
-                                return (feedbackFromPreviousRequest, securityCounter / 4, -1, ToArray());
+                                return (feedbackFromPreviousRequest, securityCounter / 4, -1, ToArray(), previousMove);
                             }
                         }
                     }
@@ -514,6 +514,7 @@ namespace SplendorConsole
             string response = await client.SendAndFetchDataFromSocket(JsonSerializer.Serialize(request));
 
             JObject json = JObject.Parse(response);
+            //Console.WriteLine(json);
             var moves = json["MovesList"]?.ToObject<int[]>();
 
             return moves;
@@ -551,6 +552,45 @@ namespace SplendorConsole
                 feedbackFromPreviousRequest = (float)-0.25;
             }
             previousMove = moves[numberOfInvalidMoves];
+        }
+
+        public int[] PlayZeroToArray()
+        {
+            int[] output = new int[348];
+            int pointer = 0;
+            foreach (var item in Board.ToArray())
+            {
+                output[pointer++] = item;
+            }
+            foreach (var item in Bank.ToArray())
+            {
+                output[pointer++] = item;
+            }
+            foreach (var item in listOfNobles)
+            {
+                foreach (var parameter in item.ToArray())
+                {
+                    output[pointer++] = parameter;
+                }
+            }
+            while (pointer < 167)
+            {
+                output[pointer++] = 0;
+                output[pointer++] = 16;
+                output[pointer++] = 16;
+                output[pointer++] = 16;
+                output[pointer++] = 16;
+                output[pointer++] = 16;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                foreach (var item in listOfPlayers[0 + i].ToArray())
+                {
+                    output[pointer++] = item;
+                }
+            }
+            return output;
         }
     }
 }

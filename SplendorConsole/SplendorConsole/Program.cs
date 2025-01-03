@@ -18,7 +18,7 @@ public class Program
         await client.ConnectToWebsocket();
         Game? game;
 
-        int N = 102;
+        int N = 1000;
 
         int errorCounter = 1;
         int errorCounterLoop = 0;
@@ -50,7 +50,7 @@ public class Program
             Console.WriteLine();
             try
             {
-                (float lastFeedback, int turnsNumber, int winner, int[]? state) =game.GameStart();
+                (float lastFeedback, int turnsNumber, int winner, int[]? state, int lastMove) =game.GameStart();
                 if (winner == -200)
                 {
                     errorCounterLoop++;
@@ -66,7 +66,7 @@ public class Program
                     Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd zapętlenia");
                     errorGap = 0;
                     awards = new float[] { 0, 0, 0, 0 };
-                    await InformServerAboutFinishedGame(awards, winner, lastFeedback);
+                    await InformServerAboutFinishedGame(awards, winner, lastFeedback, lastMove, game.Standartize(game.PlayZeroToArray()));
                 }
                 else if (winner == -1)
                 {
@@ -74,7 +74,7 @@ public class Program
                     tieCounter++;
                     turnSum += turnsNumber;
                     awards = new float[] { 0, 0, 0, 0 };
-                    await InformServerAboutFinishedGame(awards, winner, lastFeedback);
+                    await InformServerAboutFinishedGame(awards, winner, lastFeedback, lastMove, game.Standartize(game.PlayZeroToArray()));
                 }
                 else
                 {
@@ -94,7 +94,7 @@ public class Program
                         modelWinningCounter++;
                     }
                     awards = AwardsAfterGame(winner, state, turnsNumber);
-                    await InformServerAboutFinishedGame(awards, winner, lastFeedback);
+                    await InformServerAboutFinishedGame(awards, winner, lastFeedback, lastMove, game.Standartize(game.PlayZeroToArray()));
 
                     Console.WriteLine($"[C#] Nagrody dla poszczególnych graczy: {awards[0]}, {awards[1]}, {awards[2]}, {awards[3]}");
                     foreach (var item in awards)
@@ -131,7 +131,7 @@ public class Program
                 Console.WriteLine($"[C#] W grze nr {i} przekroczono limit czasu.");
                 errorCounterOther++;
                 awards = new float[] { 0, 0, 0, 0 };
-                await InformServerAboutFinishedGame(awards, -1, 0);
+                await InformServerAboutFinishedGame(awards, -1, 0, -1, game.Standartize(game.PlayZeroToArray()));
             }
             catch (Exception e)
             {
@@ -165,10 +165,11 @@ public class Program
                 }
                 errorCounter++;
                 errorGap = 0;
+                awards = new float[] { 0, 0, 0, 0 };
+                await InformServerAboutFinishedGame(awards, -1, 0, -1, game.Standartize(game.PlayZeroToArray()));
                 game = null;
 
-                awards = new float[] { 0, 0, 0, 0 };
-                await InformServerAboutFinishedGame(awards, -1, 0);
+                
             }
         }
 
@@ -286,14 +287,16 @@ public class Program
         return rewards;
     }
 
-    async public static Task InformServerAboutFinishedGame(float[] rewards, int winner, float lastFeedback)
+    async public static Task InformServerAboutFinishedGame(float[] rewards, int winner, float lastFeedback, int lastMove, float[] lastGameState)
     {
         var request = new
         {
             Id = (winner >= 0) ? 2 : -1,
             Winner = winner,
             LastFeedback = lastFeedback,
-            Rewards = rewards
+            Rewards = rewards,
+            LastMove = lastMove,
+            LastGameState = lastGameState
         };
 
         await client.SendAndFetchDataFromSocket(JsonSerializer.Serialize(request));
