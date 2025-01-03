@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using UnityEngine.UIElements;
 
@@ -15,7 +16,7 @@ public class GemStashController : MonoBehaviour
     public int amountOfGems;
     public GameObject bank;
     public BankController bankController;
-    public TextMeshProUGUI amountInfo;
+    public Text amountInfo;
     public UnityEngine.UI.Image stashImage;
 
     void Start()
@@ -30,18 +31,21 @@ public class GemStashController : MonoBehaviour
         UnityEngine.UI.Button openBoughtCardsButton = this.gameObject.GetComponent<UnityEngine.UI.Button>();
         openBoughtCardsButton.onClick.AddListener(() => OnClick());
 
-        amountInfo.SetText(this.amountOfGems.ToString());
+        amountInfo.text = this.amountOfGems.ToString();
     }
     private void Update()
     {
-        amountInfo.SetText(this.amountOfGems.ToString());
+        amountInfo.text = this.amountOfGems.ToString();
     }
 
     public void HandleAmountChange()
     {
         if(this.amountOfGems == 0)
         {
-            this.gameObject.SetActive(false);
+            string targetedSpritePath = STASH_IMAGE_PATH + spriteType + 1;
+            Sprite targetedSprite = UnityEngine.Resources.Load<Sprite>(targetedSpritePath);
+
+            this.stashImage.sprite = targetedSprite;
         } 
         else
         {
@@ -89,6 +93,7 @@ public class GemStashController : MonoBehaviour
 
         this.amountOfGems++;
         this.bankController.GiveGem(this.color);
+        this.HandleAmountChange();
     }
 
     private void HandleTakeGem()
