@@ -309,10 +309,7 @@ public class GameController : MonoBehaviour
             Debug.Log("new player id   " + (this.currentPlayerId + 1));
 
         PlayerController crntPlayerController = currentPlayer.GetComponent<PlayerController>();
-        for (int i = 0; i < 5; i++)
-        {
-            GettingNobles(crntPlayerController);
-        }
+        GettingNobles(crntPlayerController);
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
         Debug.Log($"Current player id: {this.currentPlayerId}");
 
