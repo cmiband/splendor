@@ -66,7 +66,6 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
                 gra1000 += 1 
 
                 if previous_state is not None:
-                    print("WAS SAVED TRANS")
                     agent.store_transition(
                         previous_state,
                         last_previous_action,

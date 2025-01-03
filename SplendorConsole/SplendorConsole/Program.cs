@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using SplendorConsole;
+using System.Globalization;
 
 public class Program
 {
@@ -18,7 +20,7 @@ public class Program
         await client.ConnectToWebsocket();
         Game? game;
 
-        int N = 1000;
+        int N = 200;
 
         int errorCounter = 1;
         int errorCounterLoop = 0;
@@ -40,8 +42,18 @@ public class Program
         float maxLoss = 0f;
         float minLoss = -1f;
         int modelWinningCounter = 0;
+        int modelWinningCounterAfterAll = 0;
+        //tutaj zmieniasz gapa zapisu, jak coś
+        int intSaveGap = 50;
+        float floatSaveGap = intSaveGap;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
+        string filePath = "game_results.csv";
+        using (StreamWriter writer = new StreamWriter(filePath))
+        {
+            // Zapisz nagłówki pliku CSV
+            writer.WriteLine("GameIndex;WinRate");
+        }
 
 
         for (int i = 1; i <= N; i++)
@@ -92,6 +104,17 @@ public class Program
                     if(winner==0)
                     {
                         modelWinningCounter++;
+                        modelWinningCounterAfterAll++;
+                    }
+                    if (i % intSaveGap == 0)
+                    {
+                        // Dodane zapisywanie do pliku CSV
+                        float winRate = modelWinningCounter / floatSaveGap;
+                        using (StreamWriter writer = new StreamWriter(filePath, append: true))
+                        {
+                            writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{winRate.ToString(CultureInfo.InvariantCulture)}");
+                        }
+                        modelWinningCounter = 0;
                     }
                     awards = AwardsAfterGame(winner, state, turnsNumber);
                     await InformServerAboutFinishedGame(awards, winner, lastFeedback, lastMove, game.Standartize(game.PlayZeroToArray()));
@@ -185,7 +208,12 @@ public class Program
         Console.WriteLine($"Tury: min = {minTurn}, max = {maxTurn} avg = {turnSum / (N - errorCounter + 1)}");
         Console.WriteLine($"Nagrody: min = {minAward}, max = {maxAward}");
         Console.WriteLine($"Kary: min = {minLoss}, max = {maxLoss}");
-        Console.WriteLine($"Model wygrał {modelWinningCounter} gier na {N}, co daje {(modelWinningCounter*100f)/N}%");
+        Console.WriteLine($"Model wygrał {modelWinningCounterAfterAll} gier na {N}, co daje {(modelWinningCounterAfterAll * 100f) / N}%");
+        Console.WriteLine();
+        using (StreamWriter writer = new StreamWriter(filePath, append: true))
+        {
+            writer.WriteLine($"Overall;{((modelWinningCounterAfterAll * 1f) / N).ToString(CultureInfo.InvariantCulture)}");
+        }
         Console.WriteLine();
     }
 
