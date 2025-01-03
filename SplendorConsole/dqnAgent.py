@@ -51,11 +51,11 @@ class DQNAgent:
         """Choose an action using epsilon-greedy policy."""
         
         if np.random.rand() < self.epsilon:
-            return np.random.randint(0, self.action_dim)
+            return np.random.randint(1, self.action_dim+1)
         else:
             state_tensor = torch.FloatTensor(state).unsqueeze(0)
             q_values = self.eval_net(state_tensor)
-            return torch.argmax(q_values).item()
+            return torch.argmax(q_values).item()+1
 
     def store_transition(self, state, action, reward, next_state, done):
 

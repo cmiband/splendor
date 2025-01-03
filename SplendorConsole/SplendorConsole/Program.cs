@@ -18,7 +18,7 @@ public class Program
         await client.ConnectToWebsocket();
         Game? game;
 
-        int N = 1000;
+        int N = 102;
 
         int errorCounter = 1;
         int errorCounterLoop = 0;
@@ -39,6 +39,7 @@ public class Program
         float avgAward = 0f;
         float maxLoss = 0f;
         float minLoss = -1f;
+        int modelWinningCounter = 0;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
 
@@ -49,7 +50,7 @@ public class Program
             Console.WriteLine();
             try
             {
-                (float lastFeedback, int turnsNumber, int winner, int[]? state) = ExecuteWithTimeout(() => game.GameStart(), 10000);
+                (float lastFeedback, int turnsNumber, int winner, int[]? state) =game.GameStart();
                 if (winner == -200)
                 {
                     errorCounterLoop++;
@@ -88,7 +89,10 @@ public class Program
                     {
                         minTurn = turnsNumber;
                     }
-
+                    if(winner==0)
+                    {
+                        modelWinningCounter++;
+                    }
                     awards = AwardsAfterGame(winner, state, turnsNumber);
                     await InformServerAboutFinishedGame(awards, winner, lastFeedback);
 
@@ -180,6 +184,7 @@ public class Program
         Console.WriteLine($"Tury: min = {minTurn}, max = {maxTurn} avg = {turnSum / (N - errorCounter + 1)}");
         Console.WriteLine($"Nagrody: min = {minAward}, max = {maxAward}");
         Console.WriteLine($"Kary: min = {minLoss}, max = {maxLoss}");
+        Console.WriteLine($"Model wygrał {modelWinningCounter} gier na {N}, co daje {(modelWinningCounter*100f)/N}%");
         Console.WriteLine();
     }
 
@@ -189,7 +194,7 @@ public class Program
 
         if (moves < 20)
         {
-            reward += 75;
+            reward += 79;
         }
         else if (moves < 25)
         {

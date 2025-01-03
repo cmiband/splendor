@@ -22,6 +22,7 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
                 # REQUEST Z WEWNĄTRZ
                 current_player = data.get("CurrentPlayer")
                 feedback = data.get("Feedback")
+                previou_smove = data.get("PreviousMove")
                 game_state = data.get("GameState")
 
                 
