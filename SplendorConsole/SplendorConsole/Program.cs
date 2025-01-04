@@ -258,11 +258,7 @@ public class Program
     }
     public static float AwardLossLoser(int advantage, int tokensCount, int moves)
     {
-        float reward=-0.9f;
-        if (tokensCount >= 5)
-        {
-            reward -= 0.10f;
-        }
+        float reward=-1f;
         return reward+0.025f;
     }
     public static float AwardLossWinner(int[] arr, int moveNumber)
