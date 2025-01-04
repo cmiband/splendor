@@ -1661,6 +1661,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1019770506}
     m_Modifications:
+    - target: {fileID: -4245648037186587477, guid: 7ad7118bf7e8a72428642aa83a37dcfe, type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -1269057629146102760, guid: 7ad7118bf7e8a72428642aa83a37dcfe, type: 3}
       propertyPath: bank
       value: 
@@ -2893,6 +2897,7 @@ MonoBehaviour:
   visibleNoblesListControllers: []
   visibleNoblesCoppied: []
   gameController: {fileID: 2008468893}
+  createdAvailableNoblesGameObjects: []
 --- !u!114 &526158505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3897,7 +3902,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 4500970022d7d074b8137f126a81e61f, type: 3}
     m_FontSize: 15
     m_FontStyle: 0
     m_BestFit: 0
