@@ -531,10 +531,11 @@ public class PlayerController : MonoBehaviour
 
         return result;
     }
-    public NobleController GetNoble(GameController game, PlayerController player)
+    public GameObject GetNoble(GameController game, PlayerController player)
     {
-        foreach (var noble in game.boardController.visibleNoblesCoppied)
+        foreach (var nobleGameObject in game.boardController.createdAvailableNoblesGameObjects)
         {
+            NobleController noble = nobleGameObject.GetComponent<NobleController>();
             int canGetThisNoble = 0;
 
             if (player.BonusResources.gems.Count == 0)
@@ -552,7 +553,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
             if (canGetThisNoble == NumberOfRequiredBonuses(noble))
-                return noble;
+                return nobleGameObject;
         }
         return null;
     }
