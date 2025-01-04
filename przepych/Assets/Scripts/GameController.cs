@@ -303,11 +303,6 @@ public class GameController : MonoBehaviour
             return;
         }
 
-        if (this.currentPlayerId == 3)
-            Debug.Log("new player id   " + 0);
-        else
-            Debug.Log("new player id   " + (this.currentPlayerId + 1));
-
         PlayerController crntPlayerController = currentPlayer.GetComponent<PlayerController>();
 
         GettingNobles(crntPlayerController);
@@ -427,19 +422,16 @@ public class GameController : MonoBehaviour
 
         if (availableNoble is not null)
         {
+            NobleController availableNobleController = availableNoble.GetComponent<NobleController>();
             var nobleIndex = GetNobleIndex(availableNoble);
-            var nobleIndexInVisible = GetNobleIndexInVisible(availableNoble);
 
-            this.playerIdToNoble[this.currentPlayerId].Add(availableNoble);
-            Debug.Log($"Noble added to player with id: {currentPlayerId}");
+            this.playerIdToNoble[this.currentPlayerId].Add(availableNobleController);
 
-            this.boardController.visibleNoblesCoppied.RemoveAt(nobleIndex);
-            Debug.Log($"Noble removed from visibleNobleCopied. NobleIndex: {nobleIndex}");
+            this.boardController.createdAvailableNoblesGameObjects.RemoveAt(nobleIndex);
             crntPlayerController.points += 3;
             this.playerIdToPoints[this.currentPlayerId] += 3;
 
-            this.boardController.visibleNoblesListControllers[nobleIndexInVisible].assignedPlayer = crntPlayerController;
-            availableNoble.PlayerImage = crntPlayerController.avatar;
+            availableNobleController.SetPlayerImage(crntPlayerController.avatar);
         }
     }
 
@@ -609,12 +601,11 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private int GetNobleIndex(NobleController noble)
+    private int GetNobleIndex(GameObject nobleObject)
     {
-        var visibleNobles = boardController.visibleNoblesCoppied;
-        for (int i=0; i<visibleNobles.Count; i++)
+        for (int i=0; i<this.boardController.createdAvailableNoblesGameObjects.Count; i++)
         {
-            if (visibleNobles[i].Equals(noble))
+            if (this.boardController.createdAvailableNoblesGameObjects[i].Equals(nobleObject))
                 return i;
         }
         throw new Exception("Noble not found in visible nobles");

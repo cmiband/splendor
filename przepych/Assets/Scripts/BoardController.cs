@@ -10,13 +10,7 @@ public class BoardController : MonoBehaviour
     public const int AMOUNT_OF_VISIBLE_NOBLES = 5;
     public const float GAP_SIZE = 10;
     public const float NOBLE_OFFSET = 80;
-    /*private Noble[] nobles;
-    private static Noble[] visibleNobles;
-    public static Noble[] VisibleNobles
-    {
-        get => visibleNobles;
-        set => visibleNobles = value;
-    }*/
+
     public GameObject cardPrefab;
     public GameObject gemPrefab;
     public GameObject noblePrefab;
@@ -50,6 +44,8 @@ public class BoardController : MonoBehaviour
     public List<NobleController> visibleNoblesCoppied = new List<NobleController>();
    
     public GameController gameController;
+
+    public List<GameObject> createdAvailableNoblesGameObjects = new List<GameObject>();
 
     private void Start()
     {
@@ -141,6 +137,8 @@ public class BoardController : MonoBehaviour
 
         RectTransform nobleRectTransform = nobleObject.GetComponent<RectTransform>();
         nobleRectTransform.localPosition = new Vector3(xOffset, 0, containerRectTransform.localPosition.z);
+        
+        this.createdAvailableNoblesGameObjects.Add(nobleObject);
     }
 
     private void ShuffleDecks()
