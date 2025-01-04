@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using Unity.VisualScripting;
+using UnityEngine.UIElements;
 
 public class BoughtCardsController : MonoBehaviour
 {
@@ -46,6 +47,12 @@ public class BoughtCardsController : MonoBehaviour
     {
         this.InitComponents();
 
+        if (this.gameController.selectedCard != null)
+        {
+            this.gameController.selectedCard.SetSelected(false);
+            this.gameController.selectedCard = null;
+        }
+
         this.gameObject.SetActive(true);
 
         this.CreateCardObjects();
@@ -54,8 +61,12 @@ public class BoughtCardsController : MonoBehaviour
     public void CloseModal()
     {
         this.gameObject.SetActive(false);
-        this.gameController.ChangeButtonsVisibility(true);
-
+        this.gameController.openBoughtCards.SetActive(true);
+        this.gameController.pass.SetActive(true);
+        this.gameController.buyCard.SetActive(false);
+        this.gameController.reserveCard.SetActive(false);
+        this.gameController.gameInfo.SetActive(true);
+        this.gameController.reservedCards.SetActive(true);
         this.RemoveCardObjects();
     }
 
