@@ -26,6 +26,7 @@ public class BankController : MonoBehaviour
 
     void Start()
     {
+        this.resourcesController = this.gameObject.GetComponent<ResourcesController>();
         playerController = currentPlayer.GetComponent<PlayerController>();
         isPlayerTakingThreeGems = false;
         foreach (var item in resourcesController.gems.ToList())
@@ -94,6 +95,7 @@ public class BankController : MonoBehaviour
 
         this.amountOfGemsInfo = this.resourcesController.ToString();
     }
+
     public void AddGems(Dictionary<GemColor, int> resourcesUsed)
     {
         foreach (var resource in resourcesUsed)

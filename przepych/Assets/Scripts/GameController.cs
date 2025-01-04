@@ -11,14 +11,14 @@ public class GameController : MonoBehaviour
     public int WIN_THRESHOLD = 15;
 
     public bool blockAction = false;
-    public TextMeshProUGUI stageInfo;
+    public Text stageInfo;
     private int stageNumber = 1;
 
-    public TextMeshProUGUI timerText;
+    public Text timerText;
     private float elapsedTime = 0f; 
     private bool isTimerRunning = false;
 
-    public TextMeshProUGUI countdownText;
+    public Text countdownText;
     public float countdownTime = 600f;
     private float remainingTime;
 
@@ -74,7 +74,7 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        stageInfo.SetText(stageNumber.ToString());
+        stageInfo.text = stageNumber.ToString();
         isTimerRunning = true;
         remainingTime = countdownTime;
 
@@ -308,13 +308,12 @@ public class GameController : MonoBehaviour
         GettingNobles(crntPlayerController);
 
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
-        Debug.Log($"Current player id: {this.currentPlayerId}");
 
         ResetCountdown();
         if (this.currentPlayerId == 0)
         {
             stageNumber++;
-            stageInfo.SetText(stageNumber.ToString());
+            stageInfo.text = stageNumber.ToString();
 
             if(this.CheckWinRequirements())
             {
