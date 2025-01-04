@@ -20,7 +20,7 @@ public class Program
         await client.ConnectToWebsocket();
         Game? game;
 
-        int N = 200;
+        int N = 30001;
 
         int errorCounter = 1;
         int errorCounterLoop = 0;
@@ -28,6 +28,7 @@ public class Program
         int errorCounterNull = 0;
         int errorCounterBound = 0;
         int errorCounterOther = 0;
+        int errorGameBreak = 0;
         int tieCounter = 0;
         int maxErrorGap = 0;
         int minErrorGap = N;
@@ -44,7 +45,7 @@ public class Program
         int modelWinningCounter = 0;
         int modelWinningCounterAfterAll = 0;
         //tutaj zmieniasz gapa zapisu, jak coś
-        int intSaveGap = 50;
+        int intSaveGap = 100;
         float floatSaveGap = intSaveGap;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
@@ -91,7 +92,7 @@ public class Program
                 else
                 {
                     errorGap++;
-                    Console.WriteLine($"[C#] Grę nr {i} wygrywa gracz nr {winner} w {turnsNumber} tur, zap - {errorCounterLoop}, col - {errorCounterCollect}, idx - {errorCounterBound}, null - {errorCounterNull}, ??? - {errorCounterOther}");
+                    Console.WriteLine($"[C#] Grę nr {i} wygrywa gracz nr {winner} w {turnsNumber} tur, zap - {errorCounterLoop}, col - {errorCounterCollect}, idx - {errorCounterBound}, null - {errorCounterNull}, Game Break - {errorGameBreak}, ??? - {errorCounterOther}");
                     turnSum += turnsNumber;
                     if (turnsNumber > maxTurn)
                     {
@@ -172,6 +173,11 @@ public class Program
                 {
                     errorCounterNull++;
                     Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd null");
+                }
+                else if(e.Message == "Game break ;[")
+                {
+                    errorGameBreak++;
+                    Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, GameBreak");
                 }
                 else
                 {

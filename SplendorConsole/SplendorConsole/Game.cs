@@ -43,6 +43,7 @@ namespace SplendorConsole
         private int currentTurn = 0;
         private float feedbackFromPreviousRequest = 0;
         private int previousMove = 0;
+        private int gameBrakeValidator = 0;
         private static AvailableCards availableCards = new AvailableCards();
         private static AvailableNobles availableNobles = new AvailableNobles();
 
@@ -277,10 +278,22 @@ namespace SplendorConsole
                 int[] moves = Shuffle(move);
                 var validator = new ResponseValidator();
                 int numberOfInvalidMoves = validator.CheckMoves(moves, player, this, bank, board);
-                /*if (true)
+                if (moves[numberOfInvalidMoves] == 0)
+                {
+                    gameBrakeValidator++;
+                }
+                else
+                {
+                    gameBrakeValidator = 0;
+                }
+                if (gameBrakeValidator >= 8)
+                {
+                    throw new Exception("Game break ;[");
+                }
+                if (true)
                 {
                     Console.Out.WriteLine($"[C#] gracz {currentTurn}, feedback {feedbackFromPreviousRequest} dla poprzedniego, {moves[numberOfInvalidMoves]}");
-                }*/
+                }
                 GettingNobles();
             }
             
@@ -523,18 +536,18 @@ namespace SplendorConsole
         async public Task RequestMoveFromServerAndExecuteIt(float feedbackForPreviousMove, Player currentPlayer)
         {
             //w tym fragmencie kodu zakomentować if(true) żeby nie widzieć logów
-            /*if (true)
+            if(true)
             {
                 await Console.Out.WriteLineAsync($"[C#] Wysłano na serwer zapytanie o ruch gracza {currentTurn} oraz feedback {feedbackFromPreviousRequest} dla poprzedniego gracza.");
-            }*/
+            }
             int[] moves = await RequestMovesListFromServer(feedbackForPreviousMove);
 
             var validator = new ResponseValidator();
             int numberOfInvalidMoves = validator.CheckMoves(moves, currentPlayer, this, bank, board);
-            /*if (true)
+            if (true)
             {
                 await Console.Out.WriteLineAsync($"[C#] gracz {currentTurn}, feedback {feedbackFromPreviousRequest} dla poprzedniego, {moves[numberOfInvalidMoves]}");
-            }*/
+            }
             if (numberOfInvalidMoves == 0)
             {
                 feedbackFromPreviousRequest = (float)0.005;
@@ -552,6 +565,18 @@ namespace SplendorConsole
                 feedbackFromPreviousRequest = (float)-0.25;
             }
             previousMove = moves[numberOfInvalidMoves];
+            if(previousMove==0)
+            {
+                gameBrakeValidator++;
+            }
+            else
+            {
+                gameBrakeValidator = 0;
+            }
+            if (gameBrakeValidator>=8)
+            {
+                throw new Exception("Game break ;[");
+            }
         }
 
         public int[] PlayZeroToArray()
