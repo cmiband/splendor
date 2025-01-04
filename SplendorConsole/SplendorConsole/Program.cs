@@ -226,53 +226,40 @@ public class Program
 
     public static float AwardWinner(int advantage, int tokensCount, int moves)
     {
-        int reward = 0;
-
-        if (moves < 20)
+        float reward;
+        if(moves<=23)
         {
-            reward += 80;
+            reward = 1f;
+            if (tokensCount >= 5)
+            {
+                reward -= 0.10f;
+            }
         }
-        else if (moves < 25)
+        else if(moves>=43)
         {
-            reward += 65;
-        }
-        else if (moves < 30)
-        {
-            reward += 60;
-        }
-        else if (moves < 35)
-        {
-            reward += 55;
-        }
-        else if (moves < 40)
-        {
-            reward += 50;
+            reward = 0;
+            if (tokensCount < 5)
+            {
+                reward += 0.10f;
+            }
         }
         else
         {
-            reward += 30;
-        }
-        if (advantage >= 5)
-        {
-            reward += 20;
-        }
-
-        if (tokensCount >= 5)
-        {
-            reward -= 10;
+            double x = (moves / 30d) - (2d / 3d);
+            reward = (float)Math.Log10(x);
+            reward = -reward;
+            if (tokensCount >= 5)
+            {
+                reward -= 0.10f;
+            }
         }
 
-        return (reward / (float)100) - 0.005f;
+        return reward-0.005f;
     }
-
     public static float AwardLossLoser(int advantage, int tokensCount, int moves)
     {
-        float reward = -0.95f;
-        if (tokensCount >= 5)
-        {
-            reward -= 0.05f;
-        }
-        return reward + 0.025f;
+        float reward=-1f;
+        return reward+0.025f;
     }
     public static float AwardLossWinner(int[] arr, int moveNumber)
     {
