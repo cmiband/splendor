@@ -1,11 +1,8 @@
-using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.Office.CustomUI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using Unity.VisualScripting;
-using UnityEngine.UIElements;
 
 public class BoughtCardsController : MonoBehaviour
 {
@@ -19,6 +16,11 @@ public class BoughtCardsController : MonoBehaviour
     public GameObject playerFourCards;
     public GameObject game;
     public GameObject cardPrefab;
+
+    public Image playerOneAvatar;
+    public Image playerTwoAvatar;
+    public Image playerThreeAvatar;
+    public Image playerFourAvatar;
 
     public GameController gameController;
     public GameObject closeButton;
@@ -43,7 +45,7 @@ public class BoughtCardsController : MonoBehaviour
         button.onClick.AddListener(HandleCloseButtonOnclick);
     }
 
-    public void OpenModal()
+    public void OpenModal(Dictionary<int, string> playerIdToAvatar)
     {
         this.InitComponents();
 
@@ -56,6 +58,22 @@ public class BoughtCardsController : MonoBehaviour
         this.gameObject.SetActive(true);
 
         this.CreateCardObjects();
+        this.SetPlayersAvatars(playerIdToAvatar);
+    }
+
+    private void SetPlayersAvatars(Dictionary<int, string> playerIdToAvatar)
+    {
+        this.SetPlayerAvatar(playerIdToAvatar[0], playerOneAvatar);
+        this.SetPlayerAvatar(playerIdToAvatar[1], playerTwoAvatar);
+        this.SetPlayerAvatar(playerIdToAvatar[2], playerThreeAvatar);
+        this.SetPlayerAvatar(playerIdToAvatar[3], playerFourAvatar);
+    }
+
+    private void SetPlayerAvatar(string spritePath, Image playerImage)
+    {
+        Sprite playerSprite = UnityEngine.Resources.Load<Sprite>(spritePath);
+
+        playerImage.sprite = playerSprite;
     }
 
     public void CloseModal()

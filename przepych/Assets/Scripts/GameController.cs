@@ -260,7 +260,7 @@ public class GameController : MonoBehaviour
         }
 
         BoughtCardsController boughtCardsController = this.boughtCards.GetComponent<BoughtCardsController>();
-        boughtCardsController.OpenModal();
+        boughtCardsController.OpenModal(this.playerIdToAvatar);
 
         this.ChangeButtonsVisibility(false);
     }
