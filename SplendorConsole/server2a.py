@@ -101,7 +101,6 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
                 last_previous_action = data.get("LastMove")
                 last_state = data.get("LastGameState")
                 done = True
-                gra1000 += 1 
 
                 if previous_state is not None:
                     agent.store_transition(
