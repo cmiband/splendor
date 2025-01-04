@@ -155,7 +155,8 @@ public class Program
                 Console.WriteLine($"[C#] W grze nr {i} przekroczono limit czasu.");
                 errorCounterOther++;
                 awards = new float[] { 0, 0, 0, 0 };
-                await InformServerAboutFinishedGame(awards, -1, 0, -1, game.Standartize(game.PlayZeroToArray()));
+                await InformServerAboutFinishedGame(awards, -1, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                game = null;
             }
             catch (Exception e)
             {
@@ -195,7 +196,7 @@ public class Program
                 errorCounter++;
                 errorGap = 0;
                 awards = new float[] { 0, 0, 0, 0 };
-                await InformServerAboutFinishedGame(awards, -1, 0, -1, game.Standartize(game.PlayZeroToArray()));
+                await InformServerAboutFinishedGame(awards, -1, 0, 0, game.Standartize(game.PlayZeroToArray()));
                 game = null;
 
                 
@@ -225,42 +226,14 @@ public class Program
 
     public static float AwardWinner(int advantage, int tokensCount, int moves)
     {
-        int reward = 0;
-
-        if (moves < 20)
-        {
-            reward += 79;
-        }
-        else if (moves < 25)
-        {
-            reward += 65;
-        }
-        else if (moves < 30)
-        {
-            reward += 60;
-        }
-        else if (moves < 35)
-        {
-            reward += 55;
-        }
-        else if (moves < 40)
-        {
-            reward += 50;
-        }
-        else
-        {
-            reward += 30;
-        }
-        if (advantage >= 5)
-        {
-            reward += 20;
-        }
+        float reward = 20f/moves;
+        
         if (tokensCount >= 5)
         {
-            reward -= 10;
+            reward -= 0.10f;
         }
 
-        return reward / (float)100;
+        return reward;
     }
 
     public static float AwardLossWinner(int[] arr, int moveNumber)
@@ -273,16 +246,12 @@ public class Program
 
     public static float AwardLossLoser(int advantage, int tokensCount, int moves)
     {
-        int reward = -50;
-        if (advantage >= 5)
-        {
-            reward -= 20;
-        }
+        float reward = -0.92f;
         if (tokensCount >= 5)
         {
-            reward -= 5;
+            reward -= 0.05f;
         }
-        return reward / (float)100;
+        return reward;
     }
 
     public static float AwardLossP1(int[] arr, int moveNumber)
