@@ -258,31 +258,10 @@ public class Program
     }
     public static float AwardLossLoser(int advantage, int tokensCount, int moves)
     {
-        float reward;
-        if (moves <= 23)
+        float reward=-0.9f;
+        if (tokensCount >= 5)
         {
-            reward = -1f;
-            if (tokensCount < 5)
-            {
-                reward += 0.10f;
-            }
-        }
-        else if (moves >= 43)
-        {
-            reward = 0;
-            if (tokensCount >= 5)
-            {
-                reward -= 0.10f;
-            }
-        }
-        else
-        {
-            double x = (moves / 30d) - (2d / 3d);
-            reward = (float)Math.Log10(x);
-            if (tokensCount >= 5)
-            {
-                reward -= 0.10f;
-            }
+            reward -= 0.10f;
         }
         return reward+0.025f;
     }
