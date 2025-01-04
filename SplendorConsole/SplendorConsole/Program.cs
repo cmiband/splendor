@@ -20,7 +20,7 @@ public class Program
         await client.ConnectToWebsocket();
         Game? game;
 
-        int N = 30001;
+        int N = 100000;
 
         int errorCounter = 1;
         int errorCounterLoop = 0;
@@ -226,32 +226,72 @@ public class Program
 
     public static float AwardWinner(int advantage, int tokensCount, int moves)
     {
-        float reward = 20f/moves;
-        
-        if (tokensCount >= 5)
+        float reward;
+        if(moves<=23)
         {
-            reward -= 0.10f;
+            reward = 1f;
+            if (tokensCount >= 5)
+            {
+                reward -= 0.10f;
+            }
+        }
+        else if(moves>=43)
+        {
+            reward = 0;
+            if (tokensCount < 5)
+            {
+                reward += 0.10f;
+            }
+        }
+        else
+        {
+            double x = (moves / 30d) - (2d / 3d);
+            reward = (float)Math.Log10(x);
+            reward = -reward;
+            if (tokensCount >= 5)
+            {
+                reward -= 0.10f;
+            }
         }
 
-        return reward;
+        return reward-0.005f;
     }
-
+    public static float AwardLossLoser(int advantage, int tokensCount, int moves)
+    {
+        float reward;
+        if (moves <= 23)
+        {
+            reward = -1f;
+            if (tokensCount < 5)
+            {
+                reward += 0.10f;
+            }
+        }
+        else if (moves >= 43)
+        {
+            reward = 0;
+            if (tokensCount >= 5)
+            {
+                reward -= 0.10f;
+            }
+        }
+        else
+        {
+            double x = (moves / 30d) - (2d / 3d);
+            reward = (float)Math.Log10(x);
+            if (tokensCount >= 5)
+            {
+                reward -= 0.10f;
+            }
+        }
+        return reward+0.025f;
+    }
     public static float AwardLossWinner(int[] arr, int moveNumber)
     {
         int tokensSum = arr[174] + arr[175] + arr[176] + arr[177] + arr[178] + arr[179];
         int advantage = ((arr[168] - arr[213]) + (arr[168] - arr[258]) + (arr[168] - arr[303])) / 3;
 
         return AwardWinner(advantage, tokensSum, moveNumber);
-    }
-
-    public static float AwardLossLoser(int advantage, int tokensCount, int moves)
-    {
-        float reward = -0.92f;
-        if (tokensCount >= 5)
-        {
-            reward -= 0.05f;
-        }
-        return reward;
     }
 
     public static float AwardLossP1(int[] arr, int moveNumber)

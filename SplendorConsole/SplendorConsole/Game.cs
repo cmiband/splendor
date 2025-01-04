@@ -162,7 +162,7 @@ namespace SplendorConsole
             while (true)
             {
                 securityCounter++;
-                if(securityCounter>=10000)
+                if(securityCounter>=1000)
                 {
                     return (feedbackFromPreviousRequest, securityCounter/4, -200, ToArray(), previousMove);
                 }
@@ -554,15 +554,15 @@ namespace SplendorConsole
             }
             else if (numberOfInvalidMoves <= 10)
             {
-                feedbackFromPreviousRequest = (float)-0.05;
+                feedbackFromPreviousRequest = (float)-0.005;
             }
             else if (numberOfInvalidMoves <= 20)
             {
-                feedbackFromPreviousRequest = (float)-0.15;
+                feedbackFromPreviousRequest = (float)-0.015;
             }
             else
             {
-                feedbackFromPreviousRequest = (float)-0.25;
+                feedbackFromPreviousRequest = (float)-0.025;
             }
             previousMove = moves[numberOfInvalidMoves];
             if(previousMove==0)
