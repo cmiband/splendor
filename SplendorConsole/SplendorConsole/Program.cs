@@ -20,7 +20,7 @@ public class Program
         await client.ConnectToWebsocket();
         Game? game;
 
-        int N = 100000;
+        int N = 6000;
 
         int errorCounter = 1;
         int errorCounterLoop = 0;
@@ -47,6 +47,7 @@ public class Program
         //tutaj zmieniasz gapa zapisu, jak coś
         int intSaveGap = 100;
         float floatSaveGap = intSaveGap;
+        float biggestWinRate = 0f;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
         string filePath = "game_results.csv";
@@ -79,7 +80,29 @@ public class Program
                     Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd zapętlenia");
                     errorGap = 0;
                     awards = new float[] { 0, 0, 0, 0 };
-                    await InformServerAboutFinishedGame(awards, winner, lastFeedback, lastMove, game.Standartize(game.PlayZeroToArray()));
+                    if (i % intSaveGap == 0)
+                    {
+                        // Dodane zapisywanie do pliku CSV
+                        float winRate = modelWinningCounter / floatSaveGap;
+                        using (StreamWriter writer = new StreamWriter(filePath, append: true))
+                        {
+                            writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{winRate.ToString(CultureInfo.InvariantCulture)}");
+                        }
+                        modelWinningCounter = 0;
+                        if (biggestWinRate < winRate)
+                        {
+                            await InformServerAboutFinishedGame(awards, -2, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                            biggestWinRate = winRate;
+                        }
+                        else
+                        {
+                            await InformServerAboutFinishedGame(awards, -1, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                        }
+                    }
+                    else
+                    {
+                        await InformServerAboutFinishedGame(awards, -1, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                    }
                 }
                 else if (winner == -1)
                 {
@@ -87,7 +110,29 @@ public class Program
                     tieCounter++;
                     turnSum += turnsNumber;
                     awards = new float[] { 0, 0, 0, 0 };
-                    await InformServerAboutFinishedGame(awards, winner, lastFeedback, lastMove, game.Standartize(game.PlayZeroToArray()));
+                    if (i % intSaveGap == 0)
+                    {
+                        // Dodane zapisywanie do pliku CSV
+                        float winRate = modelWinningCounter / floatSaveGap;
+                        using (StreamWriter writer = new StreamWriter(filePath, append: true))
+                        {
+                            writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{winRate.ToString(CultureInfo.InvariantCulture)}");
+                        }
+                        modelWinningCounter = 0;
+                        if (biggestWinRate < winRate)
+                        {
+                            await InformServerAboutFinishedGame(awards, -2, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                            biggestWinRate = winRate;
+                        }
+                        else
+                        {
+                            await InformServerAboutFinishedGame(awards, -1, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                        }
+                    }
+                    else
+                    {
+                        await InformServerAboutFinishedGame(awards, -1, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                    }
                 }
                 else
                 {
@@ -116,9 +161,23 @@ public class Program
                             writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{winRate.ToString(CultureInfo.InvariantCulture)}");
                         }
                         modelWinningCounter = 0;
+                        if (biggestWinRate < winRate)
+                        {
+                            awards = AwardsAfterGame(winner, state, turnsNumber);
+                            await InformServerAboutFinishedGame(awards, winner+4, lastFeedback, lastMove, game.Standartize(game.PlayZeroToArray()));
+                            biggestWinRate = winRate;
+                        }
+                        else
+                        {
+                            awards = AwardsAfterGame(winner, state, turnsNumber);
+                            await InformServerAboutFinishedGame(awards, winner, lastFeedback, lastMove, game.Standartize(game.PlayZeroToArray()));
+                        }
                     }
-                    awards = AwardsAfterGame(winner, state, turnsNumber);
-                    await InformServerAboutFinishedGame(awards, winner, lastFeedback, lastMove, game.Standartize(game.PlayZeroToArray()));
+                    else
+                    {
+                        awards = AwardsAfterGame(winner, state, turnsNumber);
+                        await InformServerAboutFinishedGame(awards, winner, lastFeedback, lastMove, game.Standartize(game.PlayZeroToArray()));
+                    }
 
                     Console.WriteLine($"[C#] Nagrody dla poszczególnych graczy: {awards[0]}, {awards[1]}, {awards[2]}, {awards[3]}");
                     foreach (var item in awards)
@@ -155,7 +214,30 @@ public class Program
                 Console.WriteLine($"[C#] W grze nr {i} przekroczono limit czasu.");
                 errorCounterOther++;
                 awards = new float[] { 0, 0, 0, 0 };
-                await InformServerAboutFinishedGame(awards, -1, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                if (i % intSaveGap == 0)
+                {
+                    // Dodane zapisywanie do pliku CSV
+                    float winRate = modelWinningCounter / floatSaveGap;
+                    using (StreamWriter writer = new StreamWriter(filePath, append: true))
+                    {
+                        writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{winRate.ToString(CultureInfo.InvariantCulture)}");
+                    }
+                    modelWinningCounter = 0;
+                    if (biggestWinRate < winRate)
+                    {
+                        await InformServerAboutFinishedGame(awards, -2, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                        biggestWinRate = winRate;
+                    }
+                    else
+                    {
+                        await InformServerAboutFinishedGame(awards, -1, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                    }
+                }
+                else
+                {
+                    await InformServerAboutFinishedGame(awards, -1, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                }
+                
                 game = null;
             }
             catch (Exception e)
@@ -196,7 +278,29 @@ public class Program
                 errorCounter++;
                 errorGap = 0;
                 awards = new float[] { 0, 0, 0, 0 };
-                await InformServerAboutFinishedGame(awards, -1, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                if (i % intSaveGap == 0)
+                {
+                    // Dodane zapisywanie do pliku CSV
+                    float winRate = modelWinningCounter / floatSaveGap;
+                    using (StreamWriter writer = new StreamWriter(filePath, append: true))
+                    {
+                        writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{winRate.ToString(CultureInfo.InvariantCulture)}");
+                    }
+                    modelWinningCounter = 0;
+                    if (biggestWinRate < winRate)
+                    {
+                        await InformServerAboutFinishedGame(awards, -2, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                        biggestWinRate = winRate;
+                    }
+                    else
+                    {
+                        await InformServerAboutFinishedGame(awards, -1, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                    }
+                }
+                else
+                {
+                    await InformServerAboutFinishedGame(awards, -1, 0, 0, game.Standartize(game.PlayZeroToArray()));
+                }
                 game = null;
 
                 
@@ -226,40 +330,49 @@ public class Program
 
     public static float AwardWinner(int advantage, int tokensCount, int moves)
     {
-        float reward;
-        if(moves<=23)
+        int reward = 0;
+
+        if (moves < 20)
         {
-            reward = 1f;
-            if (tokensCount >= 5)
-            {
-                reward -= 0.10f;
-            }
+            reward += 80;
         }
-        else if(moves>=43)
+        else if (moves < 25)
         {
-            reward = 0;
-            if (tokensCount < 5)
-            {
-                reward += 0.10f;
-            }
+            reward += 65;
+        }
+        else if (moves < 30)
+        {
+            reward += 60;
+        }
+        else if (moves < 35)
+        {
+            reward += 55;
+        }
+        else if (moves < 40)
+        {
+            reward += 50;
         }
         else
         {
-            double x = (moves / 30d) - (2d / 3d);
-            reward = (float)Math.Log10(x);
-            reward = -reward;
-            if (tokensCount >= 5)
-            {
-                reward -= 0.10f;
-            }
+            reward += 30;
+        }
+        if (advantage >= 5)
+        {
+            reward += 20;
         }
 
-        return reward-0.005f;
+        if (tokensCount >= 5)
+        {
+            reward -= 10;
+        }
+
+        return (reward / (float)100) - 0.005f;
     }
+
     public static float AwardLossLoser(int advantage, int tokensCount, int moves)
     {
-        float reward=-1f;
-        return reward+0.025f;
+        float reward = -1f;
+        return reward + 0.025f;
     }
     public static float AwardLossWinner(int[] arr, int moveNumber)
     {

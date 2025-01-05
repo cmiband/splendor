@@ -64,6 +64,7 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
                 last_state = data.get("LastGameState")
                 done = True
                 gra1000 += 1 
+                winner = data.get("Winner")
 
                 if previous_state is not None:
                     agent.store_transition(
@@ -77,7 +78,8 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
                 if gra1000 % 100 == 0:
                     agent.save_checkpoint("./checkpoints/agent_0_checkpoint.pth")
 
-
+                if winner>=4:
+                    agent.save_checkpoint("./checkpoints/best_performance_checkpoint.pth")
                 # REQUEST Z ZAKOŃCZONEJ GRY Z WYGRANYM
                 
                 rewards = data.get("Rewards")
@@ -100,6 +102,7 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
                 last_previous_reward = data.get("LastFeedback")
                 last_previous_action = data.get("LastMove")
                 last_state = data.get("LastGameState")
+                winner = data.get("Winner")
                 done = True
 
                 if previous_state is not None:
@@ -110,7 +113,8 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
                         last_state,
                         done
                     )
-                
+                if winner<=-2:
+                    agent.save_checkpoint("./checkpoints/best_performance_checkpoint.pth")
                 # REQUEST Z ZAKOŃCZONEJ GRY Z REMISEM LUB BŁĘDEM
                 rewards = data.get("Rewards")
                 last_feedback = data.get("LastFeedback")
