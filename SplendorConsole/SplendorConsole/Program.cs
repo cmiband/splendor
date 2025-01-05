@@ -20,7 +20,7 @@ public class Program
         await client.ConnectToWebsocket();
         Game? game;
 
-        int N = 6000;
+        int N = 2000;
 
         int errorCounter = 1;
         int errorCounterLoop = 0;
@@ -334,33 +334,28 @@ public class Program
 
         if (moves < 20)
         {
-            reward += 80;
+            reward += 100;
         }
         else if (moves < 25)
         {
-            reward += 65;
+            reward += 85;
         }
         else if (moves < 30)
         {
-            reward += 60;
+            reward += 80;
         }
         else if (moves < 35)
         {
-            reward += 55;
+            reward += 75;
         }
         else if (moves < 40)
         {
-            reward += 50;
+            reward += 70;
         }
         else
         {
-            reward += 30;
+            reward += 50;
         }
-        if (advantage >= 5)
-        {
-            reward += 20;
-        }
-
         if (tokensCount >= 5)
         {
             reward -= 10;
