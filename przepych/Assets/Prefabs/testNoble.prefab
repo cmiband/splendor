@@ -89,6 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 556b14da20d0151458e4be9d1fde54c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameController: {fileID: 0}
   detailedPrice: {fileID: 0}
   points: 0
   illustration: 

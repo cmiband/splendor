@@ -531,8 +531,10 @@ public class PlayerController : MonoBehaviour
 
         return result;
     }
-    public GameObject GetNoble(GameController game, PlayerController player)
+
+    public List<GameObject> GetNoble(GameController game, PlayerController player)
     {
+        List<GameObject> result = new List<GameObject>();
         foreach (var nobleGameObject in game.boardController.createdAvailableNoblesGameObjects)
         {
             NobleController noble = nobleGameObject.GetComponent<NobleController>();
@@ -553,9 +555,10 @@ public class PlayerController : MonoBehaviour
                 }
             }
             if (canGetThisNoble == NumberOfRequiredBonuses(noble))
-                return nobleGameObject;
+                result.Add(nobleGameObject);
         }
-        return null;
+
+        return result;
     }
     public void SetPlayerNoble(List<NobleController> nobles)
     {
