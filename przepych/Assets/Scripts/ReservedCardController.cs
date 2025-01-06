@@ -13,6 +13,10 @@ public class ReservedCardController : MonoBehaviour
     public GameObject game;
     public GameObject cardPrefab;
     public GameObject cardPrefabOthers;
+    public GameObject reserved1;
+    public GameObject reserved2;
+    public GameObject reserved3;
+
     RectTransform rectTransform;
 
     public List<GameObject> reservedCards = new List<GameObject>();
@@ -61,26 +65,51 @@ public class ReservedCardController : MonoBehaviour
         List<CardController> cardControllers = this.gameController.playerIdToReserveHand[playerIndex];
         CreateCardsOthers(cardControllers);
     }
-    private void CreateCardsOthers(List<CardController> cards)
+    private IEnumerator CreateCardsOthers(List<CardController> cards)
     {
-        float startXOffset = this.gameObject.transform.position.x - rectTransform.rect.width / 2;
 
-        float currentXOffset = 0;
         foreach (CardController card in cards)
         {
-            Vector3 cardPosition = new Vector3(
-                startXOffset + currentXOffset,
-                cardContainer.transform.position.y,
-                cardContainer.transform.position.z);
+            yield return null;
+            Vector3 cardPosition = new Vector3();
+            GameObject cardObject = new GameObject();
+            Debug.Log(reserved1.transform.childCount);
+            Debug.Log(reserved2.transform.childCount);
+            Debug.Log(reserved3.transform.childCount);
+            if (reserved1.transform.childCount == 0)
+            {
+                cardPosition = new Vector3(
+                this.reserved1.transform.position.x,
+                this.reserved1.transform.position.y,
+                this.reserved1.transform.position.z);
+                cardObject = Instantiate(this.cardPrefabOthers, cardPosition, Quaternion.identity, this.reserved1.transform);
 
-            GameObject cardObject = Instantiate(this.cardPrefabOthers, cardPosition, Quaternion.identity, cardContainer.transform);
+            }
+            else if(reserved1.transform.childCount > 0 && reserved2.transform.childCount == 0)
+            {
+                cardPosition = new Vector3(
+                this.reserved2.transform.position.x,
+                this.reserved2.transform.position.y,
+                this.reserved2.transform.position.z);
+                cardObject = Instantiate(this.cardPrefabOthers, cardPosition, Quaternion.identity, this.reserved2.transform);
+
+            }
+            else
+            {
+                cardPosition = new Vector3(
+                this.reserved3.transform.position.x,
+                this.reserved3.transform.position.y,
+                this.reserved3.transform.position.z);
+                cardObject = Instantiate(this.cardPrefabOthers, cardPosition, Quaternion.identity, this.reserved3.transform);
+
+            }
+
             CardController cardController = cardObject.GetComponent<CardController>();
             cardController.isReserved = true;
             cardController.InitCardData(card);
             cardController.gameController = this.gameController;
 
             this.reservedCards.Add(cardObject);
-            currentXOffset += CARD_X_OFFSET_OTHERS;
             AddCardClickListenerToOthers(cardObject, cardController);
         }
     }
@@ -116,7 +145,7 @@ public class ReservedCardController : MonoBehaviour
     public void UpdateReservedCardsOthers(int playerIndex)
     {
         RemoveCardObjects();
-        initCardsOthers(playerIndex);
+        StartCoroutine(CreateCardsOthers(this.gameController.playerIdToReserveHand[playerIndex]));
     }
 
     private void RemoveCardObjects()
