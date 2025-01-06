@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class NobleController :  MonoBehaviour 
+public class NobleController :  MonoBehaviour, IPointerClickHandler
 {
+    public GameController gameController;
     public ResourcesController detailedPrice;
     public int points;
     public string illustration;
@@ -68,6 +70,14 @@ public class NobleController :  MonoBehaviour
         this.detailedPrice = detailedPrice;
         this.illustration = illustration;
         this.detailedPriceInfo = this.detailedPrice.ToString();
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Left && this.gameController.chooseNobleMode)
+        {
+            this.gameController.HandleNobleChoice(this.gameObject);
+        }
     }
 }
 

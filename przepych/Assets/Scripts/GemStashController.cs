@@ -59,6 +59,11 @@ public class GemStashController : MonoBehaviour
 
     public void OnClick()
     {
+        if(this.bankController.mainGameController.blockAction)
+        {
+            return;
+        }
+
         if(bankController.currentMode == MODE.GIVE)
         {
             this.HandleGiveGem();

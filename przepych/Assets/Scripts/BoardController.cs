@@ -134,6 +134,7 @@ public class BoardController : MonoBehaviour
         GameObject nobleObject = Instantiate(this.noblePrefab, new Vector3(0,0,0), Quaternion.identity, targetedVisibleNoblesContainer.transform);
         NobleController nobleController = nobleObject.GetComponent<NobleController>();
         nobleController.InitNobleData(targetedNoble);
+        nobleController.gameController = this.gameController;
 
         RectTransform nobleRectTransform = nobleObject.GetComponent<RectTransform>();
         nobleRectTransform.localPosition = new Vector3(xOffset, 0, containerRectTransform.localPosition.z);

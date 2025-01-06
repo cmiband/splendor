@@ -10,6 +10,8 @@ public class GameController : MonoBehaviour
 {
     public int WIN_THRESHOLD = 15;
 
+    public bool chooseNobleMode = false;
+    public bool skipGettingNobles = false;
     public bool blockAction = false;
     public Text stageInfo;
     private int stageNumber = 1;
@@ -71,6 +73,7 @@ public class GameController : MonoBehaviour
     public CardStackController selectedStack;
 
     public GameObject gameEndModal;
+    public GameObject nobleChoiceInfoModal;
 
     private void Start()
     {
@@ -104,6 +107,14 @@ public class GameController : MonoBehaviour
 
         this.players = new List<GameObject> { currentPlayer, nextPlayerOne, nextPlayerTwo, nextPlayerThree };
         this.CreateFourPlayersDataOnInit();
+        ResourcesController tr = new ResourcesController();
+        tr.FillDictionaryWithZeros();
+        tr.gems[GemColor.WHITE] = 5;
+        tr.gems[GemColor.GREEN] = 5;
+        tr.gems[GemColor.BLUE] = 5;
+        tr.gems[GemColor.BLACK] = 5;
+        tr.gems[GemColor.RED] = 5;
+        this.playerIdToBonusResources[0] = tr;
         this.FillPlayersWithData(); 
         this.currentPlayerId = 0;
         this.reserveCard.SetActive(false);
@@ -305,7 +316,18 @@ public class GameController : MonoBehaviour
 
         PlayerController crntPlayerController = currentPlayer.GetComponent<PlayerController>();
 
-        GettingNobles(crntPlayerController);
+        bool allowChange = true;
+
+        if(!this.skipGettingNobles)
+        {
+            allowChange = GettingNobles(crntPlayerController);
+        }
+        
+        if(!allowChange)
+        {
+            this.skipGettingNobles = true;
+            return;
+        }
 
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
 
@@ -352,6 +374,7 @@ public class GameController : MonoBehaviour
 
         buyCard.SetActive(false);
         reserveCard.SetActive(false);
+        this.skipGettingNobles = false;
 
     }
 
@@ -415,23 +438,83 @@ public class GameController : MonoBehaviour
         return keys;
     }
 
-    private void GettingNobles(PlayerController crntPlayerController)
+    private bool GettingNobles(PlayerController crntPlayerController)
     {
-        var availableNoble = crntPlayerController.GetNoble(this, crntPlayerController);
+        List<GameObject> availableNobles = crntPlayerController.GetNoble(this, crntPlayerController);
 
-        if (availableNoble is not null)
+        if(availableNobles.Count == 0)
         {
-            NobleController availableNobleController = availableNoble.GetComponent<NobleController>();
-            var nobleIndex = GetNobleIndex(availableNoble);
+            return true;
+        } 
 
-            this.playerIdToNoble[this.currentPlayerId].Add(availableNobleController);
 
-            this.boardController.createdAvailableNoblesGameObjects.RemoveAt(nobleIndex);
-            crntPlayerController.points += 3;
-            this.playerIdToPoints[this.currentPlayerId] += 3;
-
-            availableNobleController.SetPlayerImage(crntPlayerController.avatar);
+        if (availableNobles.Count == 1)
+        {
+            this.ChooseAndTakeOneNoble(availableNobles[0], crntPlayerController);
+            return true;
+        } 
+        else
+        {
+            this.HightlightNoblesAndDisplayInfo(availableNobles);
+            return false;
         }
+    }
+
+    private void ChooseAndTakeOneNoble(GameObject nobleGameObject, PlayerController crntPlayerController)
+    {
+        NobleController availableNobleController = nobleGameObject.GetComponent<NobleController>();
+        var nobleIndex = GetNobleIndex(nobleGameObject);
+
+        this.playerIdToNoble[this.currentPlayerId].Add(availableNobleController);
+
+        this.boardController.createdAvailableNoblesGameObjects.RemoveAt(nobleIndex);
+        crntPlayerController.points += 3;
+        this.playerIdToPoints[this.currentPlayerId] += 3;
+
+        availableNobleController.SetPlayerImage(crntPlayerController.avatar);
+    }
+
+    private void HightlightNoblesAndDisplayInfo(List<GameObject> nobles)
+    {
+        this.nobleChoiceInfoModal.SetActive(true);
+
+        for(int i = 0; i<nobles.Count; i++)
+        {
+            GameObject targetedNoble = nobles[i];
+            Image nobleImage = targetedNoble.GetComponent<Image>();
+
+            Color highlightColor = new Color(255, 218, 0, 74);
+            nobleImage.color = highlightColor;
+
+            this.chooseNobleMode = true;
+        }
+
+        this.blockAction = true;
+    }
+
+    private void UnhighlightNobles()
+    {
+        List<GameObject> allNobles = this.boardController.createdAvailableNoblesGameObjects;
+        Color defaultColor = new Color(255, 255, 255, 255);
+
+        for (int i = 0; i<allNobles.Count; i++)
+        {
+            GameObject nobleObject = allNobles[i];
+
+            nobleObject.GetComponent<Image>().color = defaultColor;
+        }
+    }
+
+    public void HandleNobleChoice(GameObject chosenNoble)
+    {
+        PlayerController currentPlayer = this.currentPlayer.GetComponent<PlayerController>();
+
+        this.UnhighlightNobles();
+        this.ChooseAndTakeOneNoble(chosenNoble, currentPlayer);
+
+        this.nobleChoiceInfoModal.SetActive(false);
+        this.blockAction = false;
+        this.ChangeTurn();
     }
 
     public void UpdateTargetedPlayerResources(int playerId, ResourcesController resources)
