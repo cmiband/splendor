@@ -20,7 +20,7 @@ public class Program
         await client.ConnectToWebsocket();
         Game? game;
 
-        int N = 2000;
+        int N = 100000;
 
         int errorCounter = 1;
         int errorCounterLoop = 0;
@@ -29,6 +29,7 @@ public class Program
         int errorCounterBound = 0;
         int errorCounterOther = 0;
         int errorGameBreak = 0;
+        int errorLossAboveZero = 0;
         int tieCounter = 0;
         int maxErrorGap = 0;
         int minErrorGap = N;
@@ -45,7 +46,7 @@ public class Program
         int modelWinningCounter = 0;
         int modelWinningCounterAfterAll = 0;
         //tutaj zmieniasz gapa zapisu, jak coś
-        int intSaveGap = 100;
+        int intSaveGap = 200;
         float floatSaveGap = intSaveGap;
         float biggestWinRate = 0f;
         Stopwatch stopwatch = Stopwatch.StartNew();
@@ -137,7 +138,7 @@ public class Program
                 else
                 {
                     errorGap++;
-                    Console.WriteLine($"[C#] Grę nr {i} wygrywa gracz nr {winner} w {turnsNumber} tur, zap - {errorCounterLoop}, col - {errorCounterCollect}, idx - {errorCounterBound}, null - {errorCounterNull}, Game Break - {errorGameBreak}, ??? - {errorCounterOther}");
+                    Console.WriteLine($"[C#] Grę nr {i} wygrywa gracz nr {winner} w {turnsNumber} tur, zap - {errorCounterLoop}, col - {errorCounterCollect}, idx - {errorCounterBound}, null - {errorCounterNull}, Game Break - {errorGameBreak}, Award Error - {errorLossAboveZero}, ??? - {errorCounterOther}");
                     turnSum += turnsNumber;
                     if (turnsNumber > maxTurn)
                     {
@@ -262,6 +263,11 @@ public class Program
                     errorGameBreak++;
                     Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, GameBreak");
                 }
+                else if(e.Message == "Kara większa niż 0")
+                {
+                    errorLossAboveZero++;
+                    Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd kary");
+                }
                 else
                 {
                     Console.WriteLine(e.Message);
@@ -330,44 +336,34 @@ public class Program
 
     public static float AwardWinner(int advantage, int tokensCount, int moves)
     {
-        int reward = 0;
-
-        if (moves < 20)
+        float reward=0.025f;
+        if(moves<=21)
         {
-            reward += 100;
+            reward = 0.995f;
         }
-        else if (moves < 25)
+        else if(moves<50)
         {
-            reward += 85;
+            reward = (-moves / 30f) + (5f / 3f) + 0.025f;
         }
-        else if (moves < 30)
-        {
-            reward += 80;
-        }
-        else if (moves < 35)
-        {
-            reward += 75;
-        }
-        else if (moves < 40)
-        {
-            reward += 70;
-        }
-        else
-        {
-            reward += 50;
-        }
-        if (tokensCount >= 5)
-        {
-            reward -= 10;
-        }
-
-        return (reward / (float)100) - 0.005f;
+        return reward;
     }
 
     public static float AwardLossLoser(int advantage, int tokensCount, int moves)
     {
-        float reward = -1f;
-        return reward + 0.025f;
+        float reward = -0.975f;
+        if (advantage <= 0)
+        {
+            reward = -0.005f;
+        }
+        else if (advantage<=14)
+        {
+            reward = (-advantage / 15f);
+        }
+        if(reward>0)
+        {
+            throw new ArgumentException("Kara większa niż 0");
+        }
+        return reward;
     }
     public static float AwardLossWinner(int[] arr, int moveNumber)
     {
