@@ -1,3 +1,5 @@
+using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Wordprocessing;
 using System.Collections; 
 using System.Collections.Generic;
 using UnityEngine;
@@ -83,7 +85,7 @@ public class ReservedCardController : MonoBehaviour
                 this.reserved1.transform.position.y,
                 this.reserved1.transform.position.z);
                 cardObject = Instantiate(this.cardPrefabOthers, cardPosition, Quaternion.identity, this.reserved1.transform);
-
+                cardObject.GetComponent<RectTransform>().sizeDelta = reserved1.GetComponent<RectTransform>().sizeDelta;
             }
             else if(reserved1.transform.childCount > 0 && reserved2.transform.childCount == 0)
             {
@@ -92,7 +94,7 @@ public class ReservedCardController : MonoBehaviour
                 this.reserved2.transform.position.y,
                 this.reserved2.transform.position.z);
                 cardObject = Instantiate(this.cardPrefabOthers, cardPosition, Quaternion.identity, this.reserved2.transform);
-
+                cardObject.GetComponent<RectTransform>().sizeDelta = reserved2.GetComponent<RectTransform>().sizeDelta;
             }
             else
             {
@@ -101,7 +103,7 @@ public class ReservedCardController : MonoBehaviour
                 this.reserved3.transform.position.y,
                 this.reserved3.transform.position.z);
                 cardObject = Instantiate(this.cardPrefabOthers, cardPosition, Quaternion.identity, this.reserved3.transform);
-
+                cardObject.GetComponent<RectTransform>().sizeDelta = reserved3.GetComponent<RectTransform>().sizeDelta;
             }
 
             CardController cardController = cardObject.GetComponent<CardController>();
