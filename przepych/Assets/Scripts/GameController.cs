@@ -107,14 +107,6 @@ public class GameController : MonoBehaviour
 
         this.players = new List<GameObject> { currentPlayer, nextPlayerOne, nextPlayerTwo, nextPlayerThree };
         this.CreateFourPlayersDataOnInit();
-        ResourcesController tr = new ResourcesController();
-        tr.FillDictionaryWithZeros();
-        tr.gems[GemColor.WHITE] = 5;
-        tr.gems[GemColor.GREEN] = 5;
-        tr.gems[GemColor.BLUE] = 5;
-        tr.gems[GemColor.BLACK] = 5;
-        tr.gems[GemColor.RED] = 5;
-        this.playerIdToBonusResources[0] = tr;
         this.FillPlayersWithData(); 
         this.currentPlayerId = 0;
         this.reserveCard.SetActive(false);
