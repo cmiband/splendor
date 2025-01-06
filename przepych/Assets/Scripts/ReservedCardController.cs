@@ -1,5 +1,3 @@
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Wordprocessing;
 using System.Collections; 
 using System.Collections.Generic;
 using UnityEngine;
@@ -75,9 +73,6 @@ public class ReservedCardController : MonoBehaviour
             yield return null;
             Vector3 cardPosition = new Vector3();
             GameObject cardObject = new GameObject();
-            Debug.Log(reserved1.transform.childCount);
-            Debug.Log(reserved2.transform.childCount);
-            Debug.Log(reserved3.transform.childCount);
             if (reserved1.transform.childCount == 0)
             {
                 cardPosition = new Vector3(
