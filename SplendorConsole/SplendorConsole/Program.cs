@@ -342,15 +342,15 @@ public class Program
         {
             reward = 0.995f; // Maksymalna nagroda
         }
-        else if (moves >= 50)
+        else if (moves >= 35)
         {
             reward = 0.025f; // Minimalna nagroda
         }
         else
         {
             // Logarytmiczna zależność skalowana do zakresu 0.025 - 0.995
-            float normalizedMoves = (moves - 21f) / 29f; // Normalizacja moves na przedział [0, 1]
-            reward = 0.025f + (float)(Math.Log10(1 + 9 * (1 - normalizedMoves)) * 0.97f);
+            float normalizedMoves = (moves - 21f) / 13f; // Normalizacja moves na przedział [0, 1]
+            reward = 1.025f - (float)(Math.Log10(1 + 9 *  normalizedMoves) * 0.97f);
         }
 
         return reward;
