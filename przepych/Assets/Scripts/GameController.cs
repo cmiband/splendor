@@ -79,7 +79,6 @@ public class GameController : MonoBehaviour
     {
         stageInfo.text = stageNumber.ToString();
         isTimerRunning = true;
-        Time.timeScale = 1f;
         remainingTime = countdownTime;
 
         boardController = board.GetComponent<BoardController>();
@@ -713,11 +712,9 @@ public class GameController : MonoBehaviour
     public void PauseGame()
     {
         isTimerRunning = false;
-        Time.timeScale = 0f;
     }
     public void ResumeGame()
     {
         isTimerRunning = true;
-        Time.timeScale = 1f;
     }
 }

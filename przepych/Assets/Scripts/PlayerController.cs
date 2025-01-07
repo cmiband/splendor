@@ -175,7 +175,6 @@ public class PlayerController : MonoBehaviour
                     if(mainGameController.boardController.level1StackController.ChceckCardsCount() == 0 )
                     {
                         break;
-                        
                     }
 
                     GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
@@ -190,6 +189,12 @@ public class PlayerController : MonoBehaviour
                     mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
                     Debug.Log("Kupiono kart� 2 poziomu");
                     Destroy(mainGameController.selectedCard.gameObject);
+
+                    if (mainGameController.boardController.level2StackController.ChceckCardsCount() == 0)
+                    {
+                        break;
+                    }
+
                     GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
                     gameObject2.name = "Card_Level_" + cardLevel;
                     CardController cardController2 = gameObject2.GetComponent<CardController>();
@@ -202,6 +207,12 @@ public class PlayerController : MonoBehaviour
                     mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
                     Debug.Log("Kupiono kart� 3 poziomu");
                     Destroy(mainGameController.selectedCard.gameObject);
+
+                    if (mainGameController.boardController.level3StackController.ChceckCardsCount() == 0)
+                    {
+                        break;
+                    }
+
                     GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
                     gameObject3.name = "Card_Level_" + cardLevel;
                     CardController cardController3 = gameObject3.GetComponent<CardController>();
@@ -221,7 +232,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if(handReserved.Count < 3)
+        if(handReserved.Count < 3 && mainGameController.selectedStack.ChceckCardsCount() > 0)
         {
             if (goldenGemStashController.TakeGolden())
             {
@@ -309,7 +320,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Za dużo zarezerwowałeś kart");
+            if (mainGameController.selectedStack.ChceckCardsCount() <= 0) Debug.Log("Nie ma juz kart na stosie!");
+            else Debug.Log("Za dużo zarezerwowałeś kart");
         }
     }
 
