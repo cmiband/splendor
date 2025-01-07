@@ -22,10 +22,6 @@ public class CardStackController : MonoBehaviour
 
         return targetedCard;
     }
-    public int ChceckCardsCount()
-    {
-        return this.cardsInStack.Count;
-    }
 
     public void SetSelected(bool selected)
     {

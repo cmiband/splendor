@@ -20,9 +20,6 @@ public class PlayerController : MonoBehaviour
     public string resourcesInfo = "";
     public string bonusResourcesInfo = "";
 
-    public GameObject TooManyGemsAlert;
-    public Text TooManyGemsAlertText;
-
     public Dictionary<GemColor, GameObject> gemColorToResourceGameObject = new Dictionary<GemColor, GameObject>();
     public GameObject whiteGems;
     public GameObject redGems;
@@ -171,12 +168,6 @@ public class PlayerController : MonoBehaviour
                     mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
                     Debug.Log("Kupiono kart� 1 poziomu");
                     Destroy(mainGameController.selectedCard.gameObject);
-
-                    if(mainGameController.boardController.level1StackController.ChceckCardsCount() == 0 )
-                    {
-                        break;
-                    }
-
                     GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
                     gameObject1.name = "Card_Level_" + cardLevel;
                     CardController cardController1 = gameObject1.GetComponent<CardController>();
@@ -189,12 +180,6 @@ public class PlayerController : MonoBehaviour
                     mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
                     Debug.Log("Kupiono kart� 2 poziomu");
                     Destroy(mainGameController.selectedCard.gameObject);
-
-                    if (mainGameController.boardController.level2StackController.ChceckCardsCount() == 0)
-                    {
-                        break;
-                    }
-
                     GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
                     gameObject2.name = "Card_Level_" + cardLevel;
                     CardController cardController2 = gameObject2.GetComponent<CardController>();
@@ -207,12 +192,6 @@ public class PlayerController : MonoBehaviour
                     mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
                     Debug.Log("Kupiono kart� 3 poziomu");
                     Destroy(mainGameController.selectedCard.gameObject);
-
-                    if (mainGameController.boardController.level3StackController.ChceckCardsCount() == 0)
-                    {
-                        break;
-                    }
-
                     GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
                     gameObject3.name = "Card_Level_" + cardLevel;
                     CardController cardController3 = gameObject3.GetComponent<CardController>();
@@ -232,7 +211,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if(handReserved.Count < 3 && mainGameController.selectedStack.ChceckCardsCount() > 0)
+        if(handReserved.Count < 3)
         {
             if (goldenGemStashController.TakeGolden())
             {
@@ -296,19 +275,13 @@ public class PlayerController : MonoBehaviour
 
                 PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
 
-                if(mainGameController.selectedStack.ChceckCardsCount() > 0)
-                {
-                    CardController reservedCard = mainGameController.selectedStack.PopCardFromStack();
-                    reservedCard.isReserved = true;
+                CardController reservedCard = mainGameController.selectedStack.PopCardFromStack();
+                reservedCard.isReserved = true;
 
-                    Debug.Log($"Zarezerwowano kartę ze stosu poziomu {reservedCard.level}");
+                Debug.Log($"Zarezerwowano kartę ze stosu poziomu {reservedCard.level}");
 
-                    player.handReserved.Add(reservedCard);
-                }
-                else
-                {
-                    Debug.Log("Nie ma juz kart na stosie!");
-                }
+                player.handReserved.Add(reservedCard);
+
             }
             else
             {
@@ -320,8 +293,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (mainGameController.selectedStack.ChceckCardsCount() <= 0) Debug.Log("Nie ma juz kart na stosie!");
-            else Debug.Log("Za dużo zarezerwowałeś kart");
+            Debug.Log("Za dużo zarezerwowałeś kart");
         }
     }
 
@@ -367,8 +339,6 @@ public class PlayerController : MonoBehaviour
         {
             this.SetGemInfo(this.resources);
             Debug.Log("Masz za dużo żetonów musisz oddać " + (amountOfGems - MAXIMUM_AMOUNT_OF_GEMS));
-            TooManyGemsInformation(amountOfGems - MAXIMUM_AMOUNT_OF_GEMS);
-
             mainGameController.actionIsTaken = true;
             bankController.SetModeToGive(amountOfGems - MAXIMUM_AMOUNT_OF_GEMS);
         }
@@ -604,14 +574,5 @@ public class PlayerController : MonoBehaviour
                 amount++;
         }
         return amount;
-    }
-    public void TooManyGemsInformation(int amount)
-    {
-        TooManyGemsAlert.SetActive(true);
-        TooManyGemsAlertText.text = $"{amount}";
-    }
-    public void HideTooManyGemsInformation()
-    {
-        TooManyGemsAlert.SetActive(false);
     }
 }

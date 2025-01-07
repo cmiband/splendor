@@ -308,8 +308,6 @@ public class GameController : MonoBehaviour
 
         PlayerController crntPlayerController = currentPlayer.GetComponent<PlayerController>();
 
-        crntPlayerController.HideTooManyGemsInformation();
-
         bool allowChange = true;
 
         if(!this.skipGettingNobles)
@@ -708,13 +706,5 @@ public class GameController : MonoBehaviour
                 return i;
         }
         throw new Exception("Noble not found in visible nobles");
-    }
-    public void PauseGame()
-    {
-        isTimerRunning = false;
-    }
-    public void ResumeGame()
-    {
-        isTimerRunning = true;
     }
 }
