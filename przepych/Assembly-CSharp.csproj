@@ -62,7 +62,6 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\GemColor.cs" />
-    <Compile Include="Assets\Scripts\HelpButtonController.cs" />
     <Compile Include="Assets\Scripts\ReservedCardController.cs" />
     <Compile Include="Assets\Scripts\NobleController.cs" />
     <Compile Include="Assets\Scripts\BankController.cs" />
@@ -84,7 +83,6 @@
     <Compile Include="Assets\Scripts\BaseScripts\Noble.cs" />
     <Compile Include="Assets\Scripts\CardController.cs" />
     <Compile Include="Assets\Scripts\BaseScripts\AvailableCards.cs" />
-    <Compile Include="Assets\Scripts\PageManager.cs" />
     <Compile Include="Assets\Scripts\GameEndModalController.cs" />
     <Compile Include="Assets\Scripts\BaseScripts\Resources.cs" />
     <Compile Include="Assets\Scripts\BoughtCardsController.cs" />
