@@ -79,6 +79,7 @@ public class GameController : MonoBehaviour
     {
         stageInfo.text = stageNumber.ToString();
         isTimerRunning = true;
+        Time.timeScale = 1f;
         remainingTime = countdownTime;
 
         boardController = board.GetComponent<BoardController>();
@@ -307,6 +308,8 @@ public class GameController : MonoBehaviour
         }
 
         PlayerController crntPlayerController = currentPlayer.GetComponent<PlayerController>();
+
+        crntPlayerController.HideTooManyGemsInformation();
 
         bool allowChange = true;
 
@@ -706,5 +709,15 @@ public class GameController : MonoBehaviour
                 return i;
         }
         throw new Exception("Noble not found in visible nobles");
+    }
+    public void PauseGame()
+    {
+        isTimerRunning = false;
+        Time.timeScale = 0f;
+    }
+    public void ResumeGame()
+    {
+        isTimerRunning = true;
+        Time.timeScale = 1f;
     }
 }
