@@ -336,34 +336,51 @@ public class Program
 
     public static float AwardWinner(int advantage, int tokensCount, int moves)
     {
-        float reward=0.025f;
-        if(moves<=21)
+        float reward;
+
+        if (moves <= 21)
         {
-            reward = 0.995f;
+            reward = 0.995f; // Maksymalna nagroda
         }
-        else if(moves<50)
+        else if (moves >= 50)
         {
-            reward = (-moves / 30f) + (5f / 3f) + 0.025f;
+            reward = 0.025f; // Minimalna nagroda
         }
+        else
+        {
+            // Logarytmiczna zależność skalowana do zakresu 0.025 - 0.995
+            float normalizedMoves = (moves - 21f) / 29f; // Normalizacja moves na przedział [0, 1]
+            reward = 0.025f + (float)(Math.Log10(1 + 9 * (1 - normalizedMoves)) * 0.97f);
+        }
+
         return reward;
     }
 
     public static float AwardLossLoser(int advantage, int tokensCount, int moves)
     {
-        float reward = -0.975f;
+        float penalty;
+
         if (advantage <= 0)
         {
-            reward = -0.005f;
+            penalty = -0.005f; // Minimalna kara
         }
-        else if (advantage<=14)
+        else if (advantage >= 15)
         {
-            reward = (-advantage / 15f);
+            penalty = -0.975f; // Maksymalna kara
         }
-        if(reward>0)
+        else
+        {
+            // Logarytmiczna zależność skalowana do zakresu -0.005 - -0.975
+            float normalizedAdvantage = advantage / 15f; // Normalizacja advantage na przedział [0, 1]
+            penalty = -0.005f - (float)(Math.Log10(1 + 9 * normalizedAdvantage) * 0.97f);
+        }
+
+        if (penalty > 0)
         {
             throw new ArgumentException("Kara większa niż 0");
         }
-        return reward;
+
+        return penalty;
     }
     public static float AwardLossWinner(int[] arr, int moveNumber)
     {
