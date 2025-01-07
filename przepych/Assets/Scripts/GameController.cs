@@ -471,15 +471,16 @@ public class GameController : MonoBehaviour
     private void HightlightNoblesAndDisplayInfo(List<GameObject> nobles)
     {
         this.nobleChoiceInfoModal.SetActive(true);
+        Color highlightColor = new Color(255, 218, 0, 74);
 
-        for(int i = 0; i<nobles.Count; i++)
+        for (int i = 0; i<nobles.Count; i++)
         {
             GameObject targetedNoble = nobles[i];
             Image nobleImage = targetedNoble.GetComponent<Image>();
 
-            Color highlightColor = new Color(255, 218, 0, 74);
             nobleImage.color = highlightColor;
 
+            targetedNoble.GetComponent<NobleController>().canBeChosen = true;
             this.chooseNobleMode = true;
         }
 
@@ -496,6 +497,8 @@ public class GameController : MonoBehaviour
             GameObject nobleObject = allNobles[i];
 
             nobleObject.GetComponent<Image>().color = defaultColor;
+
+            nobleObject.GetComponent<NobleController>().canBeChosen = false;
         }
     }
 
