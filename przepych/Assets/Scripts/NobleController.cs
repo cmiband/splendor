@@ -17,6 +17,7 @@ public class NobleController :  MonoBehaviour, IPointerClickHandler
     public Image playerImage;   
     public PlayerController assignedPlayer;
     public string detailedPriceInfo = "";
+    public bool canBeChosen = false;
 
     public NobleController(int points, ResourcesController detailedPrice, string illustration)
     {
@@ -74,7 +75,7 @@ public class NobleController :  MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Left && this.gameController.chooseNobleMode)
+        if (eventData.button == PointerEventData.InputButton.Left && this.gameController.chooseNobleMode && this.canBeChosen)
         {
             this.gameController.HandleNobleChoice(this.gameObject);
         }
