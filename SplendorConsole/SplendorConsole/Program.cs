@@ -20,7 +20,7 @@ public class Program
         await client.ConnectToWebsocket();
         Game? game;
 
-        int N = 6000;
+        int N = 300;
 
         int errorCounter = 1;
         int errorCounterLoop = 0;
@@ -29,6 +29,7 @@ public class Program
         int errorCounterBound = 0;
         int errorCounterOther = 0;
         int errorGameBreak = 0;
+        int errorLossAboveZero = 0;
         int tieCounter = 0;
         int maxErrorGap = 0;
         int minErrorGap = N;
@@ -42,19 +43,19 @@ public class Program
         float avgAward = 0f;
         float maxLoss = 0f;
         float minLoss = -1f;
-        int modelWinningCounter = 0;
-        int modelWinningCounterAfterAll = 0;
+        int sumTurns = 0;
+        int sumuTurnsAfterAll = 0;
         //tutaj zmieniasz gapa zapisu, jak coś
-        int intSaveGap = 100;
+        int intSaveGap = 200;
         float floatSaveGap = intSaveGap;
-        float biggestWinRate = 0f;
+        float lowestAvgRounds = 32f;
         Stopwatch stopwatch = Stopwatch.StartNew();
 
         string filePath = "game_results.csv";
         using (StreamWriter writer = new StreamWriter(filePath))
         {
             // Zapisz nagłówki pliku CSV
-            writer.WriteLine("GameIndex;WinRate");
+            writer.WriteLine("GameIndex;AvgTurns");
         }
 
 
@@ -80,19 +81,20 @@ public class Program
                     Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd zapętlenia");
                     errorGap = 0;
                     awards = new float[] { 0, 0, 0, 0 };
+                    sumTurns += (int)lowestAvgRounds;
                     if (i % intSaveGap == 0)
                     {
                         // Dodane zapisywanie do pliku CSV
-                        float winRate = modelWinningCounter / floatSaveGap;
+                        float avgTurns = sumTurns / floatSaveGap;
                         using (StreamWriter writer = new StreamWriter(filePath, append: true))
                         {
-                            writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{winRate.ToString(CultureInfo.InvariantCulture)}");
+                            writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{avgTurns.ToString(CultureInfo.InvariantCulture)}");
                         }
-                        modelWinningCounter = 0;
-                        if (biggestWinRate < winRate)
+                        sumTurns = 0;
+                        if (avgTurns < lowestAvgRounds)
                         {
                             await InformServerAboutFinishedGame(awards, -2, 0, 0, game.Standartize(game.PlayZeroToArray()));
-                            biggestWinRate = winRate;
+                            lowestAvgRounds = avgTurns; 
                         }
                         else
                         {
@@ -108,21 +110,22 @@ public class Program
                 {
                     Console.WriteLine($"[C#] W grze nr {i} doszło do remisu w {turnsNumber} tur");
                     tieCounter++;
-                    turnSum += turnsNumber;
+                    sumTurns += turnsNumber;
+                    sumuTurnsAfterAll += turnsNumber;
                     awards = new float[] { 0, 0, 0, 0 };
                     if (i % intSaveGap == 0)
                     {
                         // Dodane zapisywanie do pliku CSV
-                        float winRate = modelWinningCounter / floatSaveGap;
+                        float avgRounds = sumTurns / floatSaveGap;
                         using (StreamWriter writer = new StreamWriter(filePath, append: true))
                         {
-                            writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{winRate.ToString(CultureInfo.InvariantCulture)}");
+                            writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{avgRounds.ToString(CultureInfo.InvariantCulture)}");
                         }
-                        modelWinningCounter = 0;
-                        if (biggestWinRate < winRate)
+                        sumTurns = 0;
+                        if (avgRounds < lowestAvgRounds)
                         {
                             await InformServerAboutFinishedGame(awards, -2, 0, 0, game.Standartize(game.PlayZeroToArray()));
-                            biggestWinRate = winRate;
+                            lowestAvgRounds = avgRounds;
                         }
                         else
                         {
@@ -137,8 +140,7 @@ public class Program
                 else
                 {
                     errorGap++;
-                    Console.WriteLine($"[C#] Grę nr {i} wygrywa gracz nr {winner} w {turnsNumber} tur, zap - {errorCounterLoop}, col - {errorCounterCollect}, idx - {errorCounterBound}, null - {errorCounterNull}, Game Break - {errorGameBreak}, ??? - {errorCounterOther}");
-                    turnSum += turnsNumber;
+                    Console.WriteLine($"[C#] Grę nr {i} wygrywa gracz nr {winner} w {turnsNumber} tur, zap - {errorCounterLoop}, col - {errorCounterCollect}, idx - {errorCounterBound}, null - {errorCounterNull}, Game Break - {errorGameBreak}, Award Error - {errorLossAboveZero}, ??? - {errorCounterOther}");
                     if (turnsNumber > maxTurn)
                     {
                         maxTurn = turnsNumber;
@@ -147,35 +149,30 @@ public class Program
                     {
                         minTurn = turnsNumber;
                     }
-                    if(winner==0)
-                    {
-                        modelWinningCounter++;
-                        modelWinningCounterAfterAll++;
-                    }
+                    sumTurns += turnsNumber;
+                    sumuTurnsAfterAll += turnsNumber;
+                    awards = AwardsAfterGame(winner, state, turnsNumber);
                     if (i % intSaveGap == 0)
                     {
                         // Dodane zapisywanie do pliku CSV
-                        float winRate = modelWinningCounter / floatSaveGap;
+                        float avgTurns = sumTurns / floatSaveGap;
                         using (StreamWriter writer = new StreamWriter(filePath, append: true))
                         {
-                            writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{winRate.ToString(CultureInfo.InvariantCulture)}");
+                            writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{avgTurns.ToString(CultureInfo.InvariantCulture)}");
                         }
-                        modelWinningCounter = 0;
-                        if (biggestWinRate < winRate)
+                        sumTurns = 0;
+                        if (avgTurns < lowestAvgRounds)
                         {
-                            awards = AwardsAfterGame(winner, state, turnsNumber);
-                            await InformServerAboutFinishedGame(awards, winner+4, lastFeedback, lastMove, game.Standartize(game.PlayZeroToArray()));
-                            biggestWinRate = winRate;
+                            await InformServerAboutFinishedGame(awards, winner + 4, lastFeedback, lastMove, game.Standartize(game.PlayZeroToArray()));
+                            lowestAvgRounds = avgTurns;
                         }
                         else
                         {
-                            awards = AwardsAfterGame(winner, state, turnsNumber);
                             await InformServerAboutFinishedGame(awards, winner, lastFeedback, lastMove, game.Standartize(game.PlayZeroToArray()));
                         }
                     }
                     else
                     {
-                        awards = AwardsAfterGame(winner, state, turnsNumber);
                         await InformServerAboutFinishedGame(awards, winner, lastFeedback, lastMove, game.Standartize(game.PlayZeroToArray()));
                     }
 
@@ -214,19 +211,20 @@ public class Program
                 Console.WriteLine($"[C#] W grze nr {i} przekroczono limit czasu.");
                 errorCounterOther++;
                 awards = new float[] { 0, 0, 0, 0 };
+                sumTurns += (int)lowestAvgRounds;
                 if (i % intSaveGap == 0)
                 {
                     // Dodane zapisywanie do pliku CSV
-                    float winRate = modelWinningCounter / floatSaveGap;
+                    float avgTurns = sumTurns / floatSaveGap;
                     using (StreamWriter writer = new StreamWriter(filePath, append: true))
                     {
-                        writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{winRate.ToString(CultureInfo.InvariantCulture)}");
+                        writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{avgTurns.ToString(CultureInfo.InvariantCulture)}");
                     }
-                    modelWinningCounter = 0;
-                    if (biggestWinRate < winRate)
+                    sumTurns = 0;
+                    if (avgTurns < lowestAvgRounds)
                     {
                         await InformServerAboutFinishedGame(awards, -2, 0, 0, game.Standartize(game.PlayZeroToArray()));
-                        biggestWinRate = winRate;
+                        lowestAvgRounds = avgTurns;
                     }
                     else
                     {
@@ -237,7 +235,7 @@ public class Program
                 {
                     await InformServerAboutFinishedGame(awards, -1, 0, 0, game.Standartize(game.PlayZeroToArray()));
                 }
-                
+
                 game = null;
             }
             catch (Exception e)
@@ -262,6 +260,11 @@ public class Program
                     errorGameBreak++;
                     Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, GameBreak");
                 }
+                else if(e.Message == "Kara większa niż 0")
+                {
+                    errorLossAboveZero++;
+                    Console.WriteLine($"[C#] Wystąpił błąd w grze numer {i}, błąd kary");
+                }
                 else
                 {
                     Console.WriteLine(e.Message);
@@ -278,19 +281,20 @@ public class Program
                 errorCounter++;
                 errorGap = 0;
                 awards = new float[] { 0, 0, 0, 0 };
+                sumTurns += (int)lowestAvgRounds;
                 if (i % intSaveGap == 0)
                 {
                     // Dodane zapisywanie do pliku CSV
-                    float winRate = modelWinningCounter / floatSaveGap;
+                    float avgTurns = sumTurns / floatSaveGap;
                     using (StreamWriter writer = new StreamWriter(filePath, append: true))
                     {
-                        writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{winRate.ToString(CultureInfo.InvariantCulture)}");
+                        writer.WriteLine($"{i.ToString(CultureInfo.InvariantCulture)};{avgTurns.ToString(CultureInfo.InvariantCulture)}");
                     }
-                    modelWinningCounter = 0;
-                    if (biggestWinRate < winRate)
+                    sumTurns = 0;
+                    if (avgTurns < lowestAvgRounds)
                     {
                         await InformServerAboutFinishedGame(awards, -2, 0, 0, game.Standartize(game.PlayZeroToArray()));
-                        biggestWinRate = winRate;
+                        lowestAvgRounds = avgTurns;
                     }
                     else
                     {
@@ -316,63 +320,65 @@ public class Program
         Console.WriteLine($"\n[C# Summary]\nCała pętla zakończona w czasie: {stopwatch.ElapsedMilliseconds} ms");
         Console.WriteLine($"Średni czas symulacji jednej rozgrywki: {stopwatch.ElapsedMilliseconds / N} ms");
         Console.WriteLine($"Liczba remisów = {tieCounter}, maxErrorGap = {maxErrorGap}, minErrorGap = {minErrorGap}, AvgGap = {N / errorCounter}");
-        Console.WriteLine($"Tury: min = {minTurn}, max = {maxTurn} avg = {turnSum / (N - errorCounter + 1)}");
+        Console.WriteLine($"Tury: min = {minTurn}, max = {maxTurn}");
         Console.WriteLine($"Nagrody: min = {minAward}, max = {maxAward}");
         Console.WriteLine($"Kary: min = {minLoss}, max = {maxLoss}");
-        Console.WriteLine($"Model wygrał {modelWinningCounterAfterAll} gier na {N}, co daje {(modelWinningCounterAfterAll * 100f) / N}%");
+        Console.WriteLine($"Średni czas rozgrywki: {sumuTurnsAfterAll *1f / N}");
         Console.WriteLine();
         using (StreamWriter writer = new StreamWriter(filePath, append: true))
         {
-            writer.WriteLine($"Overall;{((modelWinningCounterAfterAll * 1f) / N).ToString(CultureInfo.InvariantCulture)}");
+            writer.WriteLine($"Overall;{(sumuTurnsAfterAll * 1f / N).ToString(CultureInfo.InvariantCulture)}");
         }
         Console.WriteLine();
     }
 
     public static float AwardWinner(int advantage, int tokensCount, int moves)
     {
-        int reward = 0;
+        float reward;
 
-        if (moves < 20)
+        if (moves <= 21)
         {
-            reward += 80;
+            reward = 0.995f; // Maksymalna nagroda
         }
-        else if (moves < 25)
+        else if (moves >= 35)
         {
-            reward += 65;
-        }
-        else if (moves < 30)
-        {
-            reward += 60;
-        }
-        else if (moves < 35)
-        {
-            reward += 55;
-        }
-        else if (moves < 40)
-        {
-            reward += 50;
+            reward = 0.025f; // Minimalna nagroda
         }
         else
         {
-            reward += 30;
-        }
-        if (advantage >= 5)
-        {
-            reward += 20;
+            // Logarytmiczna zależność skalowana do zakresu 0.025 - 0.995
+            float normalizedMoves = (moves - 21f) / 13f; // Normalizacja moves na przedział [0, 1]
+            reward = 1.025f - (float)(Math.Log10(1 + 9 *  normalizedMoves) * 0.97f);
         }
 
-        if (tokensCount >= 5)
-        {
-            reward -= 10;
-        }
-
-        return (reward / (float)100) - 0.005f;
+        return reward;
     }
 
     public static float AwardLossLoser(int advantage, int tokensCount, int moves)
     {
-        float reward = -1f;
-        return reward + 0.025f;
+        float penalty;
+
+        if (advantage <= 0)
+        {
+            penalty = -0.005f; // Minimalna kara
+        }
+        else if (advantage >= 15)
+        {
+            penalty = -0.975f; // Maksymalna kara
+        }
+        else
+        {
+            // Logarytmiczna zależność skalowana do zakresu -0.005 - -0.975
+            float normalizedAdvantage = advantage / 15f; // Normalizacja advantage na przedział [0, 1]
+            penalty = -0.005f - (float)(Math.Log10(1 + 9 * normalizedAdvantage) * 0.97f);
+        }
+
+        if (penalty > 0)
+        {
+            throw new ArgumentException("Kara większa niż 0");
+        }
+
+        return penalty;
     }
     public static float AwardLossWinner(int[] arr, int moveNumber)
     {

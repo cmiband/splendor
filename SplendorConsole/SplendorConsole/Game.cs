@@ -268,35 +268,8 @@ namespace SplendorConsole
 
         private void ChoiceOfAction(Player player)
         {
-            if(currentTurn==0)
-            {
-                RequestMoveFromServerAndExecuteIt(feedbackFromPreviousRequest, player).Wait();
-                GettingNobles();
-            }
-            else
-            {
-                int[] moves = Shuffle(move);
-                var validator = new ResponseValidator();
-                int numberOfInvalidMoves = validator.CheckMoves(moves, player, this, bank, board);
-                if (moves[numberOfInvalidMoves] == 0)
-                {
-                    gameBrakeValidator++;
-                }
-                else
-                {
-                    gameBrakeValidator = 0;
-                }
-                if (gameBrakeValidator >= 8)
-                {
-                    throw new Exception("Game break ;[");
-                }
-                if (true)
-                {
-                    Console.Out.WriteLine($"[C#] gracz {currentTurn}, feedback {feedbackFromPreviousRequest} dla poprzedniego, {moves[numberOfInvalidMoves]}");
-                }
-                GettingNobles();
-            }
-            
+            RequestMoveFromServerAndExecuteIt(feedbackFromPreviousRequest, player).Wait();
+            GettingNobles();
         }
 
 
@@ -536,10 +509,10 @@ namespace SplendorConsole
         async public Task RequestMoveFromServerAndExecuteIt(float feedbackForPreviousMove, Player currentPlayer)
         {
             //w tym fragmencie kodu zakomentować if(true) żeby nie widzieć logów
-            if(true)
+            /*if(true)
             {
                 await Console.Out.WriteLineAsync($"[C#] Wysłano na serwer zapytanie o ruch gracza {currentTurn} oraz feedback {feedbackFromPreviousRequest} dla poprzedniego gracza.");
-            }
+            }*/
             int[] moves = await RequestMovesListFromServer(feedbackForPreviousMove);
 
             var validator = new ResponseValidator();
@@ -550,7 +523,7 @@ namespace SplendorConsole
             }
             if (numberOfInvalidMoves == 0)
             {
-                feedbackFromPreviousRequest = (float)0.005;
+                feedbackFromPreviousRequest = (float)0;
             }
             else if (numberOfInvalidMoves <= 10)
             {
@@ -610,7 +583,7 @@ namespace SplendorConsole
 
             for (int i = 0; i < 4; i++)
             {
-                foreach (var item in listOfPlayers[0 + i].ToArray())
+                foreach (var item in listOfPlayers[(3 + i) %4].ToArray())
                 {
                     output[pointer++] = item;
                 }
