@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class GameEndModalController : MonoBehaviour
 {
@@ -41,10 +42,9 @@ public class GameEndModalController : MonoBehaviour
 
     private void FillPlayerInfo(List<int> sortedPlayers, Dictionary<int, int> playerToPoints)
     {
-        Debug.Log(sortedPlayers.Count);
         foreach(int i in sortedPlayers)
         {
-            
+            players[i].transform.GetChild(0).GetComponent<Image>().sprite = gameController.players[i].GetComponent<Image>().sprite;
         }
     }
 
