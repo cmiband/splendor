@@ -6,15 +6,12 @@ from dqnAgent import DQNAgent
 
 STATE_DIM = 348
 ACTION_DIM = 43
-gra1000 = 0
 agent = DQNAgent(state_dim=STATE_DIM, action_dim=ACTION_DIM)
 
 async def handle_connection(websocket: websockets.WebSocketServerProtocol, path: str) -> None:
 
     try:
         async for message in websocket:
-            
-            global gra1000
 
             data = json.loads(message)
             id = data.get("Id")
@@ -26,7 +23,6 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
                 if len(state) != STATE_DIM:
                     return "Invalid state dimension", 400
                 
-                #TRENING
                 output = agent.generate_action_values(state)
                 
                 response_object = {
@@ -37,17 +33,7 @@ async def handle_connection(websocket: websockets.WebSocketServerProtocol, path:
 
             elif id == 2:
 
-                gra1000 += 1 
-
-                #if gra1000 % 100 == 0:
-                #    agent.save_checkpoint("./checkpoints/agent_0_checkpoint.pth")
-
-
-                # REQUEST Z ZAKOŃCZONEJ GRY Z WYGRANYM
-                #last_feedback = data.get("LastFeedback")
                 print(f"[Python] Serwer odebrał wygraną")
-                
-                #TRENING
 
                 response_object = {
                     "ResponseCode": 0,
