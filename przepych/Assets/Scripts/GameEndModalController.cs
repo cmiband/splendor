@@ -35,10 +35,6 @@ public class GameEndModalController : MonoBehaviour
         Debug.Log(sortedPlayers.Count);
         foreach(int i in sortedPlayers)
         {
-            if(CheckIfPlayerIsWinner(i, playerToPoints))
-            {
-                result += $"{playerToPoints[i]}\n";
-            }
             result += $"{playerToPoints[i]}\n";
         }
 
