@@ -232,7 +232,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if(handReserved.Count < 3 && mainGameController.selectedStack.ChceckCardsCount() > 0)
+        if(handReserved.Count < 3)
         {
             if (goldenGemStashController.TakeGolden())
             {
@@ -291,7 +291,7 @@ public class PlayerController : MonoBehaviour
                         break;
                 }
             }
-            else if(mainGameController.selectedStack != null)
+            else if(mainGameController.selectedStack != null && mainGameController.selectedStack.ChceckCardsCount() > 0)
             {
 
                 PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
