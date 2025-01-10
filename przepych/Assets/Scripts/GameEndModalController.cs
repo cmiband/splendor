@@ -23,7 +23,7 @@ public class GameEndModalController : MonoBehaviour
 
     public void InitModal(int turns, List<int> sortedPlayers, Dictionary<int, int> playerToPoints)
     {
-        this.turnsInfo.text = "Liczba tur: " + turns;
+        this.turnsInfo.text = turns.ToString();
 
         this.FillPlayerInfo(sortedPlayers, playerToPoints);
     }
@@ -37,15 +37,16 @@ public class GameEndModalController : MonoBehaviour
         {
             if(CheckIfPlayerIsWinner(i, playerToPoints))
             {
-                result += "WYGRANY ";
+                result += $"{playerToPoints[i]}\n";
             }
-            result += "Gracz " + i + ": " + playerToPoints[i] + " punktów\n";
+            result += $"{playerToPoints[i]}\n";
         }
 
         this.playerInfo.text = result;
     }
 
-    private bool CheckIfPlayerIsWinner(int playerId, Dictionary<int, int> playerToPoints) {
+    private bool CheckIfPlayerIsWinner(int playerId, Dictionary<int, int> playerToPoints)
+    {
         int maxPoints = playerToPoints.Values.Max();
 
         return playerToPoints[playerId] == maxPoints;
