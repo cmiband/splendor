@@ -2,12 +2,17 @@ import asyncio
 import websockets
 import json
 import numpy as np
-from dqnAgent import DQNAgent
+#from dqnAgent import DQNAgent
+from agent_gpu import DQNAgent
+import torch
 
 STATE_DIM = 348
 ACTION_DIM = 43
 gra1000 = 0
-agent = DQNAgent(state_dim=STATE_DIM, action_dim=ACTION_DIM)
+#agent = DQNAgent(state_dim=STATE_DIM, action_dim=ACTION_DIM)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+agent = DQNAgent(state_dim=STATE_DIM, action_dim=ACTION_DIM, device=device)
+previous_state = None
 
 async def handle_connection(websocket: websockets.WebSocketServerProtocol, path: str) -> None:
 
