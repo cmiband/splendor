@@ -8,10 +8,17 @@ using System.Linq;
 public class GameEndModalController : MonoBehaviour
 {
     public TextMeshProUGUI turnsInfo;
-    public TextMeshProUGUI playerInfo;
+    public GameObject player1;
+    public GameObject player2;
+    public GameObject player3;
+    public GameObject player4;
+    public List<GameObject> players = new List<GameObject>();
+
 
     public Button quitButton;
     public Button newGameButton;
+    public Image playerImage;
+
 
     public GameController gameController;
 
@@ -19,6 +26,10 @@ public class GameEndModalController : MonoBehaviour
     {
         this.quitButton.onClick.AddListener(HandleQuitGame);
         this.newGameButton.onClick.AddListener(HandleNewGame);
+        this.players.Add(player1);
+        this.players.Add(player2);
+        this.players.Add(player3);
+        this.players.Add(player4);
     }
 
     public void InitModal(int turns, List<int> sortedPlayers, Dictionary<int, int> playerToPoints)
@@ -30,15 +41,17 @@ public class GameEndModalController : MonoBehaviour
 
     private void FillPlayerInfo(List<int> sortedPlayers, Dictionary<int, int> playerToPoints)
     {
-        this.playerInfo.text = "";
-        string result = "";
         Debug.Log(sortedPlayers.Count);
         foreach(int i in sortedPlayers)
         {
-            result += $"{playerToPoints[i]}\n";
+            
         }
+    }
 
-        this.playerInfo.text = result;
+    public void SetPlayerImage(Image playerImage)
+    {
+        this.playerImage.gameObject.SetActive(true);
+        this.playerImage.sprite = playerImage.sprite;
     }
 
     private bool CheckIfPlayerIsWinner(int playerId, Dictionary<int, int> playerToPoints)
