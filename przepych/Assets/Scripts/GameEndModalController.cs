@@ -14,6 +14,7 @@ public class GameEndModalController : MonoBehaviour
     public GameObject player3;
     public GameObject player4;
     public List<GameObject> players = new List<GameObject>();
+    public List<int> pom = new List<int>();
 
 
     public Button quitButton;
@@ -42,11 +43,13 @@ public class GameEndModalController : MonoBehaviour
 
     private void FillPlayerInfo(List<int> sortedPlayers, Dictionary<int, int> playerToPoints)
     {
-        Debug.Log(sortedPlayers);
+        int j = 0;
+        pom = sortedPlayers;
         foreach (int i in sortedPlayers)
         {
-            players[i].transform.GetChild(0).GetComponent<Image>().sprite = gameController.players[i].GetComponent<PlayerController>().avatar.sprite;
-            players[i].transform.GetChild(1).GetComponent<Text>().text = playerToPoints[i].ToString();
+            players[j].transform.GetChild(0).GetComponent<Image>().sprite = gameController.players[i].GetComponent<PlayerController>().avatar.sprite;
+            players[j].transform.GetChild(1).GetComponent<Text>().text = playerToPoints[i].ToString();
+            j += 1;
         }
     }
 
