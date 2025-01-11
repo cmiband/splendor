@@ -22,7 +22,7 @@ public class CardStackController : MonoBehaviour
 
         return targetedCard;
     }
-    public int ChceckCardsCount()
+    public int CheckCardsCount()
     {
         return this.cardsInStack.Count;
     }
