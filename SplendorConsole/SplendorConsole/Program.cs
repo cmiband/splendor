@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using SplendorConsole;
 using System.Globalization;
+using DocumentFormat.OpenXml.Bibliography;
 
 public class Program
 {
@@ -20,8 +21,11 @@ public class Program
         await client.ConnectToWebsocket();
         Game? game;
 
-        int N = 300;
-
+        int N = 100000;
+        int agent0Counter = 0;
+        int agent1Counter = 0;
+        int agent2Counter = 0;
+        int agent3Counter = 0;
         int errorCounter = 1;
         int errorCounterLoop = 0;
         int errorCounterCollect = 0;
@@ -139,6 +143,24 @@ public class Program
                 }
                 else
                 {
+                    switch (winner)
+                    {
+                        case 0:
+                            agent0Counter++;
+                            break;
+                        case 1:
+                            agent1Counter++;
+                            break;
+                        case 2:
+                            agent2Counter++;
+                            break;
+                        case 3:
+                            agent3Counter++;
+                            break;
+                        default:
+                            Console.WriteLine("Zły winner!!!");
+                            break;
+                    }
                     errorGap++;
                     Console.WriteLine($"[C#] Grę nr {i} wygrywa gracz nr {winner} w {turnsNumber} tur, zap - {errorCounterLoop}, col - {errorCounterCollect}, idx - {errorCounterBound}, null - {errorCounterNull}, Game Break - {errorGameBreak}, Award Error - {errorLossAboveZero}, ??? - {errorCounterOther}");
                     if (turnsNumber > maxTurn)
@@ -330,6 +352,56 @@ public class Program
             writer.WriteLine($"Overall;{(sumuTurnsAfterAll * 1f / N).ToString(CultureInfo.InvariantCulture)}");
         }
         Console.WriteLine();
+        if (agent0Counter > agent1Counter)
+        {
+            if (agent0Counter > agent2Counter)
+            {
+                if (agent0Counter > agent3Counter)
+                {
+                    Console.WriteLine($"Najwięcej wygranych zanotował agent numer 0, winrate: {agent0Counter * 1f / N}");
+                }
+                else
+                {
+                    Console.WriteLine($"Najwięcej wygranych zanotował agent numer 3, winrate: {agent3Counter * 1f / N}");
+                }
+            }
+            else
+            {
+                if (agent2Counter > agent3Counter)
+                {
+                    Console.WriteLine($"Najwięcej wygranych zanotował agent numer 0, winrate: {agent2Counter * 1f / N}");
+                }
+                else
+                {
+                    Console.WriteLine($"Najwięcej wygranych zanotował agent numer 3, winrate: {agent3Counter * 1f / N}");
+                }
+            }
+        }
+        else
+        {
+            if (agent1Counter > agent2Counter)
+            {
+                if (agent1Counter > agent3Counter)
+                {
+                    Console.WriteLine($"Najwięcej wygranych zanotował agent numer 0, winrate: {agent1Counter * 1f / N}");
+                }
+                else
+                {
+                    Console.WriteLine($"Najwięcej wygranych zanotował agent numer 3, winrate: {agent3Counter * 1f / N}");
+                }
+            }
+            else
+            {
+                if (agent2Counter > agent3Counter)
+                {
+                    Console.WriteLine($"Najwięcej wygranych zanotował agent numer 0, winrate: {agent2Counter * 1f / N}");
+                }
+                else
+                {
+                    Console.WriteLine($"Najwięcej wygranych zanotował agent numer 3, winrate: {agent3Counter * 1f / N}");
+                }
+            }
+        }
     }
 
     public static float AwardWinner(int advantage, int tokensCount, int moves)
