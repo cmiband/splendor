@@ -172,7 +172,7 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("Kupiono kart� 1 poziomu");
                     Destroy(mainGameController.selectedCard.gameObject);
 
-                    if(mainGameController.boardController.level1StackController.ChceckCardsCount() == 0 )
+                    if(mainGameController.boardController.level1StackController.CheckCardsCount() == 0 )
                     {
                         break;
                     }
@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("Kupiono kart� 2 poziomu");
                     Destroy(mainGameController.selectedCard.gameObject);
 
-                    if (mainGameController.boardController.level2StackController.ChceckCardsCount() == 0)
+                    if (mainGameController.boardController.level2StackController.CheckCardsCount() == 0)
                     {
                         break;
                     }
@@ -208,7 +208,7 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("Kupiono kart� 3 poziomu");
                     Destroy(mainGameController.selectedCard.gameObject);
 
-                    if (mainGameController.boardController.level3StackController.ChceckCardsCount() == 0)
+                    if (mainGameController.boardController.level3StackController.CheckCardsCount() == 0)
                     {
                         break;
                     }
@@ -291,12 +291,12 @@ public class PlayerController : MonoBehaviour
                         break;
                 }
             }
-            else if(mainGameController.selectedStack != null && mainGameController.selectedStack.ChceckCardsCount() > 0)
+            else if(mainGameController.selectedStack != null && mainGameController.selectedStack.CheckCardsCount() > 0)
             {
 
                 PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
 
-                if(mainGameController.selectedStack.ChceckCardsCount() > 0)
+                if(mainGameController.selectedStack.CheckCardsCount() > 0)
                 {
                     CardController reservedCard = mainGameController.selectedStack.PopCardFromStack();
                     reservedCard.isReserved = true;
@@ -320,7 +320,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (mainGameController.selectedStack.ChceckCardsCount() <= 0) Debug.Log("Nie ma juz kart na stosie!");
+            if (mainGameController.selectedStack.CheckCardsCount() <= 0) Debug.Log("Nie ma juz kart na stosie!");
             else Debug.Log("Za dużo zarezerwowałeś kart");
         }
     }
