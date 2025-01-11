@@ -2696,6 +2696,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1929600361364695100, guid: 7ad7118bf7e8a72428642aa83a37dcfe, type: 3}
   m_PrefabInstance: {fileID: 286651052}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &286651055 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -1269057629146102760, guid: 7ad7118bf7e8a72428642aa83a37dcfe, type: 3}
+  m_PrefabInstance: {fileID: 286651052}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 286651054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b68104774eb90f45953ec9e443cfa37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &292873806
 GameObject:
   m_ObjectHideFlags: 0
@@ -4627,6 +4638,7 @@ MonoBehaviour:
   bonusGreenGems: {fileID: 217817492}
   bonusBlackGems: {fileID: 1174074010}
   bonusBlueGems: {fileID: 835054802}
+  resources: {fileID: 0}
   hand: []
   handReserved: []
   nobleController: []
@@ -8670,6 +8682,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 925421777}
+  - component: {fileID: 925421778}
   m_Layer: 0
   m_Name: ResponveValidator
   m_TagString: Untagged
@@ -8692,6 +8705,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &925421778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925421776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d4a92f7061df6e43abdf4e8525f4ed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameController: {fileID: 2008468893}
+  currentPlayerController: {fileID: 568371479}
+  boardController: {fileID: 526158504}
+  bankController: {fileID: 1058837123}
+  goldenGemStash: {fileID: 286651055}
 --- !u!1001 &954815419
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10909,6 +10939,7 @@ MonoBehaviour:
   bonusGreenGems: {fileID: 824791163}
   bonusBlackGems: {fileID: 625763013}
   bonusBlueGems: {fileID: 2007010254}
+  resources: {fileID: 0}
   hand: []
   handReserved: []
   nobleController: []
@@ -11067,6 +11098,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1157294667}
+  - component: {fileID: 1157294668}
   m_Layer: 0
   m_Name: ModelConnection
   m_TagString: Untagged
@@ -11089,6 +11121,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1157294668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157294666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 425cb9c55a3f8e44f90b30aea3ea5924, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameController: {fileID: 2008468893}
+  boardController: {fileID: 526158504}
+  bankController: {fileID: 1058837123}
 --- !u!1 &1158312718 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3496800232969062827, guid: 1490717cfa37e584997661bdc51a705f, type: 3}
@@ -18397,6 +18444,7 @@ MonoBehaviour:
   bonusGreenGems: {fileID: 2004664545}
   bonusBlackGems: {fileID: 421147035}
   bonusBlueGems: {fileID: 841653068}
+  resources: {fileID: 0}
   hand: []
   handReserved: []
   nobleController: []
@@ -19072,6 +19120,7 @@ MonoBehaviour:
   bonusGreenGems: {fileID: 686196893}
   bonusBlackGems: {fileID: 2033054289}
   bonusBlueGems: {fileID: 1868631746}
+  resources: {fileID: 0}
   hand: []
   handReserved: []
   nobleController: []

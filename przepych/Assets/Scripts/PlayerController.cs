@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
+        PlayerController player = this;
         CardController selectedCard = mainGameController.selectedCard;
         Vector3 vector = mainGameController.selectedCard.transform.position;
 
@@ -242,7 +242,7 @@ public class PlayerController : MonoBehaviour
             if(mainGameController.selectedCard != null)
             {
                 int cardLevel = mainGameController.selectedCard.level;
-                PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
+                PlayerController player = this;
                 Vector3 vector = mainGameController.selectedCard.transform.position;
 
                 mainGameController.selectedCard.isReserved = true;
@@ -293,7 +293,7 @@ public class PlayerController : MonoBehaviour
             else if(mainGameController.selectedStack != null && mainGameController.selectedStack.CheckCardsCount() > 0)
             {
 
-                PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
+                PlayerController player = this;
 
                 if(mainGameController.selectedStack.CheckCardsCount() > 0)
                 {
@@ -395,13 +395,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void UpdatePlayersResources()
+    public void UpdatePlayersResources()
     {
         this.mainGameController.UpdateTargetedPlayerResources(this.playerId, this.resources);
         this.mainGameController.UpdateTargetedPlayerBonusResources(this.playerId, this.bonusResources);
     }
 
-    private void UpdatePlayersPoints()
+    public void UpdatePlayersPoints()
     {
         this.mainGameController.UpdateTargetedPlayerPoints(this.playerId, this.points);
     }

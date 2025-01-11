@@ -42,6 +42,8 @@ public class ResponseValidatorController : MonoBehaviour
             }
             else if (this.IsValidMove(arrayOfMoves[i]))
             {
+                this.currentPlayerController.UpdatePlayersResources();
+                this.currentPlayerController.UpdatePlayersPoints();
                 return i;
             }
         }

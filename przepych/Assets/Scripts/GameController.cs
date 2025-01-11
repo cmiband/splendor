@@ -5,11 +5,15 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class GameController : MonoBehaviour
 {
     public int WIN_THRESHOLD = 15;
 
+    public bool isPlayerMove = true;
     public bool chooseNobleMode = false;
     public bool skipGettingNobles = false;
     public bool blockAction = false;
@@ -45,7 +49,7 @@ public class GameController : MonoBehaviour
     public int currentPlayerId;
 
     public List<GameObject> players;
-    public GameObject currentPlayer;
+    public GameObject clientPlayer;
     public GameObject nextPlayerOne;
     public GameObject nextPlayerTwo;
     public GameObject nextPlayerThree;
@@ -70,6 +74,7 @@ public class GameController : MonoBehaviour
     public ReservedCardController NextPlayerThreeReservedCardController;
 
     public ModelConnectionController modelConnectionController;
+    public ResponseValidatorController responseValidatorController;
 
     public CardController selectedCard;
     public CardStackController selectedStack;
@@ -77,8 +82,13 @@ public class GameController : MonoBehaviour
     public GameObject gameEndModal;
     public GameObject nobleChoiceInfoModal;
 
+    private WebServiceClient webServiceClient;
+
     private void Start()
     {
+        webServiceClient = new WebServiceClient("ws://localhost:8765");
+        webServiceClient.ConnectToWebsocket();
+
         stageInfo.text = stageNumber.ToString();
         isTimerRunning = true;
         remainingTime = countdownTime;
@@ -107,7 +117,7 @@ public class GameController : MonoBehaviour
         NextPlayerTwoReservedCardController = this.NextPlyerTwoReservedCards.GetComponent<ReservedCardController>();
         NextPlayerThreeReservedCardController = this.NextPlyerThreeReservedCards.GetComponent<ReservedCardController>();
 
-        this.players = new List<GameObject> { currentPlayer, nextPlayerOne, nextPlayerTwo, nextPlayerThree };
+        this.players = new List<GameObject> { clientPlayer, nextPlayerOne, nextPlayerTwo, nextPlayerThree };
         this.CreateFourPlayersDataOnInit();
         this.FillPlayersWithData(); 
         this.currentPlayerId = 0;
@@ -198,10 +208,10 @@ public class GameController : MonoBehaviour
         passButton.onClick.AddListener(HandlePass);
 
         Button buyCardButton = this.buyCard.GetComponent<Button>();
-        buyCardButton.onClick.AddListener(currentPlayer.GetComponent<PlayerController>().HandleBuyCard);
+        buyCardButton.onClick.AddListener(clientPlayer.GetComponent<PlayerController>().HandleBuyCard);
 
         Button reserveCardButton = this.reserveCard.GetComponent<Button>();
-        reserveCardButton.onClick.AddListener(currentPlayer.GetComponent<PlayerController>().HandleReserveCard);
+        reserveCardButton.onClick.AddListener(clientPlayer.GetComponent<PlayerController>().HandleReserveCard);
     }
     
     private void CreateFourPlayersDataOnInit()
@@ -307,25 +317,36 @@ public class GameController : MonoBehaviour
         {
             return;
         }
+    
+        PlayerController crntPlayerController = this.players[this.currentPlayerId].GetComponent<PlayerController>();
 
-        PlayerController crntPlayerController = currentPlayer.GetComponent<PlayerController>();
-
-        crntPlayerController.HideTooManyGemsInformation();
+        if(this.isPlayerMove)
+        {
+            crntPlayerController.HideTooManyGemsInformation();
+        }
 
         bool allowChange = true;
 
-        if(!this.skipGettingNobles)
+        if (!this.skipGettingNobles)
         {
-            allowChange = GettingNobles(crntPlayerController);
+            allowChange = GettingNobles(crntPlayerController, this.isPlayerMove);
         }
-        
-        if(!allowChange)
+
+        if (!allowChange)
         {
             this.skipGettingNobles = true;
             return;
         }
 
         this.currentPlayerId = (this.currentPlayerId + 1) % 4;
+        if(this.currentPlayerId != 0)
+        {
+            this.isPlayerMove = false;
+        } 
+        else
+        {
+            this.isPlayerMove = true;
+        }
 
         ResetCountdown();
         if (this.currentPlayerId == 0)
@@ -340,38 +361,82 @@ public class GameController : MonoBehaviour
             }
         }
 
-
-        int targetedPlayerId = this.currentPlayerId;
-
-        foreach (GameObject player in this.players)
+        for(int i = 0; i < 4; i++)
         {
-            PlayerController playerController = player.GetComponent<PlayerController>();
-            playerController.SetPlayerId(targetedPlayerId);
-            playerController.SetPlayerHand(this.playerIdToHand[targetedPlayerId]);
-            playerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerId]);
-            playerController.SetPlayerPoints(this.playerIdToPoints[targetedPlayerId]);
-            playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId], this.playerIdToBonusResources[targetedPlayerId]);
-            playerController.SetPlayerAvatar(this.playerIdToAvatar[targetedPlayerId]);
-            
-            if (this.playerIdToNoble.ContainsKey(targetedPlayerId))
-                playerController.SetPlayerNoble(this.playerIdToNoble[targetedPlayerId]);
-
-            targetedPlayerId = (targetedPlayerId + 1) % 4;
-
-            playerController.PointsCounter(playerController);
+            this.SetPlayerControllerInfo(this.players[i], i);
         }
 
-        reservedCardController.UpdateReservedCards(this.currentPlayerId);
-        NextPlayerOneReservedCardController.UpdateReservedCardsOthers((this.currentPlayerId + 1) % 4);
-        NextPlayerTwoReservedCardController.UpdateReservedCardsOthers((this.currentPlayerId + 2) % 4);
-        NextPlayerThreeReservedCardController.UpdateReservedCardsOthers((this.currentPlayerId + 3) % 4);
-        this.bankController.ClearSelectedGems();
+        this.responseValidatorController.currentPlayerController = this.players[this.currentPlayerId].GetComponent<PlayerController>();
 
+        reservedCardController.UpdateReservedCards(0);
+        NextPlayerOneReservedCardController.UpdateReservedCardsOthers(1);
+        NextPlayerTwoReservedCardController.UpdateReservedCardsOthers(2);
+        NextPlayerThreeReservedCardController.UpdateReservedCardsOthers(3);
+        this.bankController.ClearSelectedGems();
 
         buyCard.SetActive(false);
         reserveCard.SetActive(false);
         this.skipGettingNobles = false;
 
+        if(!this.isPlayerMove)
+        {
+            StartCoroutine(RequestMoveAfterDelay());
+        }
+    }
+
+    private IEnumerator RequestMoveAfterDelay()
+    {
+        yield return new WaitForSeconds(2);
+
+        this.RequestBotMoveAndExecute();
+    }
+
+    async private Task RequestBotMoveAndExecute()
+    {
+        int[] moves = await RequestMovesList();
+
+        this.responseValidatorController.PerformAgentMoveAndReturnAmountOfInvalidMoves(moves);
+
+        this.ChangeTurn();
+    }
+
+    async private Task<int[]?> RequestMovesList()
+    {
+        int[] gameInfo = this.modelConnectionController.GameToArray();
+        float[] gameState = this.modelConnectionController.Standartize(gameInfo);
+
+        var request = new
+        {
+            Id = 1,
+            CurrentPlayer = this.currentPlayerId,
+            GameState = gameState
+        };
+
+        string requestStringified = JsonConvert.SerializeObject(request);
+        
+        string response = this.webServiceClient.SendAndFetchDataFromSocket(requestStringified).Result;
+
+        JObject responseObject = JObject.Parse(response);
+
+        var moves = responseObject["MovesList"]?.ToObject<int[]>();
+
+        return moves;
+    }
+
+    private void SetPlayerControllerInfo(GameObject targetedPlayer, int targetedPlayerId)
+    {
+        PlayerController playerController = targetedPlayer.GetComponent<PlayerController>();
+        playerController.SetPlayerId(targetedPlayerId);
+        playerController.SetPlayerHand(this.playerIdToHand[targetedPlayerId]);
+        playerController.SetPlayerReserveHand(this.playerIdToReserveHand[targetedPlayerId]);
+        playerController.SetPlayerPoints(this.playerIdToPoints[targetedPlayerId]);
+        playerController.SetPlayerResources(this.playerIdToResources[targetedPlayerId], this.playerIdToBonusResources[targetedPlayerId]);
+        playerController.SetPlayerAvatar(this.playerIdToAvatar[targetedPlayerId]);
+
+        if (this.playerIdToNoble.ContainsKey(targetedPlayerId))
+            playerController.SetPlayerNoble(this.playerIdToNoble[targetedPlayerId]);
+
+        playerController.PointsCounter(playerController);
     }
 
     private void HandleGameEnd()
@@ -434,7 +499,7 @@ public class GameController : MonoBehaviour
         return keys;
     }
 
-    private bool GettingNobles(PlayerController crntPlayerController)
+    private bool GettingNobles(PlayerController crntPlayerController, bool isPlayerMove)
     {
         List<GameObject> availableNobles = crntPlayerController.GetNoble(this, crntPlayerController);
 
@@ -451,8 +516,15 @@ public class GameController : MonoBehaviour
         } 
         else
         {
-            this.HightlightNoblesAndDisplayInfo(availableNobles);
-            return false;
+            if(isPlayerMove)
+            {
+                this.HightlightNoblesAndDisplayInfo(availableNobles);
+                return false;
+            } else
+            {
+                this.ChooseAndTakeOneNoble(availableNobles[0], crntPlayerController);
+                return true;
+            } 
         }
     }
 
@@ -506,7 +578,7 @@ public class GameController : MonoBehaviour
 
     public void HandleNobleChoice(GameObject chosenNoble)
     {
-        PlayerController currentPlayer = this.currentPlayer.GetComponent<PlayerController>();
+        PlayerController currentPlayer = this.clientPlayer.GetComponent<PlayerController>();
 
         this.UnhighlightNobles();
         this.ChooseAndTakeOneNoble(chosenNoble, currentPlayer);
