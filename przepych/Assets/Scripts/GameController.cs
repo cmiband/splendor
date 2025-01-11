@@ -69,6 +69,8 @@ public class GameController : MonoBehaviour
     public ReservedCardController NextPlayerTwoReservedCardController;
     public ReservedCardController NextPlayerThreeReservedCardController;
 
+    public ModelConnectionController modelConnectionController;
+
     public CardController selectedCard;
     public CardStackController selectedStack;
 
