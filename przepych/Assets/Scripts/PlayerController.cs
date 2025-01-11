@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     public Text bonusBlackGems;
     public Text bonusBlueGems;
 
-    private ResourcesController resources = new ResourcesController();
+    public ResourcesController resources = new ResourcesController();
     private ResourcesController bonusResources = new ResourcesController();
 
     public ResourcesController BonusResources
@@ -138,7 +138,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        Debug.Log("Powinno kupic?");
 
         foreach (var resource in resourcesUsed)
         {
@@ -332,7 +331,7 @@ public class PlayerController : MonoBehaviour
         this.avatar.sprite = playerAvatar;
     }
 
-    private void AddCardClickListener(GameObject cardGameObject, CardController cardController)
+    public void AddCardClickListener(GameObject cardGameObject, CardController cardController)
     {
         Button button = cardGameObject.GetComponent<Button>();
         if (button == null)
@@ -486,7 +485,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log($"Dodano bonusowy zas�b: {bonusColor}");
         }
     }
-    private bool CanAffordCard(CardController cardToBuy)
+    public bool CanAffordCard(CardController cardToBuy)
     {
         var cardPrice = cardToBuy.DetailedPrice.gems;
         var playerResources = this.resources.gems;
@@ -506,7 +505,7 @@ public class PlayerController : MonoBehaviour
         }
         return true;
     }
-    private bool CanAffordCardWithGolden(CardController cardToBuy)
+    public bool CanAffordCardWithGolden(CardController cardToBuy)
     {
         var cardPrice = cardToBuy.DetailedPrice.gems;
         var playerResources = this.resources.gems;
@@ -545,7 +544,7 @@ public class PlayerController : MonoBehaviour
         return clonedCard;
     }
 
-    private int GetAmountOfGems()
+    public int GetAmountOfGems()
     {
         int result = 0;
 
