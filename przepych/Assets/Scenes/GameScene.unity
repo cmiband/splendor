@@ -20595,7 +20595,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 805bb82e37823604686e1b863d964ad4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WIN_THRESHOLD: 4
+  WIN_THRESHOLD: 15
   chooseNobleMode: 0
   skipGettingNobles: 0
   blockAction: 0
