@@ -4,14 +4,23 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class GameEndModalController : MonoBehaviour
 {
     public TextMeshProUGUI turnsInfo;
-    public TextMeshProUGUI playerInfo;
+    public GameObject player1;
+    public GameObject player2;
+    public GameObject player3;
+    public GameObject player4;
+    public List<GameObject> players = new List<GameObject>();
+    public List<int> pom = new List<int>();
+
 
     public Button quitButton;
     public Button newGameButton;
+    public Image playerImage;
+
 
     public GameController gameController;
 
@@ -23,29 +32,36 @@ public class GameEndModalController : MonoBehaviour
 
     public void InitModal(int turns, List<int> sortedPlayers, Dictionary<int, int> playerToPoints)
     {
-        this.turnsInfo.text = "Liczba tur: " + turns;
+        this.turnsInfo.text = turns.ToString();
+        this.players.Add(player1);
+        this.players.Add(player2);
+        this.players.Add(player3);
+        this.players.Add(player4);
 
         this.FillPlayerInfo(sortedPlayers, playerToPoints);
     }
 
     private void FillPlayerInfo(List<int> sortedPlayers, Dictionary<int, int> playerToPoints)
     {
-        this.playerInfo.text = "";
-        string result = "";
-        Debug.Log(sortedPlayers.Count);
-        foreach(int i in sortedPlayers)
+        int j = 0;
+        pom = sortedPlayers;
+        foreach (int i in sortedPlayers)
         {
-            if(CheckIfPlayerIsWinner(i, playerToPoints))
+            foreach (var player in gameController.players)
             {
-                result += "WYGRANY ";
+                int playerId = player.GetComponent<PlayerController>().playerId;
+                if (i == playerId)
+                {
+                    players[j].transform.GetChild(0).GetComponent<Image>().sprite = player.GetComponent<PlayerController>().avatar.sprite;
+                    players[j].transform.GetChild(1).GetComponent<Text>().text = playerToPoints[playerId].ToString() + "(" + player.GetComponent<PlayerController>().hand.Count + ")";
+                }
             }
-            result += "Gracz " + i + ": " + playerToPoints[i] + " punktów\n";
+            j += 1;
         }
-
-        this.playerInfo.text = result;
     }
 
-    private bool CheckIfPlayerIsWinner(int playerId, Dictionary<int, int> playerToPoints) {
+    private bool CheckIfPlayerIsWinner(int playerId, Dictionary<int, int> playerToPoints)
+    {
         int maxPoints = playerToPoints.Values.Max();
 
         return playerToPoints[playerId] == maxPoints;
