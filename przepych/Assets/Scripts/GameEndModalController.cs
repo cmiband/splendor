@@ -47,8 +47,15 @@ public class GameEndModalController : MonoBehaviour
         pom = sortedPlayers;
         foreach (int i in sortedPlayers)
         {
-            players[j].transform.GetChild(0).GetComponent<Image>().sprite = gameController.players[i].GetComponent<PlayerController>().avatar.sprite;
-            players[j].transform.GetChild(1).GetComponent<Text>().text = playerToPoints[i].ToString();
+            foreach (var player in gameController.players)
+            {
+                int playerId = player.GetComponent<PlayerController>().playerId;
+                if (i == playerId)
+                {
+                    players[j].transform.GetChild(0).GetComponent<Image>().sprite = player.GetComponent<PlayerController>().avatar.sprite;
+                    players[j].transform.GetChild(1).GetComponent<Text>().text = playerToPoints[playerId].ToString() + "(" + player.GetComponent<PlayerController>().hand.Count + ")";
+                }
+            }
             j += 1;
         }
     }
