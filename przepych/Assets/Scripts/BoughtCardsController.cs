@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 public class BoughtCardsController : MonoBehaviour
 {
     private float CARD_X_OFFSET;
-    private const int MAXIMUM_CARD_AMOUNT_IN_ROW = 9;
+    private const int MAXIMUM_CARD_AMOUNT_IN_ROW = 8;
 
     public List<GameObject> players;
     public GameObject playerOneCards;
@@ -29,7 +29,7 @@ public class BoughtCardsController : MonoBehaviour
 
     private void InitComponents()
     {
-        this.CARD_X_OFFSET = this.cardPrefab.GetComponent<RectTransform>().rect.width+10;
+        this.CARD_X_OFFSET = this.cardPrefab.GetComponent<RectTransform>().rect.width+5;
         this.gameController = this.game.GetComponent<GameController>();
         this.gameObject.SetActive(false);
 

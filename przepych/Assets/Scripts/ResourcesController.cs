@@ -8,10 +8,6 @@ public class ResourcesController : MonoBehaviour, IEnumerable<KeyValuePair<GemCo
 {
     public Dictionary<GemColor, int> gems = new Dictionary<GemColor, int>();
 
-    private void Start()
-    {
-        this.FillDictionaryWithZeros();
-    }
     public override bool Equals(object obj)
     {
         if (obj.GetType() != typeof(ResourcesController))
