@@ -264,18 +264,6 @@ public class GameController : MonoBehaviour
 
         BoughtCardsController boughtCardsController = this.boughtCards.GetComponent<BoughtCardsController>();
         boughtCardsController.OpenModal(this.playerIdToAvatar);
-
-        this.ChangeButtonsVisibility(false);
-    }
-
-    public void ChangeButtonsVisibility(bool visibility)
-    {
-        this.openBoughtCards.SetActive(visibility);
-        this.pass.SetActive(visibility);
-        this.buyCard.SetActive(visibility);
-        this.reserveCard.SetActive(visibility);
-        this.gameInfo.SetActive(visibility);
-        this.reservedCards.SetActive(visibility);
     }
 
     public void HandlePass()
