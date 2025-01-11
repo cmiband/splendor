@@ -80,6 +80,7 @@ public class GemStashController : MonoBehaviour
         {
             amountOfGems -= 1;
             bankController.GoldenGemTaken();
+            this.HandleAmountChange();
             return true;
         }
         else
