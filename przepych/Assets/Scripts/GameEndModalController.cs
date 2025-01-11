@@ -27,31 +27,27 @@ public class GameEndModalController : MonoBehaviour
     {
         this.quitButton.onClick.AddListener(HandleQuitGame);
         this.newGameButton.onClick.AddListener(HandleNewGame);
-        this.players.Add(player1);
-        this.players.Add(player2);
-        this.players.Add(player3);
-        this.players.Add(player4);
     }
 
     public void InitModal(int turns, List<int> sortedPlayers, Dictionary<int, int> playerToPoints)
     {
         this.turnsInfo.text = turns.ToString();
+        this.players.Add(player1);
+        this.players.Add(player2);
+        this.players.Add(player3);
+        this.players.Add(player4);
 
         this.FillPlayerInfo(sortedPlayers, playerToPoints);
     }
 
     private void FillPlayerInfo(List<int> sortedPlayers, Dictionary<int, int> playerToPoints)
     {
-        foreach(int i in sortedPlayers)
+        Debug.Log(sortedPlayers);
+        foreach (int i in sortedPlayers)
         {
-            players[i].transform.GetChild(0).GetComponent<Image>().sprite = gameController.players[i].GetComponent<Image>().sprite;
+            players[i].transform.GetChild(0).GetComponent<Image>().sprite = gameController.players[i].GetComponent<PlayerController>().avatar.sprite;
+            players[i].transform.GetChild(1).GetComponent<Text>().text = playerToPoints[i].ToString();
         }
-    }
-
-    public void SetPlayerImage(Image playerImage)
-    {
-        this.playerImage.gameObject.SetActive(true);
-        this.playerImage.sprite = playerImage.sprite;
     }
 
     private bool CheckIfPlayerIsWinner(int playerId, Dictionary<int, int> playerToPoints)
