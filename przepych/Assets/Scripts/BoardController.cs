@@ -9,7 +9,7 @@ public class BoardController : MonoBehaviour
     public const int AMOUNT_OF_CARDS_VISIBLE_PER_LEVEL = 4;
     public const int AMOUNT_OF_VISIBLE_NOBLES = 5;
     public const float GAP_SIZE = 10;
-    public const float NOBLE_OFFSET = 80;
+    public const float NOBLE_OFFSET = 100;
 
     public GameObject cardPrefab;
     public GameObject gemPrefab;

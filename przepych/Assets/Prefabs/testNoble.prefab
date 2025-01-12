@@ -36,8 +36,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -12.5601, y: 13.8251}
-  m_SizeDelta: {x: 123.3028, y: 139.5026}
+  m_AnchoredPosition: {x: -34.03883, y: 27.7435}
+  m_SizeDelta: {x: 189.9889, y: 159.592}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7408231569884654896
 CanvasRenderer:
@@ -96,6 +96,7 @@ MonoBehaviour:
   playerImage: {fileID: 2967470556235760039}
   assignedPlayer: {fileID: 0}
   detailedPriceInfo: 
+  canBeChosen: 0
 --- !u!1 &7268356499885518615
 GameObject:
   m_ObjectHideFlags: 0
@@ -130,8 +131,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 56.905, y: 24.944}
-  m_SizeDelta: {x: 75.298, y: 74.058}
+  m_AnchoredPosition: {x: 70.8, y: 3.4}
+  m_SizeDelta: {x: 95.877, y: 95.485}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1460605727476130787
 CanvasRenderer:
