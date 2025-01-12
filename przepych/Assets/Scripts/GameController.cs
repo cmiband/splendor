@@ -366,6 +366,9 @@ public class GameController : MonoBehaviour
             this.SetPlayerControllerInfo(this.players[i], i);
         }
 
+        Debug.Log("curr player id:   " + this.currentPlayerId);
+        Debug.Log("player amount:  " + this.players.Count);
+        Debug.Log(this.players[this.currentPlayerId]);
         this.responseValidatorController.currentPlayerController = this.players[this.currentPlayerId].GetComponent<PlayerController>();
 
         reservedCardController.UpdateReservedCards(0);
@@ -380,6 +383,7 @@ public class GameController : MonoBehaviour
 
         if(!this.isPlayerMove)
         {
+            Debug.Log("here");
             StartCoroutine(RequestMoveAfterDelay());
         }
     }
@@ -388,39 +392,51 @@ public class GameController : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
 
-        this.RequestBotMoveAndExecute();
+        Debug.Log("after delay");
+         this.RequestBotMoveAndExecute();
     }
 
     async private Task RequestBotMoveAndExecute()
     {
-        int[] moves = await RequestMovesList();
+        //int[] moves = await RequestMovesList();
+        Debug.Log("in request");
+        try
+        {
+            await this.RequestMovesList();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.Message);
+            Debug.Log(e.StackTrace);
+        }
+        //this.responseValidatorController.PerformAgentMoveAndReturnAmountOfInvalidMoves(moves);
 
-        this.responseValidatorController.PerformAgentMoveAndReturnAmountOfInvalidMoves(moves);
-
-        this.ChangeTurn();
+        //this.ChangeTurn();
     }
 
-    async private Task<int[]?> RequestMovesList()
+    async private Task RequestMovesList()
     {
         int[] gameInfo = this.modelConnectionController.GameToArray();
+
         float[] gameState = this.modelConnectionController.Standartize(gameInfo);
 
         var request = new
         {
             Id = 1,
-            CurrentPlayer = this.currentPlayerId,
             GameState = gameState
         };
 
         string requestStringified = JsonConvert.SerializeObject(request);
+        Debug.Log(requestStringified);
         
-        string response = this.webServiceClient.SendAndFetchDataFromSocket(requestStringified).Result;
+        string response = await this.webServiceClient.SendAndFetchDataFromSocket(requestStringified);
 
-        JObject responseObject = JObject.Parse(response);
+        Debug.Log(response);
+        //JObject responseObject = JObject.Parse(response);
 
-        var moves = responseObject["MovesList"]?.ToObject<int[]>();
-
-        return moves;
+        //var moves = responseObject["MovesList"]?.ToObject<int[]>();
+        
+        //return moves;
     }
 
     private void SetPlayerControllerInfo(GameObject targetedPlayer, int targetedPlayerId)

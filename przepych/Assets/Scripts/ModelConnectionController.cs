@@ -58,10 +58,6 @@ public class ModelConnectionController : MonoBehaviour
 
         foreach (var noble in this.boardController.createdAvailableNoblesGameObjects)
         {
-            if(noble == null)
-            {
-                throw new Exception("Available noble gameobject is null");
-            }
             NobleController availableNobleController = noble.GetComponent<NobleController>();   
 
             foreach (var parameter in this.NobleToArray(availableNobleController))
@@ -82,7 +78,7 @@ public class ModelConnectionController : MonoBehaviour
 
         for (int i = 0; i < 4; i++)
         {
-            foreach (var item in this.PlayerToArray(gameController.currentPlayerId+i))
+            foreach (var item in this.PlayerToArray((gameController.currentPlayerId+i)%4))
             {
                 output[pointer++] = item;
             }
@@ -113,10 +109,6 @@ public class ModelConnectionController : MonoBehaviour
 
         foreach (var item in playerReservedCards)
         {
-            if (item == null)
-            {
-                throw new Exception("Reserved card by player is null");
-            }
             foreach (var parameter in CardToArray(item))
             {
                 output[pointer++] = parameter;
@@ -170,11 +162,6 @@ public class ModelConnectionController : MonoBehaviour
 
         foreach(var card in this.boardController.level1VisibleCardControllers)
         {
-            if(card == null)
-            {
-                throw new System.Exception("Null card controller from level1");
-            }
-
             foreach (var parameter in this.CardToArray(card))
             {
                 output[pointer++] = parameter;
@@ -198,10 +185,6 @@ public class ModelConnectionController : MonoBehaviour
 
         foreach (var card in this.boardController.level2VisibleCardControllers)
         {
-            if (card == null)
-            {
-                throw new Exception("Null card controller from level2");
-            }
             foreach (var parameter in this.CardToArray(card))
             {
                 output[pointer++] = parameter;
@@ -225,10 +208,6 @@ public class ModelConnectionController : MonoBehaviour
 
         foreach (var card in this.boardController.level3VisibleCardControllers)
         {
-            if (card == null)
-            {
-                throw new Exception("Null card controller from level3");
-            }
             foreach (var parameter in this.CardToArray(card))
             {
                 output[pointer++] = parameter;
