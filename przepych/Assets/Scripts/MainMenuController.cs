@@ -8,10 +8,11 @@ public class MainMenuController : MonoBehaviour
 {
     public GameObject startGame;
     public GameObject quitGame;
-
+    public Slider volumeSlider;
     private void Start()
     {
         AddEventListeners();
+        volumeSlider.value = -13;
     }
     public void AddEventListeners()
     {

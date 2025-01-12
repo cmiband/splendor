@@ -9,6 +9,9 @@ using TMPro;
 public class SettingsController : MonoBehaviour
 {
     public AudioMixer audioMixer;
+    public AudioSource audioSource;
+
+    public Slider slider;
 
     public TMP_Dropdown resolutionDropdown;
 
@@ -49,6 +52,14 @@ public class SettingsController : MonoBehaviour
     public void SetVolume(float volume)
     {
         audioMixer.SetFloat("Volume",volume);
+        if (slider.value == slider.minValue)
+        {
+            audioSource.mute = true;
+        }
+        else
+        {
+            audioSource.mute = false;
+        }
     }
 
     public void SetFullScreen (bool isFullScreen)
