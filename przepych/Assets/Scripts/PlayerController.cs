@@ -242,6 +242,7 @@ public class PlayerController : MonoBehaviour
 
             if(mainGameController.selectedCard != null)
             {
+                mainGameController.selectedCard.ownerId = mainGameController.currentPlayerId;
                 int cardLevel = mainGameController.selectedCard.level;
                 PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
                 Vector3 vector = mainGameController.selectedCard.transform.position;
@@ -300,6 +301,7 @@ public class PlayerController : MonoBehaviour
                 {
                     CardController reservedCard = mainGameController.selectedStack.PopCardFromStack();
                     reservedCard.isReserved = true;
+                    reservedCard.ownerId = mainGameController.currentPlayerId;
 
                     Debug.Log($"Zarezerwowano kartę ze stosu poziomu {reservedCard.level}");
 

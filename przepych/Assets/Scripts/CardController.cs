@@ -18,6 +18,7 @@ public class CardController : MonoBehaviour, IPointerClickHandler
     public bool isSelected;
     private Image selectedCardImage;
     public bool isReserved;
+    public int ownerId=-1;
 
     public string priceInfo = "";
 
@@ -83,6 +84,7 @@ public class CardController : MonoBehaviour, IPointerClickHandler
         this.detailedPrice = card.detailedPrice;
         this.points = card.points;
         this.illustration = card.illustration;
+        this.ownerId = card.ownerId;
 
         this.SetCardSprite();
     }
@@ -105,12 +107,14 @@ public class CardController : MonoBehaviour, IPointerClickHandler
     }
 
     public void OnPointerClick(PointerEventData eventData)
-    {
-        if (eventData.button == PointerEventData.InputButton.Left)
-        {
-            SetSelected(!isSelected); 
-        }
-        else if (eventData.button == PointerEventData.InputButton.Right)
+    {   
+        //usuniete ze wzgledu na to ze zaznaczanie kart dzialalo na dwa sposoby, tutaj oraz w GameController
+        //if (eventData.button == PointerEventData.InputButton.Left)
+        //{
+        //    SetSelected(!isSelected); 
+        //}
+        //else 
+        if (eventData.button == PointerEventData.InputButton.Right)
         {
             this.gameController.ShowClickedCard(this);
         }

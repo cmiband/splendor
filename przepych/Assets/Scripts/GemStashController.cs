@@ -71,6 +71,18 @@ public class GemStashController : MonoBehaviour
         else if(bankController.currentMode == MODE.TAKE && this.color != GemColor.GOLDEN)
         {
             this.HandleTakeGem();
+            if (bankController.mainGameController.selectedStack != null)
+            {
+                bankController.mainGameController.selectedStack.SetSelected(false);
+                bankController.mainGameController.selectedStack = null;
+            }
+            if (bankController.mainGameController.selectedCard != null)
+            {
+                bankController.mainGameController.selectedCard.SetSelected(false);
+                bankController.mainGameController.selectedCard = null;
+                bankController.mainGameController.buyCard.SetActive(false);
+                bankController.mainGameController.reserveCard.SetActive(false);
+            }
         }
     }
 
