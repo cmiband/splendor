@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CardStackController : MonoBehaviour
+public class CardStackController : MonoBehaviour, IPointerClickHandler
 {
     public List<CardController> cardsInStack = new List<CardController>();
     public bool isSelected;
@@ -26,7 +27,13 @@ public class CardStackController : MonoBehaviour
     {
         return this.cardsInStack.Count;
     }
-
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            SetSelected(!isSelected);
+        }
+    }
     public void SetSelected(bool selected)
     {
         isSelected = selected;

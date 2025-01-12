@@ -306,6 +306,17 @@ public class GameController : MonoBehaviour
             return;
         }
 
+        if (selectedStack != null)
+        {
+            selectedStack.SetSelected(false);
+            selectedStack = null;
+        }
+        if (selectedCard != null)
+        {
+            selectedCard.SetSelected(false);
+            selectedCard = null;
+        }
+
         PlayerController crntPlayerController = currentPlayer.GetComponent<PlayerController>();
 
         crntPlayerController.HideTooManyGemsInformation();
@@ -554,18 +565,21 @@ public class GameController : MonoBehaviour
 
         if (selectedCard == card)
         {
+            selectedCard.SetSelected(false);
             selectedCard = null;
             buyCard.SetActive(false);
             reserveCard.SetActive(false);
         }
-        else
+        else if((card.ownerId==currentPlayerId && card.isReserved)||!card.isReserved)
         {
-            selectedCard = card;
-            selectedCard.SetSelected(true);
-            buyCard.SetActive(true);
-            if (selectedCard.isReserved != true) reserveCard.SetActive(true);
-            else reserveCard.SetActive(false);
+                selectedCard = card;
+                selectedCard.SetSelected(true);
+                buyCard.SetActive(true);
+                if (selectedCard.isReserved != true) reserveCard.SetActive(true);
+                else reserveCard.SetActive(false);
         }
+
+
     }
 
     public void SelectStack(CardStackController cardStack)
