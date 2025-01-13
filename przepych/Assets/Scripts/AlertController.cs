@@ -14,11 +14,6 @@ public class AlertController : MonoBehaviour
         TooManyReservedCards.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void ShowInvalidOperationAlert()
     {
         InvalidOperationAlert.SetActive(true);  

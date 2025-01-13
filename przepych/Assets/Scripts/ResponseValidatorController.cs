@@ -26,7 +26,7 @@ public class ResponseValidatorController : MonoBehaviour
             new List<int> { 1, 1, 1, 0, 0 }
         };
 
-    public int PerformAgentMoveAndReturnAmountOfInvalidMoves(int[] arrayOfMoves)
+    public int PerformFirstAgentValidMove(int[] arrayOfMoves)
     {
         if(arrayOfMoves == null)
         {
@@ -38,19 +38,26 @@ public class ResponseValidatorController : MonoBehaviour
         {
             if (arrayOfMoves[i] == 0)
             {
-                passPlace = i;
-            }
-            else if (this.IsValidMove(arrayOfMoves[i]))
+                passPlace = arrayOfMoves[i];
+            } 
+            else
             {
-                this.currentPlayerController.UpdatePlayersResources();
-                this.currentPlayerController.UpdatePlayersPoints();
-                return i;
+                bool result = PerformMoveIfValid(arrayOfMoves[i]);
+                if (result)
+                {
+                    return arrayOfMoves[i];
+                } else
+                {
+                    Debug.LogError(System.DateTime.Now + "   move: " + arrayOfMoves[i] + "   invalid");
+                }
             }
         }
+
+        this.gameController.HandlePass();
         return passPlace;
     }
 
-    private bool IsValidMove(int move) 
+    private bool PerformMoveIfValid(int move) 
     {
         try
         {
@@ -72,20 +79,21 @@ public class ResponseValidatorController : MonoBehaviour
                 case 10:
                 case 11:
                 case 12:
-                case 13:
                     CardController targetedCard = this.GetSelectedCard(move - 1);
+                    Debug.LogError(System.DateTime.Now + "   card buy attempt   " + targetedCard);
 
                     bool buyResult = this.HandleCardBuy(targetedCard);
                     return buyResult;
 
+                case 13:
                 case 14:
                 case 15:
                 case 16:
                 case 17:
-                case 18:
                     bool takeTwoResult = this.HandleTakeTwoGems(move);
                     return takeTwoResult;
 
+                case 18:
                 case 19:
                 case 20:
                 case 21:
@@ -95,10 +103,10 @@ public class ResponseValidatorController : MonoBehaviour
                 case 25:
                 case 26:
                 case 27:
-                case 28:
                     bool takeThreeResult = this.HandleTakeThreeGems(move);
                     return takeThreeResult;
 
+                case 28:
                 case 29:
                 case 30:
                 case 31:
@@ -110,14 +118,14 @@ public class ResponseValidatorController : MonoBehaviour
                 case 37:
                 case 38:
                 case 39:
-                case 40:
-                    bool reserveResult = this.HandleReserveCard(move - 29);
+                
+                    bool reserveResult = this.HandleReserveCard(move - 28);
                     return reserveResult;
 
+                case 40:
                 case 41:
                 case 42:
-                case 43:
-                    CardController targetedReservedCard = this.currentPlayerController.handReserved[move - 41];
+                    CardController targetedReservedCard = this.currentPlayerController.handReserved[move - 40];
 
                     bool buyReservedResult = this.HandleBuyReservedCard(targetedReservedCard);
                     return buyReservedResult;
@@ -127,6 +135,7 @@ public class ResponseValidatorController : MonoBehaviour
             }
         } catch(System.Exception e)
         {
+            Debug.LogError(System.DateTime.Now+ " error move: "+move+"   "+e.Message);
             return false;
         }
     }
@@ -138,20 +147,15 @@ public class ResponseValidatorController : MonoBehaviour
 
     private bool HandleReserveCard(int cardId)
     {
-        if(this.currentPlayerController.handReserved.Count == 3)
+        if(this.currentPlayerController.handReserved.Count == 3 || !this.CheckIfPlayerCanTakeGolden())
         {
             return false;
         }
 
-        this.goldenGemStash.TakeGolden();
-
         CardController selectedCard = this.GetSelectedCard(cardId);
-
         int cardLevel = selectedCard.level;
         Vector3 vector = selectedCard.transform.position;
-        
         selectedCard.isReserved = true;
-
 
         var copiedCard = CloneCard(selectedCard);
         this.currentPlayerController.handReserved.Add(copiedCard);
@@ -159,48 +163,74 @@ public class ResponseValidatorController : MonoBehaviour
         switch (cardLevel)
         {
             case 1:
+                this.gameController.boardController.level1CardGameObjects.Remove(selectedCard.gameObject);
                 this.gameController.boardController.level1VisibleCardControllers.Remove(selectedCard);
-                Debug.Log("Zarezerwowano kart� 1 poziomu");
                 Destroy(selectedCard.gameObject);
+                if (this.gameController.boardController.level1StackController.CheckCardsCount() == 0)
+                {
+                    return true;
+                }
+
                 GameObject gameObject1 = Instantiate(this.gameController.boardController.cardPrefab, vector, Quaternion.identity, this.gameController.boardController.level1VisibleCards.transform);
                 gameObject1.name = "Card_Level_" + cardLevel;
                 CardController cardController1 = gameObject1.GetComponent<CardController>();
                 cardController1.InitCardData(this.gameController.boardController.level1StackController.PopCardFromStack());
                 cardController1.gameController = this.gameController;
                 this.currentPlayerController.AddCardClickListener(gameObject1, cardController1);
+
+                this.gameController.boardController.level1CardGameObjects.Add(gameObject1);
+                this.gameController.boardController.level1VisibleCardControllers.Add(cardController1);
                 break;
 
             case 2:
+                this.gameController.boardController.level2CardGameObjects.Remove(selectedCard.gameObject);
                 this.gameController.boardController.level2VisibleCardControllers.Remove(selectedCard);
-                Debug.Log("Zarezerwowano kart� 2 poziomu");
                 Destroy(selectedCard.gameObject);
+                if (this.gameController.boardController.level2StackController.CheckCardsCount() == 0)
+                {
+                    return true;
+                }
+
                 GameObject gameObject2 = Instantiate(this.gameController.boardController.cardPrefab, vector, Quaternion.identity, this.gameController.boardController.level2VisibleCards.transform);
                 gameObject2.name = "Card_Level_" + cardLevel;
                 CardController cardController2 = gameObject2.GetComponent<CardController>();
                 cardController2.InitCardData(this.gameController.boardController.level2StackController.PopCardFromStack());
                 cardController2.gameController = this.gameController;
                 this.currentPlayerController.AddCardClickListener(gameObject2, cardController2);
+
+                this.gameController.boardController.level2CardGameObjects.Add(gameObject2);
+                this.gameController.boardController.level2VisibleCardControllers.Add(cardController2);
                 break;
 
             case 3:
+                this.gameController.boardController.level3CardGameObjects.Remove(selectedCard.gameObject);
                 this.gameController.boardController.level3VisibleCardControllers.Remove(selectedCard);
-                Debug.Log("Zarezerwowano kart� 3 poziomu");
                 Destroy(selectedCard.gameObject);
+                if (this.gameController.boardController.level3StackController.CheckCardsCount() == 0)
+                {
+                    return true;
+                }
+
                 GameObject gameObject3 = Instantiate(this.gameController.boardController.cardPrefab, vector, Quaternion.identity, this.gameController.boardController.level3VisibleCards.transform);
                 gameObject3.name = "Card_Level_" + cardLevel;
                 CardController cardController3 = gameObject3.GetComponent<CardController>();
                 cardController3.InitCardData(this.gameController.boardController.level3StackController.PopCardFromStack());
                 cardController3.gameController = this.gameController;
                 this.currentPlayerController.AddCardClickListener(gameObject3, cardController3);
+
+                this.gameController.boardController.level3CardGameObjects.Add(gameObject3);
+                this.gameController.boardController.level3VisibleCardControllers.Add(cardController3);
                 break;
         }
+        this.goldenGemStash.TakeGolden();
 
+        this.currentPlayerController.ConfirmPlayerMove();
         return true;
     }
 
     private bool HandleTakeThreeGems(int moveId)
     {
-        int targetedCombinationIndex = moveId - 19;
+        int targetedCombinationIndex = moveId - 18;
 
         List<int> targetedCombination = this.threeGemsConfigurations[targetedCombinationIndex];
 
@@ -270,7 +300,7 @@ public class ResponseValidatorController : MonoBehaviour
 
     private bool HandleTakeTwoGems(int moveId)
     {
-        int targetedGems = moveId - 14;
+        int targetedGems = moveId - 13;
 
         List<GemColor> colors = Enum.GetValues(typeof(GemColor)).Cast<GemColor>().ToList();
 
@@ -364,7 +394,6 @@ public class ResponseValidatorController : MonoBehaviour
         {
             this.currentPlayerController.handReserved.Remove(selectedCard);
             this.gameController.reservedCardController.reservedCards.Remove(selectedCard.gameObject);
-            Debug.Log("Kupiono zarezerwowaną kartę");
             Destroy(selectedCard.gameObject);
 
         }
@@ -373,8 +402,8 @@ public class ResponseValidatorController : MonoBehaviour
             switch (cardLevel)
             {
                 case 1:
+                    this.gameController.boardController.level1CardGameObjects.Remove(selectedCard.gameObject);           
                     this.gameController.boardController.level1VisibleCardControllers.Remove(selectedCard);
-                    Debug.Log("Kupiono kart� 1 poziomu");
                     Destroy(selectedCard.gameObject);
 
                     if (this.gameController.boardController.level1StackController.CheckCardsCount() == 0)
@@ -388,11 +417,14 @@ public class ResponseValidatorController : MonoBehaviour
                     cardController1.InitCardData(this.gameController.boardController.level1StackController.PopCardFromStack());
                     cardController1.gameController = this.gameController;
                     currentPlayerController.AddCardClickListener(gameObject1, cardController1);
+
+                    this.gameController.boardController.level1CardGameObjects.Add(gameObject1);
+                    this.gameController.boardController.level1VisibleCardControllers.Add(cardController1);
                     break;
 
                 case 2:
+                    this.gameController.boardController.level2CardGameObjects.Remove(selectedCard.gameObject);
                     this.gameController.boardController.level2VisibleCardControllers.Remove(selectedCard);
-                    Debug.Log("Kupiono kart� 2 poziomu");
                     Destroy(selectedCard.gameObject);
 
                     if (this.gameController.boardController.level2StackController.CheckCardsCount() == 0)
@@ -406,11 +438,14 @@ public class ResponseValidatorController : MonoBehaviour
                     cardController2.InitCardData(this.gameController.boardController.level2StackController.PopCardFromStack());
                     cardController2.gameController = this.gameController;
                     this.currentPlayerController.AddCardClickListener(gameObject2, cardController2);
+
+                    this.gameController.boardController.level2CardGameObjects.Add(gameObject2);
+                    this.gameController.boardController.level2VisibleCardControllers.Add(cardController2);
                     break;
 
                 case 3:
+                    this.gameController.boardController.level3CardGameObjects.Remove(selectedCard.gameObject);
                     this.gameController.boardController.level3VisibleCardControllers.Remove(selectedCard);
-                    Debug.Log("Kupiono kart� 3 poziomu");
                     Destroy(selectedCard.gameObject);
 
                     if (this.gameController.boardController.level3StackController.CheckCardsCount() == 0)
@@ -424,15 +459,28 @@ public class ResponseValidatorController : MonoBehaviour
                     cardController3.InitCardData(this.gameController.boardController.level3StackController.PopCardFromStack());
                     cardController3.gameController = this.gameController;
                     this.currentPlayerController.AddCardClickListener(gameObject3, cardController3);
+
+                    this.gameController.boardController.level3CardGameObjects.Add(gameObject3);
+                    this.gameController.boardController.level3VisibleCardControllers.Add(cardController3);
                     break;
             }
         }
+
+        this.currentPlayerController.ConfirmPlayerMove();
         return true;
     }
 
     private bool CheckIfPlayerCanBuyCard(CardController selectedCard)
     {
-        return !this.currentPlayerController.CanAffordCardWithGolden(selectedCard) && !this.currentPlayerController.CanAffordCard(selectedCard);
+        return this.currentPlayerController.CanAffordCardWithGolden(selectedCard) || this.currentPlayerController.CanAffordCard(selectedCard);
+    }
+
+    private bool CheckIfPlayerCanTakeGolden()
+    {
+        int gemAmount = this.currentPlayerController.GetAmountOfGems();
+        int amountOfGolden = this.bankController.resourcesController.gems[GemColor.GOLDEN];
+
+        return amountOfGolden > 0 ? gemAmount < 10 : true;
     }
 
     private CardController GetSelectedCard(int cardId)
@@ -440,24 +488,24 @@ public class ResponseValidatorController : MonoBehaviour
         int targetedStack = this.GetTargetedStack(cardId);
         int targetedCard = cardId - targetedStack * 4;
 
-        if(targetedStack == 0)
+        if (targetedStack == 0)
         {
-            return this.boardController.level1VisibleCardControllers[targetedCard];
+            return this.boardController.level1CardGameObjects[targetedCard].GetComponent<CardController>();
         }
-        if(targetedCard == 1)
+        if(targetedStack == 1)
         {
-            return this.boardController.level2VisibleCardControllers[targetedCard];
+            return this.boardController.level2CardGameObjects[targetedCard].GetComponent<CardController>();
         } 
         else
         {
-            return this.boardController.level3VisibleCardControllers[targetedCard];
+            return this.boardController.level3CardGameObjects[targetedCard].GetComponent<CardController>();
         }
     }
 
     private int GetTargetedStack(int cardId)
     {
-        if (cardId >= 1 && cardId <= 4) return 0;
-        if (cardId > 4 && cardId <= 8) return 1;
+        if (cardId >= 0 && cardId <= 3) return 0;
+        if (cardId > 3 && cardId <= 7) return 1;
         else return 2;
     }
 

@@ -19,9 +19,10 @@ public class GameController : MonoBehaviour
     public bool blockAction = false;
     public Text stageInfo;
     private int stageNumber = 1;
+    public int turnCounter = 0;
 
     public Text timerText;
-    private float elapsedTime = 0f; 
+    private float elapsedTime = 0f;
     private bool isTimerRunning = false;
 
     public Text countdownText;
@@ -104,7 +105,7 @@ public class GameController : MonoBehaviour
         boardController.SetCardsInStacks();
         boardController.CreateCardObjectsOnStart();
 
-        availableNoblesController = board.GetComponent<AvailableNoblesController>();    
+        availableNoblesController = board.GetComponent<AvailableNoblesController>();
         availableNoblesController.LoadNoblesFromExcel("Assets/ExternalResources/NoblesWykaz.xlsx");
         boardController.SetNobles(availableNoblesController.noblesList);
         boardController.CreateNobleObjectOnStart();
@@ -119,7 +120,16 @@ public class GameController : MonoBehaviour
 
         this.players = new List<GameObject> { clientPlayer, nextPlayerOne, nextPlayerTwo, nextPlayerThree };
         this.CreateFourPlayersDataOnInit();
-        this.FillPlayersWithData(); 
+        /*
+        ResourcesController rc = new ResourcesController();
+        rc.FillDictionaryWithZeros();
+        rc.gems[GemColor.WHITE] = 5;
+        rc.gems[GemColor.GREEN] = 5;
+        rc.gems[GemColor.BLUE] = 5;
+        rc.gems[GemColor.BLACK] = 5;
+        rc.gems[GemColor.RED] = 5;
+        this.playerIdToResources[1] = rc;*/
+        this.FillPlayersWithData();
         this.currentPlayerId = 0;
         this.reserveCard.SetActive(false);
         this.buyCard.SetActive(false);
@@ -135,7 +145,7 @@ public class GameController : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
 
-            int hours = Mathf.FloorToInt(elapsedTime / 3600F);      
+            int hours = Mathf.FloorToInt(elapsedTime / 3600F);
             int minutes = Mathf.FloorToInt((elapsedTime % 3600F) / 60F);
             int seconds = Mathf.FloorToInt(elapsedTime % 60F);
 
@@ -144,16 +154,16 @@ public class GameController : MonoBehaviour
 
         if (isTimerRunning && remainingTime > 0)
         {
-            remainingTime -= Time.deltaTime; 
+            remainingTime -= Time.deltaTime;
             if (remainingTime <= 0)
             {
-                remainingTime = 0; 
-                isTimerRunning = false; 
+                remainingTime = 0;
+                isTimerRunning = false;
             }
             UpdateTimerText();
         }
 
-        if(remainingTime == 0)
+        if (remainingTime == 0)
         {
             HandlePass();
         }
@@ -163,7 +173,7 @@ public class GameController : MonoBehaviour
     {
         this.availablePlayerAvatars = new List<string>();
 
-        for(int i = 1; i<=11; i++)
+        for (int i = 1; i <= 11; i++)
         {
             availablePlayerAvatars.Add("Avatars/awatar" + i);
         }
@@ -174,7 +184,7 @@ public class GameController : MonoBehaviour
         this.playerIdToAvatar.Clear();
         List<string> shuffledAvatars = this.ShuffleAvatars(this.availablePlayerAvatars);
 
-        for(int i = 0; i<4; i++)
+        for (int i = 0; i < 4; i++)
         {
             this.playerIdToAvatar.Add(i, shuffledAvatars[i]);
         }
@@ -187,7 +197,7 @@ public class GameController : MonoBehaviour
         System.Random rng = new System.Random();
 
         int n = listCopy.Count;
-        while(n > 1)
+        while (n > 1)
         {
             n--;
             int k = rng.Next(n + 1);
@@ -213,7 +223,7 @@ public class GameController : MonoBehaviour
         Button reserveCardButton = this.reserveCard.GetComponent<Button>();
         reserveCardButton.onClick.AddListener(clientPlayer.GetComponent<PlayerController>().HandleReserveCard);
     }
-    
+
     private void CreateFourPlayersDataOnInit()
     {
         for (int i = 0; i < 4; i++)
@@ -269,7 +279,7 @@ public class GameController : MonoBehaviour
 
     private void HandleOpenBoughtCards()
     {
-        if(this.blockAction)
+        if (this.blockAction)
         {
             return;
         }
@@ -280,7 +290,7 @@ public class GameController : MonoBehaviour
 
     public void HandlePass()
     {
-        if(actionIsTaken || blockAction)
+        if (actionIsTaken || blockAction)
         {
             return;
         }
@@ -301,7 +311,7 @@ public class GameController : MonoBehaviour
 
     public void ChangeTurn()
     {
-        if(this.blockAction)
+        if (this.blockAction)
         {
             return;
         }
@@ -364,55 +374,67 @@ public class GameController : MonoBehaviour
             this.SetPlayerControllerInfo(this.players[i], i);
         }
 
-        Debug.Log("curr player id:   " + this.currentPlayerId);
-        Debug.Log("player amount:  " + this.players.Count);
-        Debug.Log(this.players[this.currentPlayerId]);
+        Debug.Log(System.DateTime.Now+"   curr player id:   " + this.currentPlayerId);
         this.responseValidatorController.currentPlayerController = this.players[this.currentPlayerId].GetComponent<PlayerController>();
+        this.bankController.playerController = this.players[this.currentPlayerId].GetComponent<PlayerController>();
 
-        reservedCardController.UpdateReservedCards(0);
-        NextPlayerOneReservedCardController.UpdateReservedCardsOthers(1);
-        NextPlayerTwoReservedCardController.UpdateReservedCardsOthers(2);
-        NextPlayerThreeReservedCardController.UpdateReservedCardsOthers(3);
+        this.UpdateReservedCards();
+        this.UpdateAgentPlayersGameObjects();
         this.bankController.ClearSelectedGems();
 
         buyCard.SetActive(false);
         reserveCard.SetActive(false);
         this.skipGettingNobles = false;
 
+        this.turnCounter++;
+        if(turnCounter > 3)
+        {
+            //return;
+        }
         if(!this.isPlayerMove)
         {
-            Debug.Log("here");
             StartCoroutine(RequestMoveAfterDelay());
         }
+    }
+
+    private void UpdateReservedCards()
+    {
+        this.reservedCardController.UpdateReservedCards(0);
+
+        this.NextPlayerOneReservedCardController.UpdateReservedCardsOthers(1);
+        this.NextPlayerTwoReservedCardController.UpdateReservedCardsOthers(2);
+        this.NextPlayerThreeReservedCardController.UpdateReservedCardsOthers(3);
+    }
+
+    private void UpdateAgentPlayersGameObjects()
+    {
+        for(int i = 1; i<4; i++)
+        {
+            this.UpdateAgentGameObject(this.players[i], i);
+        }
+    }
+
+    private void UpdateAgentGameObject(GameObject agent, int agentIndex)
+    {
+        this.FillPlayerWithData(agent, agentIndex);
     }
 
     private IEnumerator RequestMoveAfterDelay()
     {
         yield return new WaitForSeconds(2);
 
-        Debug.Log("after delay");
-         this.RequestBotMoveAndExecute();
+        this.RequestBotMoveAndExecute();
     }
 
     async private Task RequestBotMoveAndExecute()
     {
-        //int[] moves = await RequestMovesList();
-        Debug.Log("in request");
-        try
-        {
-            await this.RequestMovesList();
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e.Message);
-            Debug.Log(e.StackTrace);
-        }
-        //this.responseValidatorController.PerformAgentMoveAndReturnAmountOfInvalidMoves(moves);
+        int[] moves = await this.RequestMovesList();
 
-        //this.ChangeTurn();
+        int x = this.responseValidatorController.PerformFirstAgentValidMove(moves);
+        Debug.Log(System.DateTime.Now + "    first valid move = " + x);
     }
 
-    async private Task RequestMovesList()
+    async private Task<int[]?> RequestMovesList()
     {
         int[] gameInfo = this.modelConnectionController.GameToArray();
 
@@ -425,16 +447,15 @@ public class GameController : MonoBehaviour
         };
 
         string requestStringified = JsonConvert.SerializeObject(request);
-        Debug.Log(requestStringified);
         
         string response = await this.webServiceClient.SendAndFetchDataFromSocket(requestStringified);
 
-        Debug.Log(response);
-        //JObject responseObject = JObject.Parse(response);
+        JObject responseObject = JObject.Parse(response);
+        Debug.Log(System.DateTime.Now+"  "+response);
 
-        //var moves = responseObject["MovesList"]?.ToObject<int[]>();
+        var moves = responseObject["MovesList"]?.ToObject<int[]>();
         
-        //return moves;
+        return moves;
     }
 
     private void SetPlayerControllerInfo(GameObject targetedPlayer, int targetedPlayerId)
@@ -660,8 +681,6 @@ public class GameController : MonoBehaviour
                 if (selectedCard.isReserved != true) reserveCard.SetActive(true);
                 else reserveCard.SetActive(false);
         }
-
-
     }
 
     public void SelectStack(CardStackController cardStack)

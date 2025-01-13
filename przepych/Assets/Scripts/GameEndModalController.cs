@@ -16,7 +16,6 @@ public class GameEndModalController : MonoBehaviour
     public List<GameObject> players = new List<GameObject>();
     public List<int> pom = new List<int>();
 
-
     public Button quitButton;
     public Button newGameButton;
     public Image playerImage;

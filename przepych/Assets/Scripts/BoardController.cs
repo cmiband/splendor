@@ -42,6 +42,10 @@ public class BoardController : MonoBehaviour
     public List<NobleController> loadedNoblesListControllers = new List<NobleController>();
     public List<NobleController> visibleNoblesListControllers = new List<NobleController>();
     public List<NobleController> visibleNoblesCoppied = new List<NobleController>();
+
+    public List<GameObject> level1CardGameObjects = new List<GameObject>();
+    public List<GameObject> level2CardGameObjects = new List<GameObject>();
+    public List<GameObject> level3CardGameObjects = new List<GameObject>();
    
     public GameController gameController;
 
@@ -78,9 +82,9 @@ public class BoardController : MonoBehaviour
 
     public void CreateCardObjectsOnStart()
     {
-        this.CreateCardObjectsInSelectedContainer(this.level1VisibleCards, this.level1StackController, this.level1VisibleCardControllers);
-        this.CreateCardObjectsInSelectedContainer(this.level2VisibleCards, this.level2StackController, this.level2VisibleCardControllers);
-        this.CreateCardObjectsInSelectedContainer(this.level3VisibleCards, this.level3StackController, this.level3VisibleCardControllers);
+        this.CreateCardObjectsInSelectedContainer(this.level1VisibleCards, this.level1StackController, this.level1VisibleCardControllers, this.level1CardGameObjects);
+        this.CreateCardObjectsInSelectedContainer(this.level2VisibleCards, this.level2StackController, this.level2VisibleCardControllers, this.level2CardGameObjects);
+        this.CreateCardObjectsInSelectedContainer(this.level3VisibleCards, this.level3StackController, this.level3VisibleCardControllers, this.level3CardGameObjects);
     }
 
     public void CreateNobleObjectOnStart()
@@ -88,21 +92,21 @@ public class BoardController : MonoBehaviour
         this.CreateNobles(this.nobles, this.visibleNoblesListControllers);
     }
 
-    private void CreateCardObjectsInSelectedContainer(GameObject cardsContainer, CardStackController targetedStack, List<CardController> visibleCards)
+    private void CreateCardObjectsInSelectedContainer(GameObject cardsContainer, CardStackController targetedStack, List<CardController> visibleCards, List<GameObject> cardGameObjects)
     {
         float currentXOffset = 0;
         for(int i = 0; i < AMOUNT_OF_CARDS_VISIBLE_PER_LEVEL; i++)
         {
             CardController cardToInsert = targetedStack.PopCardFromStack();
 
-            this.CreateCardObject(cardToInsert, cardsContainer, currentXOffset);
+            this.CreateCardObject(cardToInsert, cardsContainer, cardGameObjects, currentXOffset);
             currentXOffset += this.cardPrefab.GetComponent<RectTransform>().rect.width + GAP_SIZE;
 
             visibleCards.Add(cardToInsert);
         }
     }
 
-    public void CreateCardObject(CardController targetedCard, GameObject targetedVisibleCardsContainer, float xOffset)
+    public void CreateCardObject(CardController targetedCard, GameObject targetedVisibleCardsContainer, List<GameObject> targetedGameObjectList, float xOffset)
     {
         Vector3 cardPosition = new Vector3(targetedVisibleCardsContainer.transform.position.x + xOffset, targetedVisibleCardsContainer.transform.position.y, targetedVisibleCardsContainer.transform.position.z);
 
@@ -112,6 +116,8 @@ public class BoardController : MonoBehaviour
         cardController.gameController = this.gameController;
         RectTransform cardRectTransform = cardObject.GetComponent<RectTransform>();
         cardObject.GetComponent<RectTransform>().localPosition = new Vector3(xOffset, cardRectTransform.localPosition.y, cardRectTransform.localPosition.z);
+
+        targetedGameObjectList.Add(cardObject);
     }
 
     private void CreateNobles(GameObject noblesContainer, List<NobleController> visibleNobles)
