@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEngine.Audio;
 
 public class GameEndModalController : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class GameEndModalController : MonoBehaviour
     public GameObject player4;
     public List<GameObject> players = new List<GameObject>();
     public List<int> pom = new List<int>();
+
+    public AudioSource audioSource;
 
     public Button quitButton;
     public Button newGameButton;
@@ -27,6 +30,7 @@ public class GameEndModalController : MonoBehaviour
     {
         this.quitButton.onClick.AddListener(HandleQuitGame);
         this.newGameButton.onClick.AddListener(HandleNewGame);
+        audioSource.Stop();
     }
 
     public void InitModal(int turns, List<int> sortedPlayers, Dictionary<int, int> playerToPoints)
