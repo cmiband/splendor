@@ -228,19 +228,13 @@ public class PlayerController : MonoBehaviour
 
     public void HandleReserveCard()
     {
-        if(this.mainGameController.actionIsTaken || this.mainGameController.blockAction)
+        if(this.mainGameController.actionIsTaken || this.mainGameController.blockAction || this.mainGameController.boughtCards.activeInHierarchy == true)
         {
             return;
         }
 
         if(handReserved.Count < 3)
         {
-            if (goldenGemStashController.TakeGolden())
-            {
-                Debug.Log("Pobrano złoty żeton");
-            }
-            else Debug.Log("Nie ma już złotych żetonów");
-
             if(mainGameController.selectedCard != null)
             {
                 mainGameController.selectedCard.ownerId = mainGameController.currentPlayerId;
@@ -292,6 +286,11 @@ public class PlayerController : MonoBehaviour
                         AddCardClickListener(gameObject3, cardController3);
                         break;
                 }
+                if (goldenGemStashController.TakeGolden())
+                {
+                    Debug.Log("Pobrano złoty żeton");
+                }
+                else Debug.Log("Nie ma już złotych żetonów");
             }
             else if(mainGameController.selectedStack != null && mainGameController.selectedStack.CheckCardsCount() > 0)
             {
@@ -307,6 +306,12 @@ public class PlayerController : MonoBehaviour
                     Debug.Log($"Zarezerwowano kartę ze stosu poziomu {reservedCard.level}");
 
                     player.handReserved.Add(reservedCard);
+
+                    if (goldenGemStashController.TakeGolden())
+                    {
+                        Debug.Log("Pobrano złoty żeton");
+                    }
+                    else Debug.Log("Nie ma już złotych żetonów");
                 }
                 else
                 {
