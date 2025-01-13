@@ -18,6 +18,7 @@ public class GemStashController : MonoBehaviour
     public BankController bankController;
     public Text amountInfo;
     public UnityEngine.UI.Image stashImage;
+    private AlertController alertController = new AlertController();
 
     void Start()
     {
@@ -32,6 +33,7 @@ public class GemStashController : MonoBehaviour
         openBoughtCardsButton.onClick.AddListener(() => OnClick());
 
         amountInfo.text = this.amountOfGems.ToString();
+
     }
     private void Update()
     {
@@ -71,6 +73,18 @@ public class GemStashController : MonoBehaviour
         else if(bankController.currentMode == MODE.TAKE && this.color != GemColor.GOLDEN)
         {
             this.HandleTakeGem();
+            if (bankController.mainGameController.selectedStack != null)
+            {
+                bankController.mainGameController.selectedStack.SetSelected(false);
+                bankController.mainGameController.selectedStack = null;
+            }
+            if (bankController.mainGameController.selectedCard != null)
+            {
+                bankController.mainGameController.selectedCard.SetSelected(false);
+                bankController.mainGameController.selectedCard = null;
+                bankController.mainGameController.buyCard.SetActive(false);
+                bankController.mainGameController.reserveCard.SetActive(false);
+            }
         }
     }
 
@@ -171,7 +185,9 @@ public class GemStashController : MonoBehaviour
     private void HandleInvalidOperation()
     {
         bankController.gemsBeingChosen.Clear();
-
+  
+        alertController = FindObjectOfType<AlertController>();
+        alertController.ShowInvalidOperationAlert();
         Debug.Log("Nieodpowiednia operacja, �etony nie zosta�y pobrane");
     }
 

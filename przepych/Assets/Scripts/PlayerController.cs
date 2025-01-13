@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
 
     public GameObject TooManyGemsAlert;
     public Text TooManyGemsAlertText;
+    AlertController alertController = new AlertController();
 
     public Dictionary<GemColor, GameObject> gemColorToResourceGameObject = new Dictionary<GemColor, GameObject>();
     public GameObject whiteGems;
@@ -78,7 +79,7 @@ public class PlayerController : MonoBehaviour
 
     public void HandleBuyCard()
     {
-        if(this.mainGameController.actionIsTaken || this.mainGameController.blockAction)
+        if (this.mainGameController.actionIsTaken || this.mainGameController.blockAction)
         {
             return;
         }
@@ -88,13 +89,14 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-
-        PlayerController player = this;
+        PlayerController player = mainGameController.currentPlayer.GetComponent<PlayerController>();
         CardController selectedCard = mainGameController.selectedCard;
         Vector3 vector = mainGameController.selectedCard.transform.position;
 
         if (!player.CanAffordCardWithGolden(selectedCard) && !player.CanAffordCard(selectedCard))
         {
+            alertController = FindObjectOfType<AlertController>();
+            alertController.ShowNotEnoughGems();
             return;
         }
 
@@ -105,7 +107,6 @@ public class PlayerController : MonoBehaviour
         {
             resourcesUsed[color] = 0;
         }
-
         foreach (var gemCost in price)
         {
             int requiredAmount = gemCost.Value;
@@ -241,6 +242,7 @@ public class PlayerController : MonoBehaviour
 
             if(mainGameController.selectedCard != null)
             {
+                mainGameController.selectedCard.ownerId = mainGameController.currentPlayerId;
                 int cardLevel = mainGameController.selectedCard.level;
                 PlayerController player = this;
                 Vector3 vector = mainGameController.selectedCard.transform.position;
@@ -299,6 +301,7 @@ public class PlayerController : MonoBehaviour
                 {
                     CardController reservedCard = mainGameController.selectedStack.PopCardFromStack();
                     reservedCard.isReserved = true;
+                    reservedCard.ownerId = mainGameController.currentPlayerId;
 
                     Debug.Log($"Zarezerwowano kartę ze stosu poziomu {reservedCard.level}");
 
@@ -319,6 +322,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            alertController.ShowTooManyReservedCards();
             if (mainGameController.selectedStack.CheckCardsCount() <= 0) Debug.Log("Nie ma juz kart na stosie!");
             else Debug.Log("Za dużo zarezerwowałeś kart");
         }
