@@ -102,11 +102,16 @@ public class BoughtCardsController : MonoBehaviour
     {
         GameObject targetedPlayerPlace = this.players[playerIndex];
         RectTransform targetedPlayerPlaceRect = targetedPlayerPlace.GetComponent<RectTransform>();
+        int allCardCreated = 0;
         float currentXOffset = 0;
         float currentYOffset = 0;
         int cardInRowCounter = 0;
         foreach(CardController card in cards)
         {
+            if(allCardCreated > 24)
+            {
+                return;
+            }
             if(cardInRowCounter == MAXIMUM_CARD_AMOUNT_IN_ROW)
             {
                 cardInRowCounter = 0;
@@ -125,6 +130,7 @@ public class BoughtCardsController : MonoBehaviour
             currentXOffset += CARD_X_OFFSET;
 
             cardInRowCounter++;
+            allCardCreated++;
         }
     }
 

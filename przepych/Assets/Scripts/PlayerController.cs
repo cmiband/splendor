@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     public ResourcesController resources = new ResourcesController();
     private ResourcesController bonusResources = new ResourcesController();
 
+    public AudioSource getCardSound;
     public ResourcesController BonusResources
     {
         get { return bonusResources; }
@@ -160,11 +161,13 @@ public class PlayerController : MonoBehaviour
             player.handReserved.Remove(selectedCard);
             mainGameController.reservedCardController.reservedCards.Remove(mainGameController.selectedCard.gameObject);
             Debug.Log("Kupiono zarezerwowaną kartę");
+            getCardSound.Play();
             Destroy(mainGameController.selectedCard.gameObject);
 
         }
         else
         {
+            getCardSound.Play();
             switch (cardLevel)
             {
                 case 1:
@@ -258,10 +261,9 @@ public class PlayerController : MonoBehaviour
 
                 mainGameController.selectedCard.isReserved = true;
 
-
                 var copiedCard = CloneCard();
                 player.handReserved.Add(copiedCard);
-
+                getCardSound.Play();
                 switch (cardLevel)
                 {
                     case 1:
@@ -342,6 +344,8 @@ public class PlayerController : MonoBehaviour
                     CardController reservedCard = mainGameController.selectedStack.PopCardFromStack();
                     reservedCard.isReserved = true;
                     reservedCard.ownerId = mainGameController.currentPlayerId;
+
+                    getCardSound.Play();
 
                     player.handReserved.Add(reservedCard);
 
