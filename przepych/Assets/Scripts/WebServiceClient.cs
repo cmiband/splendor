@@ -18,16 +18,20 @@ public class WebServiceClient : MonoBehaviour
     private const string FETCH_DATA_WITH_CALLBACK_EXCEPTION_MESSAGE = "Error occured while trying to fetch data and perform callback";
     private const string DISCONNECT_ERROR_MESSAGE = "Error occured while trying to disconnect from web socket";
     private const string CLOSING_STATUS = "Closing";
-    private Uri serverEndpoint;
-    private ClientWebSocket webSocket;
+    public static Uri serverEndpoint = new Uri("ws://localhost:8765");
+    public static ClientWebSocket? webSocket;
 
-    public WebServiceClient(string endpoint)
+    public static void InitSocket()
     {
-        serverEndpoint = new Uri(endpoint);
         webSocket = new ClientWebSocket();
     }
 
-    public async Task ConnectToWebsocket()
+    public static void ClearSocket()
+    {
+        webSocket = null;
+    }
+
+    public static async Task ConnectToWebsocket()
     {
         try
         {
@@ -35,11 +39,17 @@ public class WebServiceClient : MonoBehaviour
         }
         catch (Exception e)
         {
+            Debug.LogError(System.DateTime.Now+"  "+e.Message);
             throw new WebserviceClientException(CONNECTION_ERROR_MESSAGE, e);
         }
     }
 
-    public async Task SendDataToSocket(string data)
+    public static bool CheckIfSocketIsConnected()
+    {
+        return webSocket.State == WebSocketState.Open;
+    }
+
+    public static async Task SendDataToSocket(string data)
     {
         try
         {
@@ -52,13 +62,13 @@ public class WebServiceClient : MonoBehaviour
         }
     }
 
-    public async Task<string> SendAndFetchDataFromSocket(string data)
+    public static async Task<string> SendAndFetchDataFromSocket(string data)
     {
         try
         {
-            await this.SendDataToSocket(data);
+            await SendDataToSocket(data);
 
-            return await this.FetchDataFromSocket();
+            return await FetchDataFromSocket();
         }
         catch (Exception e)
         {
@@ -68,12 +78,12 @@ public class WebServiceClient : MonoBehaviour
         return "";
     }
 
-    public async Task<string> FetchDataFromSocket()
+    public static async Task<string> FetchDataFromSocket()
     {
         try
         {
             ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[1024]);
-            WebSocketReceiveResult result = await this.webSocket.ReceiveAsync(buffer, CancellationToken.None);
+            WebSocketReceiveResult result = await webSocket.ReceiveAsync(buffer, CancellationToken.None);
             string receivedMessage = Encoding.UTF8.GetString(buffer.Array, 0, result.Count);
 
             return receivedMessage;
@@ -85,11 +95,11 @@ public class WebServiceClient : MonoBehaviour
         return "";
     }
 
-    public async Task FetchDataFromSocketAndPerformCallback(FetchDataCallbackHandler callback)
+    public static async Task FetchDataFromSocketAndPerformCallback(FetchDataCallbackHandler callback)
     {
         try
         {
-            string data = await this.FetchDataFromSocket();
+            string data = await FetchDataFromSocket();
             if (callback != null)
             {
                 callback(data);
@@ -101,7 +111,7 @@ public class WebServiceClient : MonoBehaviour
         }
     }
 
-    public async Task DisconnectFromWebsocket()
+    public static async Task DisconnectFromWebsocket()
     {
         try
         {

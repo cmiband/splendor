@@ -82,14 +82,10 @@ public class GameController : MonoBehaviour
 
     public GameObject gameEndModal;
     public GameObject nobleChoiceInfoModal;
-
-    private WebServiceClient webServiceClient;
+    public GameObject enemiesMakingDecisionInfo;
 
     private void Start()
     {
-        webServiceClient = new WebServiceClient("ws://localhost:8765");
-        webServiceClient.ConnectToWebsocket();
-
         stageInfo.text = stageNumber.ToString();
         isTimerRunning = true;
         remainingTime = countdownTime;
@@ -350,10 +346,12 @@ public class GameController : MonoBehaviour
         if(this.currentPlayerId != 0)
         {
             this.isPlayerMove = false;
+            this.enemiesMakingDecisionInfo.SetActive(true);
         } 
         else
         {
             this.isPlayerMove = true;
+            this.enemiesMakingDecisionInfo.SetActive(false);
         }
 
         ResetCountdown();
@@ -448,7 +446,7 @@ public class GameController : MonoBehaviour
 
         string requestStringified = JsonConvert.SerializeObject(request);
         
-        string response = await this.webServiceClient.SendAndFetchDataFromSocket(requestStringified);
+        string response = await WebServiceClient.SendAndFetchDataFromSocket(requestStringified);
 
         JObject responseObject = JObject.Parse(response);
         Debug.Log(System.DateTime.Now+"  "+response);
