@@ -245,7 +245,6 @@ public class PlayerController : MonoBehaviour
 
                 mainGameController.selectedCard.isReserved = true;
 
-
                 var copiedCard = CloneCard();
                 player.handReserved.Add(copiedCard);
 
@@ -255,6 +254,11 @@ public class PlayerController : MonoBehaviour
                         mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
                         Debug.Log("Zarezerwowano kart� 1 poziomu");
                         Destroy(mainGameController.selectedCard.gameObject);
+                        if (mainGameController.boardController.level1StackController.CheckCardsCount() == 0)
+                        {
+                            break;
+                        }
+
                         GameObject gameObject1 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level1VisibleCards.transform);
                         gameObject1.name = "Card_Level_" + cardLevel;
                         CardController cardController1 = gameObject1.GetComponent<CardController>();
@@ -267,6 +271,11 @@ public class PlayerController : MonoBehaviour
                         mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
                         Debug.Log("Zarezerwowano kart� 2 poziomu");
                         Destroy(mainGameController.selectedCard.gameObject);
+                        if (mainGameController.boardController.level2StackController.CheckCardsCount() == 0)
+                        {
+                            break;
+                        }
+
                         GameObject gameObject2 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level2VisibleCards.transform);
                         gameObject2.name = "Card_Level_" + cardLevel;
                         CardController cardController2 = gameObject2.GetComponent<CardController>();
@@ -279,6 +288,11 @@ public class PlayerController : MonoBehaviour
                         mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
                         Debug.Log("Zarezerwowano kart� 3 poziomu");
                         Destroy(mainGameController.selectedCard.gameObject);
+                        if (mainGameController.boardController.level3StackController.CheckCardsCount() == 0)
+                        {
+                            break;
+                        }
+
                         GameObject gameObject3 = Instantiate(mainGameController.boardController.cardPrefab, vector, Quaternion.identity, mainGameController.boardController.level3VisibleCards.transform);
                         gameObject3.name = "Card_Level_" + cardLevel;
                         CardController cardController3 = gameObject3.GetComponent<CardController>();

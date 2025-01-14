@@ -427,8 +427,29 @@ public class GameController : MonoBehaviour
                 keys.Add(key);
             }
         }
+        
+        if(keys.Count == 1)
+        {
+            return keys;
+        }
 
-        return keys;
+        List<int> cardAmounts = new List<int>();
+        foreach(int key in keys)
+        {
+            cardAmounts.Add(this.playerIdToHand[key].Count);
+        }
+        cardAmounts.Sort(delegate (int x, int y) { return y - x; });
+
+        List<int> formattedKeys = new List<int>();
+        foreach (int key in this.playerIdToHand.Keys)
+        {
+            if (collection[key] == value && keys.Contains(key))
+            {
+                formattedKeys.Add(key);
+            }
+        }
+
+        return formattedKeys;
     }
 
     private bool GettingNobles(PlayerController crntPlayerController)
