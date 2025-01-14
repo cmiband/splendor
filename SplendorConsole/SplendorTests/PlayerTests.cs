@@ -92,15 +92,11 @@ namespace SplendorTests
             Assert.That(1, Is.EqualTo(player.GetIndex(card2, test)));
         }
         [Test]
-        public void PassTurn()
+        public void PassTurnTest()
         {
             var player = new Player();
 
-            var exception = Assert.Throws<NotImplementedException>(() => player.PassTurn());
-
-            var test = new NotImplementedException();
-
-            Assert.That(exception.Message, Is.EqualTo("The method or operation is not implemented."));
+            Assert.DoesNotThrow(() => player.PassTurn());
         }
         [Test]
         public void GetNoble()

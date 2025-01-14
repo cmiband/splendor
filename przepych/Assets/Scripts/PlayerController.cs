@@ -245,8 +245,9 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
+        if (this.mainGameController.selectedStack != null && mainGameController.selectedStack.CheckCardsCount() <= 0) return;
 
-        if(handReserved.Count < 3)
+        if (handReserved.Count < 3)
         {
             if(mainGameController.selectedCard != null)
             {
