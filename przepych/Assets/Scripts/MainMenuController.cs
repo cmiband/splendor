@@ -12,16 +12,29 @@ public class MainMenuController : MonoBehaviour
     public GameObject quitGame;
     public Slider volumeSlider;
 
+    public Image gameBackground;
+    public Sprite loadingGameBackgroundSprite;
+    public Sprite basicGameBackgroundSprite;
+    public GameObject loadingGear;
+
+    public GameObject mainMenuButtons;
+
     private void Start()
     {
         AddEventListeners();
         volumeSlider.value = -13;
     }
+
+    private void Update()
+    {
+        RectTransform gearRect = this.loadingGear.GetComponent<RectTransform>();
+        gearRect.Rotate(new Vector3(0, 0, Time.deltaTime*100));
+    }
+
     public void AddEventListeners()
     {
         Button startGameButton = this.startGame.GetComponent<Button>();
         startGameButton.onClick.AddListener(HandleStartGame);
-        startGameButton.interactable = false;
 
         Button quitGameButton = this.quitGame.GetComponent<Button>();
         quitGameButton.onClick.AddListener(HandleQuitGame);
@@ -34,10 +47,30 @@ public class MainMenuController : MonoBehaviour
     {
         if(WebServiceClient.CheckIfSocketIsConnected())
         {
+            this.gameBackground.sprite = basicGameBackgroundSprite;
             return;
+        } else
+        {
+            this.HandleEnterLoading();
         }
 
         SetInterval(5000);
+    }
+
+    private void HandleEnterLoading()
+    {
+        this.gameBackground.sprite = loadingGameBackgroundSprite;
+
+        this.mainMenuButtons.SetActive(false);
+        this.loadingGear.SetActive(true);
+    }
+
+    private void HandleExitLoading()
+    {
+        this.gameBackground.sprite = basicGameBackgroundSprite;
+
+        this.mainMenuButtons.SetActive(true);
+        this.loadingGear.SetActive(false);
     }
 
     private async Task SetInterval(int interval)
@@ -62,7 +95,7 @@ public class MainMenuController : MonoBehaviour
             WebServiceClient.InitSocket();
             await WebServiceClient.ConnectToWebsocket();
 
-            this.startGame.GetComponent<Button>().interactable = true;
+            this.HandleExitLoading();
             return true;
         } catch(System.Exception e)
         {

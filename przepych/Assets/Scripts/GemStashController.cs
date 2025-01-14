@@ -61,7 +61,7 @@ public class GemStashController : MonoBehaviour
 
     public void OnClick()
     {
-        if(this.bankController.mainGameController.blockAction)
+        if(this.bankController.mainGameController.blockAction || !this.bankController.mainGameController.isPlayerMove)
         {
             return;
         }

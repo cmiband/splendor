@@ -373,7 +373,6 @@ public class GameController : MonoBehaviour
             this.SetPlayerControllerInfo(this.players[i], i);
         }
 
-        Debug.Log(System.DateTime.Now+"   curr player id:   " + this.currentPlayerId);
         this.responseValidatorController.currentPlayerController = this.players[this.currentPlayerId].GetComponent<PlayerController>();
         this.bankController.playerController = this.players[this.currentPlayerId].GetComponent<PlayerController>();
 
@@ -386,10 +385,6 @@ public class GameController : MonoBehaviour
         this.skipGettingNobles = false;
 
         this.turnCounter++;
-        if(turnCounter > 3)
-        {
-            //return;
-        }
         if(!this.isPlayerMove)
         {
             StartCoroutine(RequestMoveAfterDelay());
@@ -430,7 +425,6 @@ public class GameController : MonoBehaviour
         int[] moves = await this.RequestMovesList();
 
         int x = this.responseValidatorController.PerformFirstAgentValidMove(moves);
-        Debug.Log(System.DateTime.Now + "    first valid move = " + x);
     }
 
     async private Task<int[]?> RequestMovesList()
@@ -450,7 +444,6 @@ public class GameController : MonoBehaviour
         string response = await WebServiceClient.SendAndFetchDataFromSocket(requestStringified);
 
         JObject responseObject = JObject.Parse(response);
-        Debug.Log(System.DateTime.Now+"  "+response);
 
         var moves = responseObject["MovesList"]?.ToObject<int[]>();
         
@@ -671,7 +664,7 @@ public class GameController : MonoBehaviour
 
     public void SelectCard(CardController card)
     {
-        if(this.blockAction)
+        if(this.blockAction || !this.isPlayerMove)
         {
             return;
         }

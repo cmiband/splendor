@@ -12,6 +12,9 @@ public class ResponseValidatorController : MonoBehaviour
     public BankController bankController;
     public GemStashController goldenGemStash;
 
+    public AudioSource chipTakeSound;
+    public AudioSource cardTakeSound;
+
     private List<List<int>> threeGemsConfigurations = new List<List<int>>
         {
             new List<int> { 0, 0, 1, 1, 1 },
@@ -46,10 +49,7 @@ public class ResponseValidatorController : MonoBehaviour
                 if (result)
                 {
                     return arrayOfMoves[i];
-                } else
-                {
-                    Debug.LogError(System.DateTime.Now + "   move: " + arrayOfMoves[i] + "   invalid");
-                }
+                } 
             }
         }
 
@@ -80,7 +80,6 @@ public class ResponseValidatorController : MonoBehaviour
                 case 11:
                 case 12:
                     CardController targetedCard = this.GetSelectedCard(move - 1);
-                    Debug.LogError(System.DateTime.Now + "   card buy attempt   " + targetedCard);
 
                     bool buyResult = this.HandleCardBuy(targetedCard);
                     return buyResult;
@@ -135,7 +134,6 @@ public class ResponseValidatorController : MonoBehaviour
             }
         } catch(System.Exception e)
         {
-            Debug.LogError(System.DateTime.Now+ " error move: "+move+"   "+e.Message);
             return false;
         }
     }
@@ -224,6 +222,7 @@ public class ResponseValidatorController : MonoBehaviour
         }
         this.goldenGemStash.TakeGolden();
 
+        cardTakeSound.Play();
         this.currentPlayerController.ConfirmPlayerMove();
         return true;
     }
@@ -247,6 +246,8 @@ public class ResponseValidatorController : MonoBehaviour
         List<GemColor> gemsToTake = this.CreateListOfGemsToTake(targetedCombination, colors);
         this.bankController.gemsBeingChosen = gemsToTake;
         this.bankController.TakeGems();
+
+        chipTakeSound.Play();
         return true;
     }
 
@@ -318,6 +319,8 @@ public class ResponseValidatorController : MonoBehaviour
         
         this.bankController.gemsBeingChosen = gemsToTake;
         this.bankController.TakeGems();
+
+        chipTakeSound.Play();
         return true;
     }
 
@@ -466,6 +469,7 @@ public class ResponseValidatorController : MonoBehaviour
             }
         }
 
+        cardTakeSound.Play();
         this.currentPlayerController.ConfirmPlayerMove();
         return true;
     }

@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     private ResourcesController bonusResources = new ResourcesController();
 
     public AudioSource getCardSound;
+    public AudioSource takeGemSound;
     public ResourcesController BonusResources
     {
         get { return bonusResources; }
@@ -80,7 +81,7 @@ public class PlayerController : MonoBehaviour
 
     public void HandleBuyCard()
     {
-        if (this.mainGameController.actionIsTaken || this.mainGameController.blockAction)
+        if (this.mainGameController.actionIsTaken || this.mainGameController.blockAction || !this.mainGameController.isPlayerMove)
         {
             return;
         }
@@ -244,7 +245,7 @@ public class PlayerController : MonoBehaviour
 
     public void HandleReserveCard()
     {
-        if(this.mainGameController.actionIsTaken || this.mainGameController.blockAction || this.mainGameController.boughtCards.activeInHierarchy == true)
+        if(this.mainGameController.actionIsTaken || this.mainGameController.blockAction || this.mainGameController.boughtCards.activeInHierarchy || !this.mainGameController.isPlayerMove)
         {
             return;
         }
@@ -408,6 +409,10 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        if(this.takeGemSound != null)
+        {
+            takeGemSound.Play();
+        }
         this.PerformEndOfTurnDecision();
     }
 
