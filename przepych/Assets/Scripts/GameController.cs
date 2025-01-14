@@ -75,6 +75,7 @@ public class GameController : MonoBehaviour
     public GameObject gameEndModal;
     public GameObject nobleChoiceInfoModal;
 
+    public AudioSource getCardSound;
     private void Start()
     {
         stageInfo.text = stageNumber.ToString();
