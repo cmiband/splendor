@@ -9,9 +9,12 @@ using TMPro;
 public class SettingsController : MonoBehaviour
 {
     public AudioMixer audioMixer;
+    public AudioMixer sfxAudioMixer;
+
     public AudioSource audioSource;
 
     public Slider slider;
+    public Slider sfxSlider;
 
     public TMP_Dropdown resolutionDropdown;
 
@@ -37,6 +40,7 @@ public class SettingsController : MonoBehaviour
                 currentResolutionIndex = i;
             }
         }
+        //options.Add("");
 
         resolutionDropdown.AddOptions(options);
         resolutionDropdown.value = currentResolutionIndex;
@@ -45,20 +49,34 @@ public class SettingsController : MonoBehaviour
 
     public void SetResolution(int resolutionIndex)
     {
-        Resolution resolution = resolutions[resolutionIndex];
-        Screen.SetResolution(resolution.width,resolution.height,Screen.fullScreen);
+        //if (resolutions[resolutionIndex].ToString()!="")
+        //{
+            Resolution resolution = resolutions[resolutionIndex];
+            Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+        //}
+
     }
 
     public void SetVolume(float volume)
-    {
-        audioMixer.SetFloat("Volume",volume);
+    { 
         if (slider.value == slider.minValue)
         {
-            audioSource.mute = true;
+            audioMixer.SetFloat("Volume", -80);
         }
         else
         {
-            audioSource.mute = false;
+            audioMixer.SetFloat("Volume", volume);
+        }
+    }
+    public void SetSfxVolume(float volume)
+    {  
+        if (sfxSlider.value == sfxSlider.minValue)
+        {
+            sfxAudioMixer.SetFloat("Volume", -80);
+        }
+        else
+        {
+            sfxAudioMixer.SetFloat("Volume", volume);
         }
     }
 
