@@ -118,14 +118,15 @@ public class GameController : MonoBehaviour
         this.players = new List<GameObject> { clientPlayer, nextPlayerOne, nextPlayerTwo, nextPlayerThree };
         this.CreateFourPlayersDataOnInit();
         /*
-        ResourcesController rc = new ResourcesController();
-        rc.FillDictionaryWithZeros();
-        rc.gems[GemColor.WHITE] = 5;
-        rc.gems[GemColor.GREEN] = 5;
-        rc.gems[GemColor.BLUE] = 5;
-        rc.gems[GemColor.BLACK] = 5;
-        rc.gems[GemColor.RED] = 5;
-        this.playerIdToResources[1] = rc;*/
+        this.playerIdToPoints[1] = 18;
+        this.playerIdToPoints[2] = 16;
+        this.playerIdToPoints[3] = 16;
+
+        CardController cc1 = new CardController(1, GemColor.WHITE, 0, "", new ResourcesController());
+        CardController cc2 = new CardController(1, GemColor.WHITE, 0, "", new ResourcesController());
+        CardController cc3 = new CardController(1, GemColor.WHITE, 0, "", new ResourcesController());
+        this.playerIdToHand[2] = new List<CardController> { cc1, cc2 };
+        this.playerIdToHand[3] = new List<CardController> { cc3 };*/
         this.FillPlayersWithData();
         this.currentPlayerId = 0;
         this.reserveCard.SetActive(false);
@@ -212,7 +213,7 @@ public class GameController : MonoBehaviour
         openBoughtCardsButton.onClick.AddListener(HandleOpenBoughtCards);
 
         Button passButton = this.pass.GetComponent<Button>();
-        passButton.onClick.AddListener(HandlePass);
+        passButton.onClick.AddListener(HandlePassButtonOnclick);
 
         Button buyCardButton = this.buyCard.GetComponent<Button>();
         buyCardButton.onClick.AddListener(clientPlayer.GetComponent<PlayerController>().HandleBuyCard);
@@ -285,13 +286,18 @@ public class GameController : MonoBehaviour
         boughtCardsController.OpenModal(this.playerIdToAvatar);
     }
 
-    public void HandlePass()
+    private void HandlePassButtonOnclick()
     {
-        if (actionIsTaken || blockAction)
+        if(actionIsTaken || blockAction || !this.isPlayerMove)
         {
             return;
         }
 
+        this.HandlePass();
+    }
+
+    public void HandlePass()
+    {
         if (selectedStack != null)
         {
             selectedStack.SetSelected(false);
@@ -348,11 +354,13 @@ public class GameController : MonoBehaviour
         {
             this.isPlayerMove = false;
             this.enemiesMakingDecisionInfo.SetActive(true);
+            this.pass.SetActive(false);
         } 
         else
         {
             this.isPlayerMove = true;
             this.enemiesMakingDecisionInfo.SetActive(false);
+            this.pass.SetActive(true);
         }
 
         ResetCountdown();
@@ -528,19 +536,24 @@ public class GameController : MonoBehaviour
             return keys;
         }
 
+        Dictionary<int, int> playerIdToAmountOfCards = new Dictionary<int, int>();
         List<int> cardAmounts = new List<int>();
         foreach(int key in keys)
         {
+            playerIdToAmountOfCards.Add(key, this.playerIdToHand[key].Count);
             cardAmounts.Add(this.playerIdToHand[key].Count);
         }
-        cardAmounts.Sort(delegate (int x, int y) { return y - x; });
+        cardAmounts.Sort(delegate (int x, int y) { return x - y; });
 
         List<int> formattedKeys = new List<int>();
-        foreach (int key in this.playerIdToHand.Keys)
+        foreach(int amount in cardAmounts)
         {
-            if (collection[key] == value && keys.Contains(key))
+            foreach(int playerId in playerIdToAmountOfCards.Keys)
             {
-                formattedKeys.Add(key);
+                if (playerIdToAmountOfCards[playerId] == amount)
+                {
+                    formattedKeys.Add(playerId);
+                }
             }
         }
 

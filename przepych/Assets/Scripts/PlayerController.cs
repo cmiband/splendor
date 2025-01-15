@@ -135,7 +135,6 @@ public class PlayerController : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("Nie masz wystarczających zasobów.");
                         return;
                     }
                 }
@@ -161,7 +160,6 @@ public class PlayerController : MonoBehaviour
         {
             player.handReserved.Remove(selectedCard);
             mainGameController.reservedCardController.reservedCards.Remove(mainGameController.selectedCard.gameObject);
-            Debug.Log("Kupiono zarezerwowaną kartę");
             getCardSound.Play();
             Destroy(mainGameController.selectedCard.gameObject);
 
@@ -174,7 +172,6 @@ public class PlayerController : MonoBehaviour
                 case 1:
                     mainGameController.boardController.level1CardGameObjects.Remove(mainGameController.selectedCard.gameObject);
                     mainGameController.boardController.level1VisibleCardControllers.Remove(mainGameController.selectedCard);
-                    Debug.Log("Kupiono kart� 1 poziomu");
                     Destroy(mainGameController.selectedCard.gameObject);
 
                     if(mainGameController.boardController.level1StackController.CheckCardsCount() == 0 )
@@ -196,7 +193,6 @@ public class PlayerController : MonoBehaviour
                 case 2:
                     mainGameController.boardController.level2CardGameObjects.Remove(mainGameController.selectedCard.gameObject);
                     mainGameController.boardController.level2VisibleCardControllers.Remove(mainGameController.selectedCard);
-                    Debug.Log("Kupiono kart� 2 poziomu");
                     Destroy(mainGameController.selectedCard.gameObject);
 
                     if (mainGameController.boardController.level2StackController.CheckCardsCount() == 0)
@@ -219,7 +215,6 @@ public class PlayerController : MonoBehaviour
                 case 3:
                     mainGameController.boardController.level3CardGameObjects.Remove(mainGameController.selectedCard.gameObject);
                     mainGameController.boardController.level3VisibleCardControllers.Remove(mainGameController.selectedCard);
-                    Debug.Log("Kupiono kart� 3 poziomu");
                     Destroy(mainGameController.selectedCard.gameObject);
 
                     if (mainGameController.boardController.level3StackController.CheckCardsCount() == 0)
@@ -329,11 +324,7 @@ public class PlayerController : MonoBehaviour
                         this.mainGameController.boardController.level3VisibleCardControllers.Add(cardController3);
                         break;
                 }
-                if (goldenGemStashController.TakeGolden())
-                {
-                    Debug.Log("Pobrano złoty żeton");
-                }
-                else Debug.Log("Nie ma już złotych żetonów");
+                goldenGemStashController.TakeGolden();
             }
             else if(mainGameController.selectedStack != null && mainGameController.selectedStack.CheckCardsCount() > 0)
             {
@@ -350,20 +341,8 @@ public class PlayerController : MonoBehaviour
 
                     player.handReserved.Add(reservedCard);
 
-                    if (goldenGemStashController.TakeGolden())
-                    {
-                        Debug.Log("Pobrano złoty żeton");
-                    }
-                    else Debug.Log("Nie ma już złotych żetonów");
+                    goldenGemStashController.TakeGolden();
                 }
-                else
-                {
-                    Debug.Log("Nie ma juz kart na stosie!");
-                }
-            }
-            else
-            {
-                Debug.Log("Nie wybrano żadnej karty do zarezerwowania");
             }
 
             this.SetGemInfo(this.resources);
@@ -372,8 +351,6 @@ public class PlayerController : MonoBehaviour
         else
         {
             alertController.ShowTooManyReservedCards();
-            if (mainGameController.selectedStack.CheckCardsCount() <= 0) Debug.Log("Nie ma juz kart na stosie!");
-            else Debug.Log("Za dużo zarezerwowałeś kart");
         }
     }
 
@@ -422,7 +399,6 @@ public class PlayerController : MonoBehaviour
         if (amountOfGems > 10)
         {
             this.SetGemInfo(this.resources);
-            Debug.Log("Masz za dużo żetonów musisz oddać " + (amountOfGems - MAXIMUM_AMOUNT_OF_GEMS));
             TooManyGemsInformation(amountOfGems - MAXIMUM_AMOUNT_OF_GEMS);
 
             mainGameController.actionIsTaken = true;
@@ -539,7 +515,6 @@ public class PlayerController : MonoBehaviour
         if (bonusColor != GemColor.NONE)
         {
             this.bonusResources.AddResource(bonusColor);
-            Debug.Log($"Dodano bonusowy zas�b: {bonusColor}");
         }
     }
     public bool CanAffordCard(CardController cardToBuy)

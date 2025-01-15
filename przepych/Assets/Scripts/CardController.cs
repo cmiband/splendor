@@ -44,10 +44,6 @@ public class CardController : MonoBehaviour, IPointerClickHandler
     private void Start()
     {
         selectedCardImage = GetComponent<Image>();
-        if (selectedCardImage == null)
-        {
-            Debug.LogWarning("Nie znaleziono komponentu Image na karcie! Upewnij się, że karta ma komponent Image.");
-        }
 
         this.priceInfo = "Price: " +this.detailedPrice.ToString();
     }
@@ -108,12 +104,6 @@ public class CardController : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {   
-        //usuniete ze wzgledu na to ze zaznaczanie kart dzialalo na dwa sposoby, tutaj oraz w GameController
-        //if (eventData.button == PointerEventData.InputButton.Left)
-        //{
-        //    SetSelected(!isSelected); 
-        //}
-        //else 
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             this.gameController.ShowClickedCard(this);
@@ -127,10 +117,6 @@ public class CardController : MonoBehaviour, IPointerClickHandler
         if (selectedCardImage != null)
         {
             selectedCardImage.color = selected ? Color.yellow : Color.white;
-        }
-        else
-        {
-            Debug.LogWarning("Nie znaleziono komponentu Image na karcie!");
         }
     }
 }

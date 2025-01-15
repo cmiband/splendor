@@ -16,7 +16,8 @@ public class AlertController : MonoBehaviour
 
     public void ShowInvalidOperationAlert()
     {
-        InvalidOperationAlert.SetActive(true);  
+        InvalidOperationAlert.SetActive(true);
+        StartCoroutine(HideAfterDelay(InvalidOperationAlert, 3f));
     }
     public void HideInvalidOperationAlert()
     {
@@ -25,6 +26,7 @@ public class AlertController : MonoBehaviour
     public void ShowNotEnoughGems()
     {
         NotEnoughGems.SetActive(true);
+        StartCoroutine(HideAfterDelay(NotEnoughGems, 3f));
     }
     public void HideNotEnoughGems()
     {
@@ -33,9 +35,16 @@ public class AlertController : MonoBehaviour
     public void ShowTooManyReservedCards()
     {
         TooManyReservedCards.SetActive(true);
+        StartCoroutine(HideAfterDelay(TooManyReservedCards, 3f));
     }
     public void HideTooManyReservedCards()
     {
         TooManyReservedCards.SetActive(false);
+    }
+
+    private IEnumerator HideAfterDelay(GameObject alert, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        alert.SetActive(false);
     }
 }
