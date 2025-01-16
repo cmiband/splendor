@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class CardStackController : MonoBehaviour, IPointerClickHandler
 {
+    public GameController gameController;
     public List<CardController> cardsInStack = new List<CardController>();
     public bool isSelected;
     private Image selectedStackImage;
@@ -36,6 +37,11 @@ public class CardStackController : MonoBehaviour, IPointerClickHandler
     }
     public void SetSelected(bool selected)
     {
+        if(!this.gameController.isPlayerMove)
+        {
+            return;
+        }
+
         isSelected = selected;
 
         if (selectedStackImage != null)

@@ -117,16 +117,6 @@ public class GameController : MonoBehaviour
 
         this.players = new List<GameObject> { clientPlayer, nextPlayerOne, nextPlayerTwo, nextPlayerThree };
         this.CreateFourPlayersDataOnInit();
-        /*
-        this.playerIdToPoints[1] = 18;
-        this.playerIdToPoints[2] = 16;
-        this.playerIdToPoints[3] = 16;
-
-        CardController cc1 = new CardController(1, GemColor.WHITE, 0, "", new ResourcesController());
-        CardController cc2 = new CardController(1, GemColor.WHITE, 0, "", new ResourcesController());
-        CardController cc3 = new CardController(1, GemColor.WHITE, 0, "", new ResourcesController());
-        this.playerIdToHand[2] = new List<CardController> { cc1, cc2 };
-        this.playerIdToHand[3] = new List<CardController> { cc3 };*/
         this.FillPlayersWithData();
         this.currentPlayerId = 0;
         this.reserveCard.SetActive(false);
@@ -711,7 +701,7 @@ public class GameController : MonoBehaviour
 
     public void SelectStack(CardStackController cardStack)
     {
-        if(this.blockAction)
+        if(this.blockAction || !this.isPlayerMove)
         {
             return;
         }
