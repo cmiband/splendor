@@ -59,7 +59,23 @@ namespace SplendorConsole
         public override string ToString()
         {
             string priceDescription = DetailedPrice.ToString();
-            return $"Karta koloru: {bonusColor}, cena: {priceDescription}, dodająca {points} punktów.";
+            return $"Karta koloru: {bonusColor},\t cena: {priceDescription},\t dodająca {points} punktów.";
         }
-    }
+
+        public int[] ToArray()
+        {
+            return new int[] { points, 
+                               bonusColor == GemColor.WHITE  ?  1 : 0,
+                               bonusColor == GemColor.BLUE   ?  1 : 0,
+                               bonusColor == GemColor.GREEN  ?  1 : 0,
+                               bonusColor == GemColor.RED    ?  1 : 0,
+                               bonusColor == GemColor.BLACK  ?  1 : 0,
+                               detailedPrice.gems.ContainsKey(GemColor.WHITE) ? detailedPrice.gems[GemColor.WHITE] : 0,
+                               detailedPrice.gems.ContainsKey(GemColor.BLUE) ? detailedPrice.gems[GemColor.BLUE] : 0,
+                               detailedPrice.gems.ContainsKey(GemColor.GREEN) ? detailedPrice.gems[GemColor.GREEN] : 0,
+                               detailedPrice.gems.ContainsKey(GemColor.RED) ? detailedPrice.gems[GemColor.RED] : 0,
+                               detailedPrice.gems.ContainsKey(GemColor.BLACK) ? detailedPrice.gems[GemColor.BLACK] : 0
+                             };
+        }
+    } 
 }
