@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -284,14 +285,126 @@ namespace SplendorTests
 
         }
 
-        
-        
+        [Test]
+        public void CanGetNoble_Test()
+        {
+            var game = new Game();
+            var homie = new Player();
+            game.listOfPlayers.Add(homie);
 
 
+            var res1 = new Resources();
+            var res2 = new Resources();
+            var res3 = new Resources();
+            res1.AddResource(GemColor.RED);
+            var noble = new Noble(3, res1);
+
+            var card1 = new Card(1, GemColor.RED, 2, "Zaba", res2);
+            var card2 = new Card(1, GemColor.RED, 2, "Pies", res3);
+
+            homie.AddCardToPlayer(card1);
+            homie.BonusResources = res1;
 
 
+            Assert.That(game.CanGetNoble(noble),Is.True);
+        }
+
+        [Test]
+        public void CanNotGetNoble_Test()
+        {
+            var game = new Game();
+            var homie = new Player();
+            game.listOfPlayers.Add(homie);
 
 
+            var res1 = new Resources();
+            var res2 = new Resources();
+            var res3 = new Resources();
+            res1.AddResource(GemColor.RED);
+            res2.AddResource(GemColor.WHITE);
+            res2.AddResource(GemColor.BLACK);
+            var noble = new Noble(3, res1);
+
+            var card1 = new Card(1, GemColor.WHITE, 2, "Zaba", res2);
+            var card2 = new Card(1, GemColor.BLACK, 2, "Pies", res3);
+
+            homie.AddCardToPlayer(card1);
+            homie.BonusResources = res2;
+
+
+            Assert.That(game.CanGetNoble(noble), Is.False);
+        }
+
+        [Test]
+        public void ShowPlayerTokens_Test()
+        {
+            var game = new Game();
+            var player = new Player();
+            var res1 = new Resources();
+
+            player.Resources.AddResource(GemColor.WHITE);
+            game.listOfPlayers.Add(player);
+
+            List<GemColor> result2 = new List<GemColor>();
+
+            foreach (KeyValuePair<GemColor, int> c in player.Resources.gems)
+            {
+                result2.Add(c.Key);
+            }
+            var result = game.ShowPlayerTokens();
+
+            Assert.That(result2, Is.EqualTo(result));
+        }
+        [Test]
+        public void Price_Test()
+        {
+            var game = new Game();
+            var res1 = new Resources();
+            res1.AddResource(GemColor.BLACK);
+            var card1 = new Card(1, GemColor.BLACK, 3, "elo", res1);
+
+            var result = "BLACK 1 ";
+            Assert.That(result, Is.EqualTo(game.Price(card1)));
+        }
+
+        [Test]
+        public void Price_MultipleGemColors_Test()
+        {
+            var game = new Game();
+            var res1 = new Resources();
+            res1.AddResource(GemColor.BLACK);
+            res1.AddResource(GemColor.BLACK);
+            res1.AddResource(GemColor.WHITE);
+            res1.AddResource(GemColor.RED);
+            res1.AddResource(GemColor.RED);
+
+            var card1 = new Card(1, GemColor.BLACK, 3, "elo", res1);
+
+            var result = "BLACK 2 WHITE 1 RED 2 ";
+            Assert.That(result, Is.EqualTo(game.Price(card1)));
+        }
+
+        [Test]
+        public void Price_ShouldNotPass_Test()
+        {
+            var game = new Game();
+            var res1 = new Resources();
+            res1.AddResource(GemColor.BLACK);
+            res1.AddResource(GemColor.BLACK);
+            res1.AddResource(GemColor.WHITE);
+            res1.AddResource(GemColor.RED);
+            res1.AddResource(GemColor.RED);
+            bool notEqual = false;
+
+            var card1 = new Card(1, GemColor.BLACK, 3, "elo", res1);
+
+            var result = "WHITE 1 RED 2 BLACK 1 ";
+            if (result != game.Price(card1))
+            {
+                notEqual = true;
+            }
+            Assert.That(notEqual, Is.True);
+        }
     }
 
 

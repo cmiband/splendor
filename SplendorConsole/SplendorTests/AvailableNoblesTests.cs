@@ -25,5 +25,6 @@ namespace SplendorTests
 
             Assert.That(noble, Is.EqualTo(message));
         }
+
     }
 }

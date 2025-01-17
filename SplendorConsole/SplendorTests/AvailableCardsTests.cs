@@ -85,5 +85,14 @@ namespace SplendorTests
             
             Assert.That(card, Is.EqualTo(message));
         }
+        
+        [Test]
+        public void LoadWrongLevelCardFromExcel_Test()
+        {
+            var availableCards = new AvailableCards();
+
+            Assert.Throws<ArgumentException>(() => availableCards.LoadCardsFromExcel("LoadWrongLevelCardFromExcelTest.xlsx"), "Wrong card level!");
+
+        }
     }
 }

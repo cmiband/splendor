@@ -294,6 +294,6 @@ namespace SplendorTests
 
             Assert.That(false, Is.EqualTo(checkEqual));
         }
-
+        
     }        
 }
