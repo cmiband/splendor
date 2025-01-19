@@ -98,6 +98,200 @@ namespace SplendorTests
 
             Assert.Throws<ArgumentException>(() => board.GetVisibleCards(null), "Expected an exception for null level");
         }
+        [Test]
+        public void ReplaceMissingCard_Level1VisibleCards_Test()
+        {
+            var level1 = new List<Card>();
+            var res1 = new Resources();
 
+            var card1 = new Card(1, GemColor.WHITE, 0, "elo1", res1);
+            var card2 = new Card(1, GemColor.WHITE, 0, "elo2", res1);
+            var card3 = new Card(1, GemColor.WHITE, 0, "elo3", res1);
+            var card4 = new Card(1, GemColor.WHITE, 0, "elo4", res1);
+            var card5 = new Card(1, GemColor.BLACK, 0, "elo5", res1);
+            var card6 = new Card(1, GemColor.BLACK, 0, "elo6", res1);
+
+            level1.Add(card1);
+            level1.Add(card2);
+            level1.Add(card3);
+            level1.Add(card4);
+
+            var level1Deck = new List<Card>();
+            level1Deck.Add(card5);
+            level1Deck.Add(card6);
+            var board = new Board(level1, new List<Card>(), new List<Card>(), level1Deck, new List<Card>(), new List<Card>(), new List<Noble>());
+
+            board.ReplaceMissingCard(1, card4);
+
+            Assert.That(card5.ToString(), Is.EqualTo(board.Level1VisibleCards[3].ToString()));
+        }
+        [Test]
+        public void ReplaceMissingCard_Level2VisibleCards_Test()
+        {
+            var level2 = new List<Card>();
+            var res1 = new Resources();
+
+            var card1 = new Card(2, GemColor.WHITE, 0, "elo1", res1);
+            var card2 = new Card(2, GemColor.WHITE, 0, "elo2", res1);
+            var card3 = new Card(2, GemColor.WHITE, 0, "elo3", res1);
+            var card4 = new Card(2, GemColor.WHITE, 0, "elo4", res1);
+            var card5 = new Card(2, GemColor.BLACK, 0, "elo5", res1);
+            var card6 = new Card(2, GemColor.BLACK, 0, "elo6", res1);
+
+            level2.Add(card1);
+            level2.Add(card2);
+            level2.Add(card3);
+            level2.Add(card4);
+
+            var level2Deck = new List<Card>();
+            level2Deck.Add(card5);
+            level2Deck.Add(card6);
+            var board = new Board(new List<Card>(), level2, new List<Card>(), new List<Card>(), level2Deck, new List<Card>(), new List<Noble>());
+
+            board.ReplaceMissingCard(2, card4);
+
+            Assert.That(card5.ToString(), Is.EqualTo(board.Level2VisibleCards[3].ToString()));
+        }
+        [Test]
+        public void ReplaceMissingCard_Level3VisibleCards_Test()
+        {
+            var level3 = new List<Card>();
+            var res1 = new Resources();
+
+            var card1 = new Card(2, GemColor.WHITE, 0, "elo1", res1);
+            var card2 = new Card(2, GemColor.WHITE, 0, "elo2", res1);
+            var card3 = new Card(2, GemColor.WHITE, 0, "elo3", res1);
+            var card4 = new Card(2, GemColor.WHITE, 0, "elo4", res1);
+            var card5 = new Card(2, GemColor.BLACK, 0, "elo5", res1);
+            var card6 = new Card(2, GemColor.BLACK, 0, "elo6", res1);
+
+            level3.Add(card1);
+            level3.Add(card2);
+            level3.Add(card3);
+            level3.Add(card4);
+
+            var level3Deck = new List<Card>();
+            level3Deck.Add(card5);
+            level3Deck.Add(card6);
+            var board = new Board(new List<Card>(), new List<Card>(), level3, new List<Card>(), new List<Card>(), level3Deck, new List<Noble>());
+
+            board.ReplaceMissingCard(3, card4);
+
+            Assert.That(card5.ToString(), Is.EqualTo(board.Level3VisibleCards[3].ToString()));
+        }
+        [Test]
+        public void ReplaceMissingCard_Level1DeckRemoved_Test()
+        {
+            var level1 = new List<Card>();
+            var res1 = new Resources();
+
+            var card1 = new Card(1, GemColor.WHITE, 0, "elo1", res1);
+            var card2 = new Card(1, GemColor.WHITE, 0, "elo2", res1);
+            var card3 = new Card(1, GemColor.WHITE, 0, "elo3", res1);
+            var card4 = new Card(1, GemColor.WHITE, 0, "elo4", res1);
+            var card5 = new Card(1, GemColor.BLACK, 0, "elo5", res1);
+            var card6 = new Card(1, GemColor.RED, 0, "elo6", res1);
+            var card7 = new Card(1, GemColor.GREEN, 0, "elo7", res1);
+
+            bool checkEqual = false;
+
+            level1.Add(card1);
+            level1.Add(card2);
+            level1.Add(card3);
+            level1.Add(card4);
+
+            var level1Deck = new List<Card>();
+            level1Deck.Add(card5);
+            level1Deck.Add(card6);
+            level1Deck.Add(card7);
+            var board = new Board(level1, new List<Card>(), new List<Card>(), level1Deck, new List<Card>(), new List<Card>(), new List<Noble>());
+
+            board.ReplaceMissingCard(1, card4);
+            foreach (Card card in board.Level1Deck)
+            {
+                if (card5.ToString() == card.ToString())
+                {
+                    checkEqual = true;
+                }
+            }
+
+            Assert.That(false, Is.EqualTo(checkEqual));
+        }
+        [Test]
+        public void ReplaceMissingCard_Level2DeckRemoved_Test()
+        {
+            var level1 = new List<Card>();
+            var res1 = new Resources();
+
+            var card1 = new Card(1, GemColor.WHITE, 0, "elo1", res1);
+            var card2 = new Card(1, GemColor.WHITE, 0, "elo2", res1);
+            var card3 = new Card(1, GemColor.WHITE, 0, "elo3", res1);
+            var card4 = new Card(1, GemColor.WHITE, 0, "elo4", res1);
+            var card5 = new Card(1, GemColor.BLACK, 0, "elo5", res1);
+            var card6 = new Card(1, GemColor.RED, 0, "elo6", res1);
+            var card7 = new Card(1, GemColor.GREEN, 0, "elo7", res1);
+
+            bool checkEqual = false;
+
+            level1.Add(card1);
+            level1.Add(card2);
+            level1.Add(card3);
+            level1.Add(card4);
+
+            var level2Deck = new List<Card>();
+            level2Deck.Add(card5);
+            level2Deck.Add(card6);
+            level2Deck.Add(card7);
+            var board = new Board(level1, new List<Card>(), new List<Card>(), new List<Card>(), level2Deck, new List<Card>(), new List<Noble>());
+
+            board.ReplaceMissingCard(2, card4);
+            foreach (Card card in board.Level2Deck)
+            {
+                if (card5.ToString() == card.ToString())
+                {
+                    checkEqual = true;
+                }
+            }
+
+            Assert.That(false, Is.EqualTo(checkEqual));
+        }
+        [Test]
+        public void ReplaceMissingCard_Level3DeckRemoved_Test()
+        {
+            var level1 = new List<Card>();
+            var res1 = new Resources();
+
+            var card1 = new Card(1, GemColor.WHITE, 0, "elo1", res1);
+            var card2 = new Card(1, GemColor.WHITE, 0, "elo2", res1);
+            var card3 = new Card(1, GemColor.WHITE, 0, "elo3", res1);
+            var card4 = new Card(1, GemColor.WHITE, 0, "elo4", res1);
+            var card5 = new Card(1, GemColor.BLACK, 0, "elo5", res1);
+            var card6 = new Card(1, GemColor.RED, 0, "elo6", res1);
+            var card7 = new Card(1, GemColor.GREEN, 0, "elo7", res1);
+
+            bool checkEqual = false;
+
+            level1.Add(card1);
+            level1.Add(card2);
+            level1.Add(card3);
+            level1.Add(card4);
+
+            var level3Deck = new List<Card>();
+            level3Deck.Add(card5);
+            level3Deck.Add(card6);
+            level3Deck.Add(card7);
+            var board = new Board(level1, new List<Card>(), new List<Card>(), new List<Card>(), new List<Card>(), level3Deck, new List<Noble>());
+
+            board.ReplaceMissingCard(3, card4);
+            foreach (Card card in board.Level3Deck)
+            {
+                if (card5.ToString() == card.ToString())
+                {
+                    checkEqual = true;
+                }
+            }
+
+            Assert.That(false, Is.EqualTo(checkEqual));
+        }
     }
 }

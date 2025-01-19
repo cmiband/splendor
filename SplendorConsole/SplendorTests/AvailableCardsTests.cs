@@ -74,16 +74,26 @@ namespace SplendorTests
         [Test]
         public void LoadCardsFromExcel_Test()
         {
-            
+
             var availableCards = new AvailableCards();
 
-            
+
             availableCards.LoadCardsFromExcel("LoadCardsFromExcelTest.xlsx");
             var card = availableCards.level3Cards[0].ToString();
             string message = "Karta koloru: WHITE,\t cena: WHITE: 1, BLUE: 2, GREEN: 3, RED: 4, BLACK: 5,\t dodająca 1 punktów.";
 
-            
+
             Assert.That(card, Is.EqualTo(message));
         }
+
+        [Test]
+        public void LoadWrongLevelCardFromExcel_Test()
+        {
+            var availableCards = new AvailableCards();
+
+            Assert.Throws<ArgumentException>(() => availableCards.LoadCardsFromExcel("LoadWrongLevelCardFromExcelTest.xlsx"), "Wrong card level!");
+
+        }
+
     }
 }
