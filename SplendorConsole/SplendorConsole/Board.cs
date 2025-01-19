@@ -14,11 +14,23 @@ namespace SplendorConsole
             get => VisibleNobles;
             set => VisibleNobles = value;   
         }
-        private Noble[] nobles;   
-        
+        private Noble[] nobles;
+
         private List<Card> level1Deck = new List<Card>();
+        public List<Card> Level1Deck
+        {
+            get => level1Deck;
+        }
         private List<Card> level2Deck = new List<Card>();
+        public List<Card> Level2Deck
+        {
+            get => level2Deck;
+        }
         private List<Card> level3Deck = new List<Card>();
+        public List<Card> Level3Deck
+        {
+            get => level3Deck;
+        }
         internal List<Card> level1VisibleCards;
         internal List<Card> level2VisibleCards;
         internal List<Card> level3VisibleCards;
