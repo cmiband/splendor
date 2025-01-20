@@ -4,9 +4,9 @@
 
 
 
-Niniejszy projekt jest komputerową adaptacją gry planszowej "Splendor" w tematyce cyberpunkowej. 
+Niniejszy projekt jest komputerową adaptacją gry planszowej "Splendor" w aranżacji cyberpunkowej. 
 Do stworzenia projektu użyliśmy silnika Unity w wersji 2022.3.50f1 oraz języka C# do skryptów obsługujących grę.
-Jest to gra jednoosobowa, a przeciwnicy są modelami SI, wytrenowanymi w Pythonie metodą "Reinforcement Learning" 
+Jest to gra jednoosobowa, a przeciwnicy są obsługiwani przez SI, uczoną przy pomocy symulacyjnej, konsolowej wersji gry. Model trenowaliśmy na bazie algorytmu Deep Q Network (DQN) - jednej z technik Reinforcement Learning.
 
 # // W grze
 
