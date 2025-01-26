@@ -1,14 +1,14 @@
-# splendor
+# Cyberprzepych - splendor
 
    
 
 
 
-Niniejszy projekt jest komputerową adaptacją gry planszowej "Splendor" w aranżacji cyberpunkowej. 
+Cyberprzepych jest komputerową adaptacją gry planszowej "Splendor" w aranżacji cyberpunkowej. 
 Do stworzenia projektu użyliśmy silnika Unity w wersji 2022.3.50f1 oraz języka C# do skryptów obsługujących grę.
 Jest to gra jednoosobowa, a przeciwnicy są obsługiwani przez SI, uczoną przy pomocy symulacyjnej, konsolowej wersji gry. Model trenowaliśmy na bazie algorytmu Deep Q Network (DQN) - jednej z technik Reinforcement Learning.
 
-# // W grze
+**W grze**
 
 W grze znajdują się dwie sceny:
 
@@ -48,7 +48,7 @@ ten ruch.
 
 Podczas tury graczy SI, gracz jest o tym informowany i nie ma możliwości podejmowania żadnej akcji.
 
-# // Repo
+**Repozytorium**
 W repozytorium znajduje się tylko kod gry, nie ma końcowych plików .exe i .bat służących do włączania aplikacji.
 Repozytorium ma w sobie 2 podprojekty:
 1. wersję konsolową gry, użytą do treningu modelu AI
