@@ -48,8 +48,10 @@ ten ruch.
 
 Podczas tury graczy SI, gracz jest o tym informowany i nie ma możliwości podejmowania żadnej akcji.
 
-**Repozytorium**
+# Repozytorium
 W repozytorium znajduje się tylko kod gry, nie ma końcowych plików .exe i .bat służących do włączania aplikacji.
 Repozytorium ma w sobie 2 podprojekty:
 1. wersję konsolową gry, użytą do treningu modelu AI
 2. wersję końcową, zawierającą implementację w Unity
+Link do pobrania gry:
+[CyberPrzepych](https://sggwpl-my.sharepoint.com/:u:/g/personal/s223362_sggw_edu_pl/EeWMFsq3OZBLjz5Z_Jdj6cwBA6M8MhCHqXmum_W60cpXXg?e=gE8gA8)
